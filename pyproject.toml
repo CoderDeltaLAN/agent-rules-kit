@@ -22,6 +22,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+agent-rules-kit = "agent_rules_kit.cli:main"
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
