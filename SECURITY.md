@@ -6,11 +6,11 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 ## Supported versions
 
-There is no stable supported release yet.
+There is no stable supported release yet. The `0.1.x` line is a pre-release support boundary, not a stability guarantee.
 
 | Version | Status |
 | --- | --- |
-| 0.1.x | Pre-release development |
+| 0.1.x | Pre-release / best-effort security fixes |
 | < 0.1 | Not supported |
 
 ## Security boundaries
@@ -38,13 +38,13 @@ Use fake examples only.
 
 ## Reporting a vulnerability
 
-This repository is public but has no stable release and no formal private vulnerability disclosure process yet.
+This repository is public and has no stable release yet.
+
+Preferred sensitive-reporting path: use GitHub Security Advisories or GitHub private vulnerability reporting when available to the maintainer.
+
+If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
 
 For non-sensitive security boundary issues, open a GitHub issue with a minimal reproduction.
-
-Do not include secrets, tokens, credentials, cookies, private URLs, customer data, or sensitive repository contents in public issues.
-
-Before a stable public release, the maintainer must define a private reporting channel or enable GitHub Security Advisories.
 
 ## Non-goals
 
@@ -60,15 +60,14 @@ agent-rules-kit does not aim to:
 
 ## Maintainer response
 
-There is no guaranteed security response time before a stable release.
+Security response is best-effort for pre-release `0.1.x`. There is no commercial SLA or guaranteed response time.
 
-Before a stable public release, the maintainer must define:
+Before any stable release, the maintainer must define:
 
-- contact channel;
-- expected response time;
 - supported versions;
+- expected response time;
 - disclosure handling;
-- whether GitHub Security Advisories are enabled.
+- whether GitHub Security Advisories or private vulnerability reporting are enabled.
 
 ## Safe development rules
 

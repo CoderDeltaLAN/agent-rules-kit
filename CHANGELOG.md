@@ -6,6 +6,10 @@ This project has no stable public release yet.
 
 ## [Unreleased]
 
+No unreleased changes yet.
+
+## [0.1.0] - 2026-06-09
+
 ### Added
 
 - Repository identity baseline with README, MIT license, and .gitignore.
@@ -65,14 +69,16 @@ This project has no stable public release yet.
 
 ## Release policy
 
-Before the first stable public release, the maintainer must verify:
+Before publishing any GitHub release, the maintainer must verify:
 
 - local checks pass;
 - CI passes for the release SHA;
 - README reflects actual behavior;
+- sdist and wheel build and install from clean temporary environments;
 - SECURITY.md has a private reporting channel or clearly documents the absence of one;
 - CHANGELOG.md describes the released changes;
 - version number matches pyproject.toml and package metadata;
+- the tag and GitHub Release point to the verified release SHA;
 - no unsupported security, production, or maturity claims are present.
 
 ## Notes for maintainers

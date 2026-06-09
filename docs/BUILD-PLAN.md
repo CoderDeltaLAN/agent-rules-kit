@@ -123,8 +123,11 @@ Before a public v0.1 release, verify:
 - local checks pass;
 - CI passes for the release SHA;
 - tests cover the implemented commands;
+- sdist and wheel build and install from clean temporary environments;
 - output examples are generated from real commands;
 - secret-like findings are redacted in all formats;
 - README reflects actual behavior only;
 - SECURITY.md and CHANGELOG.md are current;
+- private vulnerability reporting is enabled or its absence is clearly documented;
+- tag and GitHub Release point to the verified release SHA;
 - no unsupported production or security claims are present.
