@@ -6,7 +6,10 @@ This project has no stable public release yet.
 
 ## [Unreleased]
 
-No unreleased changes yet.
+### Changed
+
+- Updated README status after publishing `v0.1.0` as a GitHub pre-release.
+- Added basic installation guidance for release artifacts.
 
 ## [0.1.0] - 2026-06-09
 

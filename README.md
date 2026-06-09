@@ -150,11 +150,25 @@ A clean report means only that the implemented baseline checks did not find a su
 
 ---
 
-## Commands
+## Installation
 
-The project can currently be used from the source tree with:
+`v0.1.0` is available as GitHub pre-release artifacts.
+
+This project is not published to PyPI yet.
+
+Download the wheel from the `v0.1.0` GitHub Release, then install it in a virtual environment:
+
+    python -m venv .venv
+    .venv/bin/python -m pip install ./agent_rules_kit-0.1.0-py3-none-any.whl
+    .venv/bin/agent-rules-kit --version
+
+The source tree can still be used directly for development:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
+
+---
+
+## Commands
 
 ### Check a repository
 
@@ -313,21 +327,24 @@ The required status check for `main` is:
 
 Current status:
 
-- v0.1.0 release-candidate documentation stage;
+- `v0.1.0` is published as a GitHub pre-release;
 - no public stable release yet;
+- release tag `v0.1.0` points to the verified release SHA;
+- wheel and sdist artifacts are attached to the GitHub Release;
+- release assets were downloaded, checksum-verified, installed, and smoke-tested;
 - local CLI behavior implemented;
-- packaging verified from real sdist and wheel artifacts;
 - CI active;
 - branch protection active;
 - README reflects current behavior only;
 - security boundaries documented;
 - threat model documented.
 
-Before a public release, verify:
+For future releases, verify:
 
 - local checks pass;
 - CI passes for the release SHA;
 - sdist and wheel build and install from clean temporary environments;
+- release assets can be downloaded, checksum-verified, installed, and smoke-tested;
 - output examples are generated from real commands;
 - README does not claim unsupported maturity;
 - SECURITY.md and CHANGELOG.md are current;
