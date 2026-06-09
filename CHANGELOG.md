@@ -8,6 +8,8 @@ This project has no stable public release yet.
 
 ### Changed
 
+- Improved README and project metadata for clearer GitHub and Python package discoverability.
+- Added project URLs and more specific package keywords.
 - Updated README status after publishing `v0.1.0` as a GitHub pre-release.
 - Added basic installation guidance for release artifacts.
 

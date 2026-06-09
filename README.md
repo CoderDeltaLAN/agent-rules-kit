@@ -11,7 +11,7 @@
 <h1 align="center">agent-rules-kit</h1>
 
 <p align="center">
-  <strong>Local Python CLI for diagnosing baseline quality of AI agent instruction files in repositories.</strong>
+  <strong>Local read-only Python CLI for diagnosing AGENTS.md, CLAUDE.md, GEMINI.md, Cursor rules, GitHub Copilot instructions, and other AI agent instruction files in repositories.</strong>
 </p>
 
 <p align="center">
@@ -86,7 +86,9 @@
 
 ## Overview
 
-`agent-rules-kit` is a local diagnostic CLI for repositories that use AI coding agents or assistant-specific instruction files.
+`agent-rules-kit` is a local, read-only diagnostic CLI for repositories that use AI coding agents or assistant-specific instruction files.
+
+It helps developers inspect `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, Cursor rules, GitHub Copilot instructions, and GitHub instruction files without network calls, LLM calls, or repository command execution.
 
 It focuses on files such as:
 
