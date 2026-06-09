@@ -11,6 +11,7 @@ from pathlib import Path
 from agent_rules_kit import __version__
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
 from agent_rules_kit.init_plan import InitPlan, build_init_plan
+from agent_rules_kit.init_write import InitWriteResult, write_init_files
 from agent_rules_kit.redaction import redact_secret_like_values
 
 OUTPUT_FORMATS = ("console", "json", "markdown")
@@ -62,6 +63,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Preview planned file changes without modifying files.",
     )
+    init_parser.add_argument(
+        "--write",
+        action="store_true",
+        help="Write baseline files, backing up existing files first.",
+    )
 
     return parser
 
@@ -79,7 +85,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _run_check(Path(args.repository), output_format=args.format)
 
     if args.command == "init":
-        return _run_init(Path(args.repository), dry_run=args.dry_run)
+        return _run_init(
+            Path(args.repository),
+            dry_run=args.dry_run,
+            write=args.write,
+        )
 
     parser.print_help()
     return 0
@@ -130,18 +140,26 @@ def _print_console_check(
     return 0
 
 
-def _run_init(repository_root: Path, *, dry_run: bool) -> int:
-    if not dry_run:
-        print("ERROR: init currently requires --dry-run.", file=sys.stderr)
+def _run_init(repository_root: Path, *, dry_run: bool, write: bool) -> int:
+    if dry_run and write:
+        print("ERROR: init accepts only one mode: --dry-run or --write.", file=sys.stderr)
+        return 2
+
+    if not dry_run and not write:
+        print("ERROR: init currently requires --dry-run or --write.", file=sys.stderr)
         return 2
 
     try:
-        plan = build_init_plan(repository_root)
+        if dry_run:
+            plan = build_init_plan(repository_root)
+            _print_init_dry_run(plan)
+        else:
+            result = write_init_files(repository_root)
+            _print_init_write(result)
     except ValueError as error:
         print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
         return 2
 
-    _print_init_dry_run(plan)
     return 0
 
 
@@ -155,6 +173,20 @@ def _print_init_dry_run(plan: InitPlan) -> None:
         path = redact_secret_like_values(file_item.path)
         reason = redact_secret_like_values(file_item.reason)
         print(f"- {path} [{file_item.action.value}] - {reason}")
+
+
+def _print_init_write(result: InitWriteResult) -> None:
+    print(f"agent-rules-kit init: {redact_secret_like_values(result.repository)}")
+    print("Mode: write")
+    print("Files modified:")
+
+    for file_item in result.files:
+        path = redact_secret_like_values(file_item.path)
+        if file_item.backup_path is None:
+            print(f"- {path} [{file_item.action.value}]")
+        else:
+            backup_path = redact_secret_like_values(file_item.backup_path)
+            print(f"- {path} [{file_item.action.value}] - backup: {backup_path}")
 
 
 def _build_check_payload(

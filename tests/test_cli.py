@@ -289,7 +289,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("No files will be modified.", text)
         self.assertIn("- AGENTS.md [create]", text)
 
-    def test_init_dry_run_skips_existing_agents_file_without_writing(self) -> None:
+    def test_init_dry_run_plans_backup_before_replace_without_writing(self) -> None:
         output = io.StringIO()
 
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -308,9 +308,10 @@ class CliTests(unittest.TestCase):
 
         text = output.getvalue()
 
-        self.assertIn("- AGENTS.md [skip-existing] - file already exists", text)
+        self.assertIn("- AGENTS.md [backup-and-replace]", text)
+        self.assertIn("existing file would be backed up before replacement", text)
 
-    def test_init_requires_dry_run_until_write_mode_exists(self) -> None:
+    def test_init_requires_explicit_mode(self) -> None:
         output = io.StringIO()
 
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -318,7 +319,10 @@ class CliTests(unittest.TestCase):
                 exit_code = main(["init", temporary_directory])
 
         self.assertEqual(exit_code, 2)
-        self.assertIn("ERROR: init currently requires --dry-run.", output.getvalue())
+        self.assertIn(
+            "ERROR: init currently requires --dry-run or --write.",
+            output.getvalue(),
+        )
 
     def test_init_dry_run_returns_two_for_invalid_repository_root(self) -> None:
         output = io.StringIO()
@@ -347,6 +351,73 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertIn("[REDACTED]", text)
         self.assertNotIn(secret_like_path.name, text)
+
+    def test_init_rejects_dry_run_and_write_together(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            with redirect_stderr(output):
+                exit_code = main(
+                    [
+                        "init",
+                        temporary_directory,
+                        "--dry-run",
+                        "--write",
+                    ]
+                )
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn(
+            "ERROR: init accepts only one mode: --dry-run or --write.",
+            output.getvalue(),
+        )
+
+    def test_init_write_creates_agents_file(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+
+            with redirect_stdout(output):
+                exit_code = main(["init", str(repository), "--write"])
+
+            agents_file = repository / "AGENTS.md"
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue(agents_file.exists())
+            self.assertIn("# Agent Instructions", agents_file.read_text(encoding="utf-8"))
+
+        text = output.getvalue()
+
+        self.assertIn("Mode: write", text)
+        self.assertIn("- AGENTS.md [create]", text)
+
+    def test_init_write_backs_up_existing_agents_file_before_replacing(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            agents_file = repository / "AGENTS.md"
+            agents_file.write_text("existing instructions\n", encoding="utf-8")
+
+            with redirect_stdout(output):
+                exit_code = main(["init", str(repository), "--write"])
+
+            backup_file = repository / "AGENTS.md.agent-rules-kit.bak"
+
+            self.assertEqual(exit_code, 0)
+            self.assertTrue(backup_file.exists())
+            self.assertEqual(
+                backup_file.read_text(encoding="utf-8"),
+                "existing instructions\n",
+            )
+            self.assertIn("# Agent Instructions", agents_file.read_text(encoding="utf-8"))
+
+        text = output.getvalue()
+
+        self.assertIn("Mode: write", text)
+        self.assertIn("- AGENTS.md [backup-and-replace]", text)
+        self.assertIn("backup: AGENTS.md.agent-rules-kit.bak", text)
 
 
 if __name__ == "__main__":
