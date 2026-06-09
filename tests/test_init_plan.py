@@ -19,7 +19,7 @@ class InitPlanTests(unittest.TestCase):
             self.assertEqual(plan.files[0].action, InitPlanAction.CREATE)
             self.assertFalse((repository / "AGENTS.md").exists())
 
-    def test_build_init_plan_marks_existing_agents_file_as_skip_existing(self) -> None:
+    def test_build_init_plan_marks_existing_agents_file_as_backup_and_replace(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
             agents_file = repository / "AGENTS.md"
@@ -28,7 +28,7 @@ class InitPlanTests(unittest.TestCase):
             plan = build_init_plan(repository)
 
             self.assertEqual(plan.files[0].path, "AGENTS.md")
-            self.assertEqual(plan.files[0].action, InitPlanAction.SKIP_EXISTING)
+            self.assertEqual(plan.files[0].action, InitPlanAction.BACKUP_AND_REPLACE)
             self.assertEqual(
                 agents_file.read_text(encoding="utf-8"),
                 "existing instructions\n",

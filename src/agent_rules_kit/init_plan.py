@@ -8,15 +8,15 @@ from pathlib import Path
 
 
 class InitPlanAction(StrEnum):
-    """Supported dry-run init actions."""
+    """Supported init actions."""
 
     CREATE = "create"
-    SKIP_EXISTING = "skip-existing"
+    BACKUP_AND_REPLACE = "backup-and-replace"
 
 
 @dataclass(frozen=True, slots=True)
 class PlannedInitFile:
-    """A file action planned by init dry-run."""
+    """A file action planned by init."""
 
     path: str
     action: InitPlanAction
@@ -44,8 +44,8 @@ def build_init_plan(root: Path | str) -> InitPlan:
     candidate = root_path / target_path
 
     if candidate.exists():
-        action = InitPlanAction.SKIP_EXISTING
-        reason = "file already exists"
+        action = InitPlanAction.BACKUP_AND_REPLACE
+        reason = "existing file would be backed up before replacement"
     else:
         action = InitPlanAction.CREATE
         reason = "baseline agent instruction file would be created"
