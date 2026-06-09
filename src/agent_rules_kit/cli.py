@@ -10,6 +10,7 @@ from pathlib import Path
 
 from agent_rules_kit import __version__
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
+from agent_rules_kit.init_plan import InitPlan, build_init_plan
 from agent_rules_kit.redaction import redact_secret_like_values
 
 OUTPUT_FORMATS = ("console", "json", "markdown")
@@ -46,6 +47,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output format. Defaults to console.",
     )
 
+    init_parser = subparsers.add_parser(
+        "init",
+        help="Plan baseline agent instruction files without writing by default.",
+    )
+    init_parser.add_argument(
+        "repository",
+        nargs="?",
+        default=".",
+        help="Repository root to inspect. Defaults to the current directory.",
+    )
+    init_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview planned file changes without modifying files.",
+    )
+
     return parser
 
 
@@ -60,6 +77,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "check":
         return _run_check(Path(args.repository), output_format=args.format)
+
+    if args.command == "init":
+        return _run_init(Path(args.repository), dry_run=args.dry_run)
 
     parser.print_help()
     return 0
@@ -108,6 +128,33 @@ def _print_console_check(
         print(f"- {instruction_file.path} [{instruction_file.kind.value}]")
 
     return 0
+
+
+def _run_init(repository_root: Path, *, dry_run: bool) -> int:
+    if not dry_run:
+        print("ERROR: init currently requires --dry-run.", file=sys.stderr)
+        return 2
+
+    try:
+        plan = build_init_plan(repository_root)
+    except ValueError as error:
+        print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
+        return 2
+
+    _print_init_dry_run(plan)
+    return 0
+
+
+def _print_init_dry_run(plan: InitPlan) -> None:
+    print(f"agent-rules-kit init: {redact_secret_like_values(plan.repository)}")
+    print("Mode: dry-run")
+    print("No files will be modified.")
+    print("Planned file actions:")
+
+    for file_item in plan.files:
+        path = redact_secret_like_values(file_item.path)
+        reason = redact_secret_like_values(file_item.reason)
+        print(f"- {path} [{file_item.action.value}] - {reason}")
 
 
 def _build_check_payload(
