@@ -313,9 +313,10 @@ The required status check for `main` is:
 
 Current status:
 
-- pre-release v0.1 development;
+- v0.1.0 release-candidate documentation stage;
 - no public stable release yet;
 - local CLI behavior implemented;
+- packaging verified from real sdist and wheel artifacts;
 - CI active;
 - branch protection active;
 - README reflects current behavior only;
@@ -326,9 +327,12 @@ Before a public release, verify:
 
 - local checks pass;
 - CI passes for the release SHA;
+- sdist and wheel build and install from clean temporary environments;
 - output examples are generated from real commands;
 - README does not claim unsupported maturity;
 - SECURITY.md and CHANGELOG.md are current;
+- private vulnerability reporting is enabled or its absence is clearly documented;
+- tag and GitHub Release point to the verified release SHA;
 - no real secrets or private data are present.
 
 ---
