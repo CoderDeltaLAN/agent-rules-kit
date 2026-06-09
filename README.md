@@ -1,23 +1,422 @@
-# agent-rules-kit
+<a id="readme-top"></a>
 
-CLI local para diagnosticar la calidad mínima de archivos de instrucciones para agentes IA en repositorios.
+<p align="center">
+  <img
+    width="100%"
+    src="https://capsule-render.vercel.app/api?type=waving&height=220&section=header&color=0:000000,42:111827,72:d4af37,100:000000&text=agent-rules-kit&fontColor=ffffff&fontSize=50&fontAlign=50&fontAlignY=38&desc=Local%20CLI%20%C2%B7%20AI%20agent%20instruction%20diagnostics%20%C2%B7%20read-only%20by%20default&descAlign=50&descAlignY=62&animation=twinkling"
+    alt="agent-rules-kit banner"
+  />
+</p>
 
-Estado actual: inception local. No hay release, no hay remoto y no hay promesas de producción.
+<h1 align="center">agent-rules-kit</h1>
 
-## Propósito
+<p align="center">
+  <strong>Local Python CLI for diagnosing baseline quality of AI agent instruction files in repositories.</strong>
+</p>
 
-`agent-rules-kit` ayuda a revisar archivos como `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, reglas de Cursor e instrucciones de GitHub Copilot para detectar ausencias, duplicación, contradicciones básicas y riesgos operativos.
+<p align="center">
+  <a href="https://github.com/CoderDeltaLAN/agent-rules-kit/actions/workflows/ci.yml">
+    <img alt="CI" src="https://github.com/CoderDeltaLAN/agent-rules-kit/actions/workflows/ci.yml/badge.svg?branch=main&label=CI" />
+  </a>
+  <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-111827?logo=python&logoColor=white" />
+  <img alt="Local CLI" src="https://img.shields.io/badge/Runtime-local%20CLI-d4af37" />
+  <img alt="Read-only by default" src="https://img.shields.io/badge/Default-read--only-0f766e" />
+  <img alt="No LLM" src="https://img.shields.io/badge/LLM-none-5a0f0f" />
+  <img alt="No network" src="https://img.shields.io/badge/Network-none-111827" />
+  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-d4af37" />
+</p>
 
-## Límites v0.1
+<p align="center">
+  <a href="https://www.paypal.com/donate/?hosted_button_id=YVENCBNCZWVPW">
+    <img alt="Support with PayPal" src="https://img.shields.io/badge/Support-PayPal-003087?style=for-the-badge&logo=paypal&logoColor=white&labelColor=050505" />
+  </a>
+</p>
 
-- read-only by default; read-only por defecto.
-- no network access; sin red.
-- no LLM dependency; sin LLM.
-- does not execute commands from analyzed repositories; sin ejecutar comandos del repositorio analizado.
-- no file modifications unless a future explicit write mode is implemented.
-- no security guarantees; it is not a security scanner.
-- secret-like findings are always redacted.
+<p align="center">
+  <a href="#screenshots">Screenshots</a>
+  ·
+  <a href="#overview">Overview</a>
+  ·
+  <a href="#commands">Commands</a>
+  ·
+  <a href="#safety-boundary">Safety Boundary</a>
+  ·
+  <a href="#quality-gates">Quality Gates</a>
+  ·
+  <a href="#maintainer-workflow">Maintainer Workflow</a>
+  ·
+  <a href="#support">Support</a>
+</p>
 
-## Licencia
+---
+
+## Screenshots
+
+### Help and repository check
+
+<p align="center">
+  <img
+    src="docs/screenshots/readme/agent-rules-kit-help-check.png"
+    alt="Terminal screenshot showing agent-rules-kit help output and a repository check detecting AGENTS.md"
+    width="100%"
+  />
+</p>
+
+### JSON and Markdown output formats
+
+<p align="center">
+  <img
+    src="docs/screenshots/readme/agent-rules-kit-output-formats.png"
+    alt="Terminal screenshot showing agent-rules-kit check output in JSON and Markdown formats"
+    width="100%"
+  />
+</p>
+
+### Explicit init behavior
+
+<p align="center">
+  <img
+    src="docs/screenshots/readme/agent-rules-kit-init-safety.png"
+    alt="Terminal screenshot showing init dry-run, explicit write, and backup behavior"
+    width="100%"
+  />
+</p>
+
+---
+
+## Overview
+
+`agent-rules-kit` is a local diagnostic CLI for repositories that use AI coding agents or assistant-specific instruction files.
+
+It focuses on files such as:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `GEMINI.md`
+- `.cursor/rules/*.mdc`
+- `.github/copilot-instructions.md`
+- `.github/instructions/*`
+
+The project is positioned as a doctor/lint tool for agent instruction files.
+
+It is not:
+
+- a universal instruction generator;
+- a security scanner;
+- an LLM agent;
+- a repository automation bot;
+- a CI/CD security auditor;
+- a dependency vulnerability scanner.
+
+The default behavior is read-only.
+
+---
+
+## What This Project Does
+
+Current v0.1 behavior includes:
+
+- discovers supported AI agent instruction files;
+- reports repository-relative paths;
+- supports console, JSON, and Markdown output;
+- provides `init --dry-run` for planning baseline instruction files;
+- provides explicit `init --write` behavior for creating or replacing root `AGENTS.md`;
+- backs up existing root `AGENTS.md` before replacement;
+- redacts supported secret-like values in findings;
+- avoids network calls;
+- avoids LLM calls;
+- avoids executing commands from analyzed repositories.
+
+---
+
+## What This Project Does Not Do
+
+`agent-rules-kit` does not claim to make a repository secure.
+
+It does not:
+
+- prove that a repository is safe;
+- scan dependencies for vulnerabilities;
+- execute repository commands;
+- inspect private infrastructure;
+- call external APIs;
+- call an LLM;
+- modify files during `check`;
+- modify files during `init --dry-run`;
+- provide complete secret scanning;
+- replace human review.
+
+A clean report means only that the implemented baseline checks did not find a supported issue.
+
+---
+
+## Commands
+
+The project can currently be used from the source tree with:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli --help
+
+### Check a repository
+
+    PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent
+
+Example console output:
+
+    agent-rules-kit check: tests/fixtures/repositories/single-agent
+    Found 1 supported instruction file(s):
+    - AGENTS.md [agents]
+
+### JSON output
+
+    PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format json
+
+### Markdown output
+
+    PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format markdown
+
+### Init dry-run
+
+`init --dry-run` shows what would happen without writing files:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli init /path/to/repo --dry-run
+
+Example behavior:
+
+    Mode: dry-run
+    No files will be modified.
+    Planned file actions:
+    - AGENTS.md [create] - baseline agent instruction file would be created
+
+### Init write
+
+`init --write` must be requested explicitly:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli init /path/to/repo --write
+
+If root `AGENTS.md` already exists, it is backed up before replacement:
+
+    AGENTS.md.agent-rules-kit.bak
+
+---
+
+## Output Formats
+
+Supported `check` formats:
+
+| Format | Purpose |
+| --- | --- |
+| `console` | Human-readable terminal output |
+| `json` | Machine-readable output |
+| `markdown` | Markdown report output |
+
+The output format is selected with:
+
+    --format console
+    --format json
+    --format markdown
+
+---
+
+## Safety Boundary
+
+The runtime boundary is intentionally narrow.
+
+The project must preserve these rules:
+
+- read-only by default;
+- no network access in runtime behavior;
+- no LLM dependency in runtime behavior;
+- no execution of commands from analyzed repositories;
+- no unsupported security guarantees;
+- secret-like values must be redacted;
+- write behavior must require explicit user intent;
+- generated or overwritten files must be handled conservatively.
+
+Security-sensitive changes must be isolated in their own phase and covered by tests.
+
+See:
+
+- `SECURITY.md`
+- `docs/THREAT-MODEL.md`
+
+---
+
+## Repository Layout
+
+    .
+    ├── .github/
+    │   ├── ISSUE_TEMPLATE/
+    │   ├── pull_request_template.md
+    │   └── workflows/
+    │       └── ci.yml
+    ├── docs/
+    │   ├── BUILD-PLAN.md
+    │   ├── THREAT-MODEL.md
+    │   └── screenshots/
+    │       └── readme/
+    │           ├── agent-rules-kit-help-check.png
+    │           ├── agent-rules-kit-init-safety.png
+    │           └── agent-rules-kit-output-formats.png
+    ├── scripts/
+    │   └── check.sh
+    ├── src/
+    │   └── agent_rules_kit/
+    │       ├── cli.py
+    │       ├── discovery.py
+    │       ├── findings.py
+    │       ├── init_plan.py
+    │       ├── init_write.py
+    │       └── redaction.py
+    ├── tests/
+    ├── AGENTS.md
+    ├── CHANGELOG.md
+    ├── CONTRIBUTING.md
+    ├── LICENSE
+    ├── README.md
+    ├── SECURITY.md
+    ├── SUPPORT.md
+    └── pyproject.toml
+
+---
+
+## Quality Gates
+
+Local verification is handled by:
+
+    ./scripts/check.sh
+
+The local check suite verifies:
+
+- Python syntax;
+- unit tests;
+- UTF-8 text files;
+- LF line endings;
+- final newline;
+- no trailing whitespace;
+- Git whitespace checks.
+
+Current verified local result:
+
+    Ran 56 tests
+
+    OK
+
+CI runs the same local check script through GitHub Actions.
+
+The required status check for `main` is:
+
+    local-checks / Python 3.12
+
+---
+
+## Development Status
+
+Current status:
+
+- pre-release v0.1 development;
+- no public stable release yet;
+- local CLI behavior implemented;
+- CI active;
+- branch protection active;
+- README reflects current behavior only;
+- security boundaries documented;
+- threat model documented.
+
+Before a public release, verify:
+
+- local checks pass;
+- CI passes for the release SHA;
+- output examples are generated from real commands;
+- README does not claim unsupported maturity;
+- SECURITY.md and CHANGELOG.md are current;
+- no real secrets or private data are present.
+
+---
+
+## Maintainer Workflow
+
+This repository follows a strict Always-Green workflow.
+
+Required discipline:
+
+- never work directly on `main` after Genesis;
+- start each phase from clean, synchronized `main`;
+- create one branch per logical phase;
+- read real files before editing;
+- make minimal changes;
+- avoid `git add .`;
+- stage only expected files;
+- inspect staged diff before commit;
+- run local checks before push;
+- verify remote branch SHA after push;
+- open PR;
+- verify PR state, diff, and CI;
+- merge only after green checks;
+- use exact head SHA for merge;
+- verify `main` after merge;
+- verify CI on `main`;
+- delete local and remote phase branches.
+
+A phase is complete only when:
+
+    main is clean
+    origin/main is synchronized
+    local checks pass
+    CI is green
+    the PR is merged
+    phase branches are deleted
+
+---
+
+## Contributing
+
+See `CONTRIBUTING.md`.
+
+Any contribution must preserve the safety boundary documented in `AGENTS.md`, `SECURITY.md`, and `docs/THREAT-MODEL.md`.
+
+---
+
+## Support
+
+If this project helps you, you can support CDLAN public work here:
+
+<p align="center">
+  <a href="https://www.paypal.com/donate/?hosted_button_id=YVENCBNCZWVPW">
+    <img
+      alt="Support with PayPal"
+      src="https://img.shields.io/badge/Support%20CDLAN-PayPal-003087?style=for-the-badge&logo=paypal&logoColor=white&labelColor=050505"
+    />
+  </a>
+</p>
+
+Support is optional. It does not change the license, support policy, or project boundaries.
+
+---
+
+## License
 
 MIT.
+
+See `LICENSE`.
+
+---
+
+## Scope Disclaimer
+
+`agent-rules-kit` is a focused diagnostic tool for AI agent instruction files.
+
+It is not a security product, not a general repository auditor, not a secret scanner, not an autonomous fixer, and not a replacement for maintainer review.
+
+---
+
+<p align="center">
+  <strong>CDLAN · Less noise. More system.</strong>
+</p>
+
+<p align="center">
+  <img
+    width="100%"
+    src="https://capsule-render.vercel.app/api?type=waving&height=160&section=footer&color=0:000000,55:d4af37,100:111827&animation=twinkling"
+    alt="agent-rules-kit footer wave"
+  />
+</p>
