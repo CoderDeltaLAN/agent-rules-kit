@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -268,6 +269,84 @@ class CliTests(unittest.TestCase):
         self.assertIn("[REDACTED]", text)
         self.assertNotIn(secret_like_path.name, text)
         self.assertIn("- Status: error", text)
+
+    def test_init_dry_run_plans_agents_file_creation_without_writing(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+
+            with redirect_stdout(output):
+                exit_code = main(["init", str(repository), "--dry-run"])
+
+            self.assertEqual(exit_code, 0)
+            self.assertFalse((repository / "AGENTS.md").exists())
+
+        text = output.getvalue()
+
+        self.assertIn("agent-rules-kit init:", text)
+        self.assertIn("Mode: dry-run", text)
+        self.assertIn("No files will be modified.", text)
+        self.assertIn("- AGENTS.md [create]", text)
+
+    def test_init_dry_run_skips_existing_agents_file_without_writing(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            agents_file = repository / "AGENTS.md"
+            agents_file.write_text("existing instructions\n", encoding="utf-8")
+
+            with redirect_stdout(output):
+                exit_code = main(["init", str(repository), "--dry-run"])
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(
+                agents_file.read_text(encoding="utf-8"),
+                "existing instructions\n",
+            )
+
+        text = output.getvalue()
+
+        self.assertIn("- AGENTS.md [skip-existing] - file already exists", text)
+
+    def test_init_requires_dry_run_until_write_mode_exists(self) -> None:
+        output = io.StringIO()
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            with redirect_stderr(output):
+                exit_code = main(["init", temporary_directory])
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn("ERROR: init currently requires --dry-run.", output.getvalue())
+
+    def test_init_dry_run_returns_two_for_invalid_repository_root(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(
+                [
+                    "init",
+                    str(FIXTURE_ROOT / "missing-repo"),
+                    "--dry-run",
+                ]
+            )
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn("ERROR: repository root does not exist:", output.getvalue())
+
+    def test_init_dry_run_redacts_secret_like_repository_values(self) -> None:
+        output = io.StringIO()
+        secret_like_path = FIXTURE_ROOT / ("sk-" + ("A" * 24))
+
+        with redirect_stderr(output):
+            exit_code = main(["init", str(secret_like_path), "--dry-run"])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn("[REDACTED]", text)
+        self.assertNotIn(secret_like_path.name, text)
 
 
 if __name__ == "__main__":
