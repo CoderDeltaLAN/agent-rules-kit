@@ -11,7 +11,7 @@ from pathlib import Path
 from agent_rules_kit import __version__
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
 from agent_rules_kit.findings import Finding
-from agent_rules_kit.governance import find_unsupported_claim_findings
+from agent_rules_kit.governance import find_governance_findings
 from agent_rules_kit.init_plan import InitPlan, build_init_plan
 from agent_rules_kit.init_write import InitWriteResult, write_init_files
 from agent_rules_kit.redaction import redact_secret_like_values
@@ -113,7 +113,7 @@ def _run_check(repository_root: Path, *, output_format: str = "console") -> int:
         return 2
 
     status = "ok" if instruction_files else "no_instruction_files"
-    findings = find_unsupported_claim_findings(repository_root, instruction_files)
+    findings = find_governance_findings(repository_root, instruction_files)
     payload = _build_check_payload(
         repository_root,
         instruction_files,

@@ -502,6 +502,37 @@ class CliTests(unittest.TestCase):
         self.assertEqual(payload["findings"], [])
 
 
+    def test_check_json_reports_review_ci_bypass_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "risky-instructions"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 3)
+        self.assertEqual(
+            [finding["rule_id"] for finding in payload["findings"]],
+            ["AIRK-GOV003", "AIRK-GOV003", "AIRK-GOV003"],
+        )
+        self.assertEqual(
+            [finding["line"] for finding in payload["findings"]],
+            [7, 8, 10],
+        )
+        self.assertEqual(
+            [finding["path"] for finding in payload["findings"]],
+            ["AGENTS.md", "AGENTS.md", "AGENTS.md"],
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()
