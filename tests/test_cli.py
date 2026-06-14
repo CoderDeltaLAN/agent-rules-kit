@@ -533,6 +533,133 @@ class CliTests(unittest.TestCase):
         )
 
 
+    def test_check_console_reports_unsafe_command_execution_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "unsafe-command-execution")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV004 [warning] AGENTS.md:9", text)
+        self.assertIn(
+            "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary.",
+            text,
+        )
+
+    def test_check_json_reports_unsafe_command_execution_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "unsafe-command-execution"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 1)
+        self.assertEqual(payload["findings"][0]["rule_id"], "AIRK-GOV004")
+        self.assertEqual(payload["findings"][0]["severity"], "warning")
+        self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
+        self.assertEqual(payload["findings"][0]["line"], 9)
+
+    def test_check_markdown_reports_unsafe_command_execution_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "unsafe-command-execution"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 1", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV004 | warning | AGENTS.md:9 |", text)
+        self.assertIn(
+            "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary.",
+            text,
+        )
+
+    def test_check_console_reports_runtime_network_llm_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "runtime-network-llm")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV005 [warning] AGENTS.md:9", text)
+        self.assertIn(
+            "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries.",
+            text,
+        )
+
+    def test_check_json_reports_runtime_network_llm_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "runtime-network-llm"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 1)
+        self.assertEqual(payload["findings"][0]["rule_id"], "AIRK-GOV005")
+        self.assertEqual(payload["findings"][0]["severity"], "warning")
+        self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
+        self.assertEqual(payload["findings"][0]["line"], 9)
+
+    def test_check_markdown_reports_runtime_network_llm_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "runtime-network-llm"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 1", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV005 | warning | AGENTS.md:9 |", text)
+        self.assertIn(
+            "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries.",
+            text,
+        )
+
+
     def test_check_json_reports_missing_secret_boundary_findings(self) -> None:
         output = io.StringIO()
 
