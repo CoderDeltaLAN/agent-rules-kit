@@ -20,6 +20,11 @@ COMMAND_CONFIRMATION_MESSAGE = (
     "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary."
 )
 
+RUNTIME_NETWORK_LLM_RULE_ID = "AIRK-GOV005"
+RUNTIME_NETWORK_LLM_MESSAGE = (
+    "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries."
+)
+
 AUTHORITY_SCOPE_RULE_ID = "AIRK-GOV001"
 AUTHORITY_SCOPE_MESSAGE = "Instruction file may lack clear scope or authority."
 
@@ -111,6 +116,55 @@ NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
+RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
+    re.compile(
+        r"\b(send|upload|post|transmit|share)\b"
+        r".{0,100}\b(repository|repo|source code|codebase|workspace|context|files?)\b"
+        r".{0,140}\b(OpenAI|Anthropic|Claude|Gemini|ChatGPT|LLM|external API|external service|remote service)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(check|runtime|scan|scanning|audit|analyze|analysis|validation|validate)\b"
+        r".{0,140}\b(must|should|required|requires?|needs?|depends on|call|query|use)\b"
+        r".{0,100}\b(LLM API|LLM|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external API|remote API)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(call|query|use)\b"
+        r".{0,100}\b(remote\s+)?(LLM|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external API|remote API)\b"
+        r".{0,100}\b(check|runtime|scan|scanning|audit|analyze|analysis|validation|validate)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(runtime|check|scan|scanning|audit|analyze|analysis|validation|validate)\b"
+        r".{0,120}\b(requires?|needs?|must have|depends on)\b"
+        r".{0,100}\b(internet|network|online access|network access)\b",
+        re.IGNORECASE,
+    ),
+)
+
+NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
+    re.compile(
+        r"\b(do not|don't|must not|should not|never|avoid|avoids|forbid|forbidden|no|without)\b"
+        r".{0,180}\b(network|internet|online|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|remote services?|API calls?)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(does not|do not|don't|must not|should not|never|avoid|avoids|no)\b"
+        r".{0,140}\b(call|use|depend|send|upload|post|transmit|share)\b"
+        r".{0,140}\b(network|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|remote services?)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(human|maintainer|operator|user)\b"
+        r".{0,100}\b(may|can)\b"
+        r".{0,100}\b(use|consult)\b"
+        r".{0,100}\b(ChatGPT|Claude|Gemini|OpenAI|Anthropic|LLM)\b"
+        r".{0,140}\b(planning|review|research|design)\b",
+        re.IGNORECASE,
+    ),
+)
+
 SECRET_BOUNDARY_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\bsecret(?:s)?\b", re.IGNORECASE),
     re.compile(r"\btoken(?:s)?\b", re.IGNORECASE),
@@ -177,6 +231,7 @@ def find_governance_findings(
         *find_unsupported_claim_findings(repository_root, instruction_files),
         *find_review_ci_bypass_findings(repository_root, instruction_files),
         *find_unsafe_command_execution_findings(repository_root, instruction_files),
+        *find_runtime_network_llm_dependency_findings(repository_root, instruction_files),
         *find_missing_secret_boundary_findings(repository_root, instruction_files),
         *find_missing_authority_scope_findings(repository_root, instruction_files),
     )
@@ -194,6 +249,21 @@ def find_unsafe_command_execution_findings(
         severity=Severity.WARNING,
         message=COMMAND_CONFIRMATION_MESSAGE,
         predicate=_contains_unsafe_command_execution_guidance,
+    )
+
+
+def find_runtime_network_llm_dependency_findings(
+    repository_root: Path,
+    instruction_files: tuple[InstructionFile, ...],
+) -> tuple[Finding, ...]:
+    """Return runtime network, LLM, or external API dependency findings."""
+    return _find_line_findings(
+        repository_root,
+        instruction_files,
+        rule_id=RUNTIME_NETWORK_LLM_RULE_ID,
+        severity=Severity.WARNING,
+        message=RUNTIME_NETWORK_LLM_MESSAGE,
+        predicate=_contains_runtime_network_llm_dependency_guidance,
     )
 
 
@@ -351,6 +421,19 @@ def _contains_unsafe_command_execution_guidance(line: str) -> bool:
     )
 
 
+def _contains_runtime_network_llm_dependency_guidance(line: str) -> bool:
+    has_runtime_network_llm_dependency = any(
+        pattern.search(line) is not None for pattern in RUNTIME_NETWORK_LLM_PATTERNS
+    )
+    if not has_runtime_network_llm_dependency:
+        return False
+
+    return not any(
+        pattern.search(line) is not None
+        for pattern in NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS
+    )
+
+
 def _contains_unsupported_claim(line: str) -> bool:
     has_claim = any(
         pattern.search(line) is not None for pattern in UNSUPPORTED_CLAIM_PATTERNS
@@ -372,11 +455,15 @@ __all__ = [
     "COMMAND_CONFIRMATION_PATTERNS",
     "COMMAND_CONFIRMATION_RULE_ID",
     "NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS",
+    "NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS",
     "NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS",
     "NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS",
     "REVIEW_CI_BYPASS_MESSAGE",
     "REVIEW_CI_BYPASS_PATTERNS",
     "REVIEW_CI_BYPASS_RULE_ID",
+    "RUNTIME_NETWORK_LLM_MESSAGE",
+    "RUNTIME_NETWORK_LLM_PATTERNS",
+    "RUNTIME_NETWORK_LLM_RULE_ID",
     "SECRET_BOUNDARY_MESSAGE",
     "SECRET_BOUNDARY_PATTERNS",
     "SECRET_BOUNDARY_RULE_ID",
@@ -385,6 +472,7 @@ __all__ = [
     "UNSUPPORTED_CLAIM_RULE_ID",
     "find_governance_findings",
     "find_unsafe_command_execution_findings",
+    "find_runtime_network_llm_dependency_findings",
     "find_missing_authority_scope_findings",
     "find_missing_secret_boundary_findings",
     "find_review_ci_bypass_findings",
