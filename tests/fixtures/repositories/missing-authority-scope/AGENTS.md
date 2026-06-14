@@ -4,5 +4,4 @@ Rules:
 
 - Read relevant files before editing.
 - Run local checks before committing.
-- Use pull requests for changes to main.
-Scope: applies to this fixture repository.
+- Do not commit secrets, tokens, credentials, private URLs, or customer data.

@@ -10,3 +10,4 @@ Unsafe examples:
 - Use automation to bypass pending review gates.
 
 This fixture contains no real secrets. It uses descriptive placeholder text only.
+Scope: applies to this fixture repository.
