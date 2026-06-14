@@ -419,6 +419,89 @@ class CliTests(unittest.TestCase):
         self.assertIn("- AGENTS.md [backup-and-replace]", text)
         self.assertIn("backup: AGENTS.md.agent-rules-kit.bak", text)
 
+    def test_check_console_reports_unsupported_security_claim_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "unsupported-claim")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV006 [warning] AGENTS.md:5", text)
+        self.assertIn("AGENTS.md:6", text)
+        self.assertIn(
+            "Instruction file may contain an unsupported security or maturity claim.",
+            text,
+        )
+
+    def test_check_json_reports_unsupported_security_claim_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "unsupported-claim"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 2)
+        self.assertEqual(len(payload["findings"]), 2)
+        self.assertEqual(payload["findings"][0]["rule_id"], "AIRK-GOV006")
+        self.assertEqual(payload["findings"][0]["severity"], "warning")
+        self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
+        self.assertEqual(payload["findings"][0]["line"], 5)
+        self.assertEqual(payload["findings"][1]["line"], 6)
+
+    def test_check_markdown_reports_unsupported_security_claim_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "unsupported-claim"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 2", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV006 | warning | AGENTS.md:5 |", text)
+        self.assertIn("| AIRK-GOV006 | warning | AGENTS.md:6 |", text)
+
+    def test_check_json_reports_empty_findings_for_clean_fixture(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "single-agent"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 0)
+        self.assertEqual(payload["findings"], [])
+
+
 
 if __name__ == "__main__":
     unittest.main()

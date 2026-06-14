@@ -10,6 +10,8 @@ from pathlib import Path
 
 from agent_rules_kit import __version__
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
+from agent_rules_kit.findings import Finding
+from agent_rules_kit.governance import find_unsupported_claim_findings
 from agent_rules_kit.init_plan import InitPlan, build_init_plan
 from agent_rules_kit.init_write import InitWriteResult, write_init_files
 from agent_rules_kit.redaction import redact_secret_like_values
@@ -111,14 +113,20 @@ def _run_check(repository_root: Path, *, output_format: str = "console") -> int:
         return 2
 
     status = "ok" if instruction_files else "no_instruction_files"
-    payload = _build_check_payload(repository_root, instruction_files, status=status)
+    findings = find_unsupported_claim_findings(repository_root, instruction_files)
+    payload = _build_check_payload(
+        repository_root,
+        instruction_files,
+        findings=findings,
+        status=status,
+    )
 
     if output_format == "json":
         _print_json(payload)
     elif output_format == "markdown":
         _print_markdown(payload)
     else:
-        return _print_console_check(repository_root, instruction_files)
+        return _print_console_check(repository_root, instruction_files, findings)
 
     return 0 if instruction_files else 1
 
@@ -126,6 +134,7 @@ def _run_check(repository_root: Path, *, output_format: str = "console") -> int:
 def _print_console_check(
     repository_root: Path,
     instruction_files: tuple[InstructionFile, ...],
+    findings: tuple[Finding, ...],
 ) -> int:
     print(f"agent-rules-kit check: {repository_root}")
 
@@ -136,6 +145,15 @@ def _print_console_check(
     print(f"Found {len(instruction_files)} supported instruction file(s):")
     for instruction_file in instruction_files:
         print(f"- {instruction_file.path} [{instruction_file.kind.value}]")
+
+    if findings:
+        print("Findings:")
+        for finding in findings:
+            location = _format_finding_location(finding)
+            print(
+                f"- {finding.rule_id} [{finding.severity.value}] "
+                f"{location} - {redact_secret_like_values(finding.message)}"
+            )
 
     return 0
 
@@ -193,6 +211,7 @@ def _build_check_payload(
     repository_root: Path,
     instruction_files: tuple[InstructionFile, ...],
     *,
+    findings: tuple[Finding, ...],
     status: str,
 ) -> dict[str, object]:
     return {
@@ -208,7 +227,9 @@ def _build_check_payload(
         ],
         "summary": {
             "supported_instruction_file_count": len(instruction_files),
+            "finding_count": len(findings),
         },
+        "findings": [_build_finding_payload(finding) for finding in findings],
         "error": None,
     }
 
@@ -224,7 +245,9 @@ def _build_check_error_payload(
         "instruction_files": [],
         "summary": {
             "supported_instruction_file_count": 0,
+            "finding_count": 0,
         },
+        "findings": [],
         "error": {
             "message": redact_secret_like_values(str(error)),
         },
@@ -244,6 +267,7 @@ def _print_markdown(payload: dict[str, object]) -> None:
         "- Supported instruction files: "
         f"{payload['summary']['supported_instruction_file_count']}"
     )
+    print(f"- Findings: {payload['summary']['finding_count']}")
 
     error = payload["error"]
     if error is not None:
@@ -264,6 +288,51 @@ def _print_markdown(payload: dict[str, object]) -> None:
         path = _markdown_value(str(instruction_file["path"]))
         kind = _markdown_value(str(instruction_file["kind"]))
         print(f"| {path} | {kind} |")
+
+    findings = payload["findings"]
+    if findings:
+        print()
+        print("## Findings")
+        print()
+        print("| Rule | Severity | Location | Message |")
+        print("| --- | --- | --- | --- |")
+        for finding in findings:
+            rule_id = _markdown_value(str(finding["rule_id"]))
+            severity = _markdown_value(str(finding["severity"]))
+            location = _markdown_value(_format_finding_payload_location(finding))
+            message = _markdown_value(str(finding["message"]))
+            print(f"| {rule_id} | {severity} | {location} | {message} |")
+
+
+def _build_finding_payload(finding: Finding) -> dict[str, str | int]:
+    payload = finding.to_dict()
+
+    if "message" in payload:
+        payload["message"] = redact_secret_like_values(str(payload["message"]))
+    if "path" in payload:
+        payload["path"] = redact_secret_like_values(str(payload["path"]))
+
+    return payload
+
+
+def _format_finding_location(finding: Finding) -> str:
+    if finding.path is None:
+        return "repository"
+    if finding.line is None:
+        return redact_secret_like_values(finding.path)
+    return f"{redact_secret_like_values(finding.path)}:{finding.line}"
+
+
+def _format_finding_payload_location(finding: dict[str, object]) -> str:
+    path_value = finding.get("path")
+    if path_value is None:
+        return "repository"
+
+    line_value = finding.get("line")
+    if line_value is None:
+        return str(path_value)
+
+    return f"{path_value}:{line_value}"
 
 
 def _markdown_value(value: str) -> str:
