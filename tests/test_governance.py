@@ -7,6 +7,7 @@ from pathlib import Path
 from agent_rules_kit.discovery import discover_instruction_files
 from agent_rules_kit.governance import (
     find_governance_findings,
+    find_missing_secret_boundary_findings,
     find_review_ci_bypass_findings,
     find_unsupported_claim_findings,
 )
@@ -137,6 +138,54 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(findings, ())
 
+
+    def test_reports_missing_secret_handling_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- Read relevant files before editing.",
+                        "- Run local checks before committing.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_missing_secret_boundary_findings(repository, instruction_files)
+
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-GOV002"])
+        self.assertEqual([finding.path for finding in findings], ["AGENTS.md"])
+        self.assertEqual([finding.line for finding in findings], [None])
+
+    def test_ignores_files_with_secret_handling_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- Do not commit secrets, tokens, credentials, private URLs, or customer data.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_missing_secret_boundary_findings(repository, instruction_files)
+
+        self.assertEqual(findings, ())
+
     def test_governance_findings_keep_stable_rule_order(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
@@ -160,9 +209,9 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(
             [finding.rule_id for finding in findings],
-            ["AIRK-GOV006", "AIRK-GOV003"],
+            ["AIRK-GOV006", "AIRK-GOV003", "AIRK-GOV002"],
         )
-        self.assertEqual([finding.line for finding in findings], [5, 6])
+        self.assertEqual([finding.line for finding in findings], [5, 6, None])
 
 
 

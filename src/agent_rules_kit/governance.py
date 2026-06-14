@@ -15,6 +15,9 @@ REVIEW_CI_BYPASS_MESSAGE = (
     "Instruction file appears to encourage bypassing review, CI, or safe integration boundaries."
 )
 
+SECRET_BOUNDARY_RULE_ID = "AIRK-GOV002"
+SECRET_BOUNDARY_MESSAGE = "Instruction file may lack an explicit secret-handling boundary."
+
 UNSUPPORTED_CLAIM_RULE_ID = "AIRK-GOV006"
 UNSUPPORTED_CLAIM_MESSAGE = (
     "Instruction file may contain an unsupported security or maturity claim."
@@ -59,6 +62,16 @@ NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
+SECRET_BOUNDARY_PATTERNS: tuple[Pattern[str], ...] = (
+    re.compile(r"\bsecret(?:s)?\b", re.IGNORECASE),
+    re.compile(r"\btoken(?:s)?\b", re.IGNORECASE),
+    re.compile(r"\bcredential(?:s)?\b", re.IGNORECASE),
+    re.compile(r"\bapi[-_ ]?key(?:s)?\b", re.IGNORECASE),
+    re.compile(r"\bprivate\s+(data|url(?:s)?|key(?:s)?)\b", re.IGNORECASE),
+    re.compile(r"\bcustomer\s+data\b", re.IGNORECASE),
+    re.compile(r"\bsensitive\s+(value(?:s)?|information|data)\b", re.IGNORECASE),
+)
+
 UNSUPPORTED_CLAIM_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\bguarantee[sd]?\s+(security|safety)\b", re.IGNORECASE),
     re.compile(r"\bguaranteed\s+(secure|safe|security|safety)\b", re.IGNORECASE),
@@ -101,7 +114,36 @@ def find_governance_findings(
     return (
         *find_unsupported_claim_findings(repository_root, instruction_files),
         *find_review_ci_bypass_findings(repository_root, instruction_files),
+        *find_missing_secret_boundary_findings(repository_root, instruction_files),
     )
+
+
+def find_missing_secret_boundary_findings(
+    repository_root: Path,
+    instruction_files: tuple[InstructionFile, ...],
+) -> tuple[Finding, ...]:
+    """Return findings for files without visible secret-handling guidance."""
+    findings: list[Finding] = []
+
+    for instruction_file in instruction_files:
+        candidate = repository_root / instruction_file.path
+
+        try:
+            text = candidate.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        if not _contains_secret_boundary(text):
+            findings.append(
+                Finding(
+                    rule_id=SECRET_BOUNDARY_RULE_ID,
+                    severity=Severity.WARNING,
+                    message=SECRET_BOUNDARY_MESSAGE,
+                    path=instruction_file.path,
+                )
+            )
+
+    return tuple(findings)
 
 
 def find_review_ci_bypass_findings(
@@ -168,6 +210,10 @@ def _find_line_findings(
     return tuple(findings)
 
 
+def _contains_secret_boundary(text: str) -> bool:
+    return any(pattern.search(text) is not None for pattern in SECRET_BOUNDARY_PATTERNS)
+
+
 def _contains_review_ci_bypass_guidance(line: str) -> bool:
     has_bypass_guidance = any(
         pattern.search(line) is not None for pattern in REVIEW_CI_BYPASS_PATTERNS
@@ -200,10 +246,14 @@ __all__ = [
     "REVIEW_CI_BYPASS_MESSAGE",
     "REVIEW_CI_BYPASS_PATTERNS",
     "REVIEW_CI_BYPASS_RULE_ID",
+    "SECRET_BOUNDARY_MESSAGE",
+    "SECRET_BOUNDARY_PATTERNS",
+    "SECRET_BOUNDARY_RULE_ID",
     "UNSUPPORTED_CLAIM_MESSAGE",
     "UNSUPPORTED_CLAIM_PATTERNS",
     "UNSUPPORTED_CLAIM_RULE_ID",
     "find_governance_findings",
+    "find_missing_secret_boundary_findings",
     "find_review_ci_bypass_findings",
     "find_unsupported_claim_findings",
 ]
