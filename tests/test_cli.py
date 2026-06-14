@@ -558,6 +558,31 @@ class CliTests(unittest.TestCase):
         self.assertNotIn("line", payload["findings"][0])
 
 
+    def test_check_json_reports_missing_authority_scope_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "missing-authority-scope"),
+                    "--format",
+                    "json",
+                ]
+            )
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 1)
+        self.assertEqual(
+            [finding["rule_id"] for finding in payload["findings"]],
+            ["AIRK-GOV001"],
+        )
+        self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
+        self.assertNotIn("line", payload["findings"][0])
+
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -8,3 +8,4 @@ Rules:
 - Keep changes small and reviewable.
 - Run local checks before committing.
 - Do not commit secrets, tokens, credentials, private URLs, or customer data.
+Scope: applies to this fixture repository.
