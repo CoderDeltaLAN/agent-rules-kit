@@ -126,7 +126,7 @@ The published `v0.1.0` GitHub pre-release includes:
 - provides `init --dry-run` for planning baseline instruction files;
 - provides explicit `init --write` behavior for creating or replacing root `AGENTS.md`;
 - backs up existing root `AGENTS.md` before replacement;
-- redacts supported secret-like values in findings;
+- redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
 - avoids executing commands from analyzed repositories.
@@ -292,7 +292,9 @@ See:
     │       └── ci.yml
     ├── docs/
     │   ├── BUILD-PLAN.md
+    │   ├── PRODUCT-STRATEGY.md
     │   ├── THREAT-MODEL.md
+    │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
     │   └── screenshots/
     │       └── readme/
     │           ├── agent-rules-kit-help-check.png
@@ -302,9 +304,11 @@ See:
     │   └── check.sh
     ├── src/
     │   └── agent_rules_kit/
+    │       ├── __init__.py
     │       ├── cli.py
     │       ├── discovery.py
     │       ├── findings.py
+    │       ├── governance.py
     │       ├── init_plan.py
     │       ├── init_write.py
     │       └── redaction.py
@@ -338,7 +342,7 @@ The local check suite verifies:
 
 Current verified local result on `main`:
 
-    Ran 83 tests
+    Ran 93 tests
 
     OK
 
@@ -360,6 +364,7 @@ Current status:
 - wheel and sdist artifacts are attached to the GitHub Release;
 - release assets were downloaded, checksum-verified, installed, and smoke-tested;
 - local CLI behavior implemented;
+- current `main` includes unreleased v0.2 governance diagnostics, structured finding evidence, and evidence redaction;
 - CI active;
 - branch protection active;
 - README distinguishes the published `v0.1.0` pre-release from current `main` / unreleased v0.2 governance behavior;
