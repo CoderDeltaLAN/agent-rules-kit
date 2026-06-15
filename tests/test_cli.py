@@ -502,6 +502,26 @@ class CliTests(unittest.TestCase):
         self.assertEqual(payload["findings"], [])
 
 
+    def test_check_console_reports_review_ci_bypass_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "risky-instructions")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV003 [warning] AGENTS.md:7", text)
+        self.assertIn("AIRK-GOV003 [warning] AGENTS.md:8", text)
+        self.assertIn("AIRK-GOV003 [warning] AGENTS.md:10", text)
+        self.assertIn(
+            "Instruction file appears to encourage bypassing review, CI, or safe integration boundaries.",
+            text,
+        )
+
+
     def test_check_json_reports_review_ci_bypass_findings(self) -> None:
         output = io.StringIO()
 
@@ -530,6 +550,33 @@ class CliTests(unittest.TestCase):
         self.assertEqual(
             [finding["path"] for finding in payload["findings"]],
             ["AGENTS.md", "AGENTS.md", "AGENTS.md"],
+        )
+
+
+    def test_check_markdown_reports_review_ci_bypass_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "risky-instructions"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 3", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV003 | warning | AGENTS.md:7 |", text)
+        self.assertIn("| AIRK-GOV003 | warning | AGENTS.md:8 |", text)
+        self.assertIn("| AIRK-GOV003 | warning | AGENTS.md:10 |", text)
+        self.assertIn(
+            "Instruction file appears to encourage bypassing review, CI, or safe integration boundaries.",
+            text,
         )
 
 
@@ -660,6 +707,24 @@ class CliTests(unittest.TestCase):
         )
 
 
+    def test_check_console_reports_missing_secret_boundary_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "missing-secret-boundary")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV002 [warning] AGENTS.md", text)
+        self.assertIn(
+            "Instruction file may lack an explicit secret-handling boundary.",
+            text,
+        )
+
+
     def test_check_json_reports_missing_secret_boundary_findings(self) -> None:
         output = io.StringIO()
 
@@ -685,6 +750,49 @@ class CliTests(unittest.TestCase):
         self.assertNotIn("line", payload["findings"][0])
 
 
+    def test_check_markdown_reports_missing_secret_boundary_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "missing-secret-boundary"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 1", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV002 | warning | AGENTS.md |", text)
+        self.assertIn(
+            "Instruction file may lack an explicit secret-handling boundary.",
+            text,
+        )
+
+
+    def test_check_console_reports_missing_authority_scope_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["check", str(FIXTURE_ROOT / "missing-authority-scope")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Found 1 supported instruction file(s):", text)
+        self.assertIn("Findings:", text)
+        self.assertIn("AIRK-GOV001 [warning] AGENTS.md", text)
+        self.assertIn(
+            "Instruction file may lack clear scope or authority.",
+            text,
+        )
+
+
     def test_check_json_reports_missing_authority_scope_findings(self) -> None:
         output = io.StringIO()
 
@@ -708,6 +816,31 @@ class CliTests(unittest.TestCase):
         )
         self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
         self.assertNotIn("line", payload["findings"][0])
+
+    def test_check_markdown_reports_missing_authority_scope_findings(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "check",
+                    str(FIXTURE_ROOT / "missing-authority-scope"),
+                    "--format",
+                    "markdown",
+                ]
+            )
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("- Findings: 1", text)
+        self.assertIn("## Findings", text)
+        self.assertIn("| AIRK-GOV001 | warning | AGENTS.md |", text)
+        self.assertIn(
+            "Instruction file may lack clear scope or authority.",
+            text,
+        )
+
 
 
 
