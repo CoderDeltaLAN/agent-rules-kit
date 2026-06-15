@@ -39,6 +39,8 @@
   ·
   <a href="#commands">Commands</a>
   ·
+  <a href="#governance-findings">Governance Findings</a>
+  ·
   <a href="#safety-boundary">Safety Boundary</a>
   ·
   <a href="#quality-gates">Quality Gates</a>
@@ -116,7 +118,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-Current v0.1 behavior includes:
+The published `v0.1.0` GitHub pre-release includes:
 
 - discovers supported AI agent instruction files;
 - reports repository-relative paths;
@@ -128,6 +130,29 @@ Current v0.1 behavior includes:
 - avoids network calls;
 - avoids LLM calls;
 - avoids executing commands from analyzed repositories.
+
+Current `main` also contains unreleased v0.2 governance diagnostics.
+
+These diagnostics are heuristic findings for instruction-file governance. They are meant to flag review-worthy instruction patterns, not to prove that a repository is safe.
+
+---
+
+## Governance Findings
+
+Current `main` includes the following unreleased governance finding rules, in stable evaluation order:
+
+| Rule | Severity | Purpose |
+| --- | --- | --- |
+| `AIRK-GOV006` | `warning` | Flags unsupported security, production-readiness, or maturity claims. |
+| `AIRK-GOV003` | `warning` | Flags guidance that appears to bypass review, CI, PRs, or safe integration. |
+| `AIRK-GOV004` | `warning` | Flags unsafe command execution guidance without an explicit confirmation boundary. |
+| `AIRK-GOV005` | `warning` | Flags runtime network, LLM, or external API dependency guidance that conflicts with local-first boundaries. |
+| `AIRK-GOV002` | `warning` | Flags missing secret-handling boundaries. |
+| `AIRK-GOV001` | `warning` | Flags missing instruction scope or authority. |
+
+Governance findings are intentionally conservative and pattern-based. They may produce false positives or false negatives, and they are not a substitute for maintainer review.
+
+This v0.2 governance behavior is present on `main` but has not been published as a versioned release yet.
 
 ---
 
@@ -148,7 +173,7 @@ It does not:
 - provide complete secret scanning;
 - replace human review.
 
-A clean report means only that the implemented baseline checks did not find a supported issue.
+A clean report means only that the implemented checks did not find a supported issue. It is not proof of safety, completeness, or production readiness.
 
 ---
 
@@ -311,9 +336,9 @@ The local check suite verifies:
 - no trailing whitespace;
 - Git whitespace checks.
 
-Current verified local result:
+Current verified local result on `main`:
 
-    Ran 56 tests
+    Ran 83 tests
 
     OK
 
@@ -337,7 +362,7 @@ Current status:
 - local CLI behavior implemented;
 - CI active;
 - branch protection active;
-- README reflects current behavior only;
+- README distinguishes the published `v0.1.0` pre-release from current `main` / unreleased v0.2 governance behavior;
 - security boundaries documented;
 - threat model documented.
 
