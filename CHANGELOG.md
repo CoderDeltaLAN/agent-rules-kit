@@ -6,12 +6,26 @@ This project has no stable public release yet.
 
 ## [Unreleased]
 
+### Added
+
+- Documented the v0.2 product direction toward local-first AI agent instruction governance.
+- Added the v0.2 governance rules specification for conservative, deterministic instruction-file diagnostics.
+- Added unreleased governance findings for unsupported security or maturity claims, review or CI bypass guidance, unsafe command execution guidance, runtime network or LLM dependency guidance, missing secret-handling boundaries, and missing instruction scope or authority.
+- Added governance finding coverage across console, JSON, and Markdown output paths.
+- Added structured finding evidence for line-based governance findings.
+- Added regression coverage for redacting secret-like values from finding evidence in JSON output.
+
 ### Changed
 
-- Improved README and project metadata for clearer GitHub and Python package discoverability.
-- Added project URLs and more specific package keywords.
-- Updated README status after publishing `v0.1.0` as a GitHub pre-release.
-- Added basic installation guidance for release artifacts.
+- Updated GitHub Actions workflow actions to Node 24-compatible major versions.
+- Preserved the published `v0.1.0` pre-release while documenting unreleased v0.2 governance behavior on `main`.
+
+### Security
+
+- Kept governance diagnostics conservative, heuristic, and pattern-based.
+- Preserved the runtime boundary: read-only by default, no runtime network calls, no runtime LLM calls, and no execution of commands from analyzed repositories.
+- Redacted secret-like values in finding message, path, and evidence payload fields before emitting supported output.
+- Documented that governance findings are not proof that a repository is safe and do not replace maintainer review.
 
 ## [0.1.0] - 2026-06-09
 
