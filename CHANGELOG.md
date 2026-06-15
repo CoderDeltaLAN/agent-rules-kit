@@ -6,20 +6,26 @@ This project has no stable public release yet.
 
 ## [Unreleased]
 
+No unreleased changes yet.
+
+## [0.2.0] - 2026-06-15
+
 ### Added
 
 - Documented the v0.2 product direction toward local-first AI agent instruction governance.
 - Added the v0.2 governance rules specification for conservative, deterministic instruction-file diagnostics.
-- Added unreleased governance findings for unsupported security or maturity claims, review or CI bypass guidance, unsafe command execution guidance, runtime network or LLM dependency guidance, missing secret-handling boundaries, and missing instruction scope or authority.
+- Added governance findings for unsupported security or maturity claims, review or CI bypass guidance, unsafe command execution guidance, runtime network or LLM dependency guidance, missing secret-handling boundaries, and missing instruction scope or authority.
 - Added governance finding coverage across console, JSON, and Markdown output paths.
 - Added golden contract coverage for current governance console, JSON, and Markdown output behavior.
 - Added structured finding evidence for line-based governance findings.
 - Added regression coverage for redacting secret-like values from finding evidence in JSON output.
+- Added v0.2 release-readiness, packaging dry-run, and governance-boundaries evidence documents.
 
 ### Changed
 
 - Updated GitHub Actions workflow actions to Node 24-compatible major versions.
-- Preserved the published `v0.1.0` pre-release while documenting unreleased v0.2 governance behavior on `main`.
+- Preserved the published `v0.1.0` pre-release while preparing v0.2.0 metadata.
+- Updated package metadata from `0.1.0` to `0.2.0`.
 
 ### Security
 
@@ -27,6 +33,8 @@ This project has no stable public release yet.
 - Preserved the runtime boundary: read-only by default, no runtime network calls, no runtime LLM calls, and no execution of commands from analyzed repositories.
 - Redacted secret-like values in finding message, path, and evidence payload fields before emitting supported output.
 - Documented that governance findings are not proof that a repository is safe and do not replace maintainer review.
+- Captured branch protection, required status check, admin enforcement, force-push prevention, deletion prevention, solo-maintainer review profile, and private vulnerability reporting evidence for v0.2 release preparation.
+- Documented that private vulnerability reporting is currently verified as disabled and must not be claimed as enabled.
 
 ## [0.1.0] - 2026-06-09
 

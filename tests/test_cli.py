@@ -20,7 +20,7 @@ class CliTests(unittest.TestCase):
             exit_code = main(["--version"])
 
         self.assertEqual(exit_code, 0)
-        self.assertIn("agent-rules-kit 0.1.0", output.getvalue())
+        self.assertIn("agent-rules-kit 0.2.0", output.getvalue())
 
     def test_help_is_default(self) -> None:
         output = io.StringIO()
