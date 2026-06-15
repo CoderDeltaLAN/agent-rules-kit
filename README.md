@@ -342,9 +342,9 @@ The local check suite verifies:
 
 Current verified local result on `main`:
 
-    Ran 93 tests
+    ./scripts/check.sh passes
 
-    OK
+The exact unit test count may change as coverage evolves. The source of truth is the current `./scripts/check.sh` output and the matching GitHub Actions run for `main`.
 
 CI runs the same local check script through GitHub Actions.
 

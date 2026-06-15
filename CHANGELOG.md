@@ -12,6 +12,7 @@ This project has no stable public release yet.
 - Added the v0.2 governance rules specification for conservative, deterministic instruction-file diagnostics.
 - Added unreleased governance findings for unsupported security or maturity claims, review or CI bypass guidance, unsafe command execution guidance, runtime network or LLM dependency guidance, missing secret-handling boundaries, and missing instruction scope or authority.
 - Added governance finding coverage across console, JSON, and Markdown output paths.
+- Added golden contract coverage for current governance console, JSON, and Markdown output behavior.
 - Added structured finding evidence for line-based governance findings.
 - Added regression coverage for redacting secret-like values from finding evidence in JSON output.
 
