@@ -311,6 +311,8 @@ def _build_finding_payload(finding: Finding) -> dict[str, str | int]:
         payload["message"] = redact_secret_like_values(str(payload["message"]))
     if "path" in payload:
         payload["path"] = redact_secret_like_values(str(payload["path"]))
+    if "evidence" in payload:
+        payload["evidence"] = redact_secret_like_values(str(payload["evidence"]))
 
     return payload
 
