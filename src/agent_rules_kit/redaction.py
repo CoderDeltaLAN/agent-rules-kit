@@ -23,6 +23,14 @@ SECRET_LIKE_PATTERNS: tuple[RedactionPattern, ...] = (
         pattern=re.compile(r"sk-[A-Za-z0-9_-]{12,}"),
     ),
     RedactionPattern(
+        name="anthropic_api_key",
+        pattern=re.compile(r"sk-ant-[A-Za-z0-9_-]{12,}"),
+    ),
+    RedactionPattern(
+        name="jwt_token",
+        pattern=re.compile(r"eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}"),
+    ),
+    RedactionPattern(
         name="github_token",
         pattern=re.compile(r"gh[pousr]_[A-Za-z0-9_]{20,}"),
     ),
