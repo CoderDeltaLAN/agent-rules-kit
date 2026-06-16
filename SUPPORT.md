@@ -1,20 +1,22 @@
 # Support Policy
 
-agent-rules-kit is a pre-release public project with no stable release yet.
+agent-rules-kit has a published `v0.2.0` GitHub Release line, but no stable support or API guarantee yet.
 
 There is no guaranteed support response time.
 
 ## Current status
 
-This project is pre-release software.
+This project is maintained on a best-effort basis.
 
 At this stage:
 
-- no stable public release exists;
-- no stability guarantee exists;
+- `v0.2.0` is the current published GitHub Release line;
+- no stable support or API guarantee exists;
+- no commercial SLA exists;
 - no support response time is promised;
 - no production readiness is claimed;
-- no security guarantees are provided.
+- no security guarantees are provided;
+- PyPI publication is not claimed.
 
 ## What this project is
 
@@ -41,7 +43,7 @@ Before reporting a problem, check:
 - AGENTS.md for workflow and AI assistant rules;
 - SECURITY.md for security boundaries and reporting limits;
 - CONTRIBUTING.md for contribution rules;
-- CHANGELOG.md for unreleased changes.
+- CHANGELOG.md for release history and unreleased changes.
 
 ## Good support requests
 
@@ -72,11 +74,11 @@ The following requests are out of scope unless a maintainer explicitly approves 
 
 Security-sensitive reports should follow SECURITY.md.
 
+Private vulnerability reporting is currently verified as disabled. Do not claim that private vulnerability reporting is enabled.
+
+If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
+
 For non-sensitive security boundary issues, open a GitHub issue with a minimal reproduction.
-
-Do not include secrets, tokens, credentials, cookies, private URLs, customer data, or sensitive repository contents in public issues.
-
-Before a stable public release, the maintainer must define whether GitHub Security Advisories are enabled and what private contact channel should be used.
 
 ## Maintainer note
 
