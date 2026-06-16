@@ -22,6 +22,11 @@ classifiers = [
 ]
 dependencies = []
 
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.8,<1",
+]
+
 [project.urls]
 Repository = "https://github.com/CoderDeltaLAN/agent-rules-kit"
 Issues = "https://github.com/CoderDeltaLAN/agent-rules-kit/issues"
