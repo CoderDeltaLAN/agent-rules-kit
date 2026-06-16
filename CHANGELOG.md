@@ -2,7 +2,7 @@
 
 All notable changes to agent-rules-kit will be documented in this file.
 
-This project has no stable public release yet.
+This project has a published GitHub Release line, but no stable support or API guarantee yet.
 
 ## [Unreleased]
 
