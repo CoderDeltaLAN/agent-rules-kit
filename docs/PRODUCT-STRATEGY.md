@@ -1,12 +1,12 @@
 # Product Strategy Roadmap
 
-This document defines the product direction for agent-rules-kit after the public v0.1.0 pre-release.
+This document defines the product direction for agent-rules-kit after the published v0.2.0 GitHub Release and current post-v0.2.0 main fixes.
 
 It is a strategy document, not an implementation plan for a specific feature. It must not be used to claim capabilities that are not already implemented.
 
 ## Current product truth
 
-agent-rules-kit v0.1.0 is a local Python CLI for repositories that use AI coding agents or assistant-specific instruction files.
+agent-rules-kit has a published v0.2.0 GitHub Release line. Current main contains unreleased post-v0.2.0 fixes intended for a future patch release.
 
 The implemented product currently supports:
 
@@ -16,8 +16,10 @@ The implemented product currently supports:
 - explicit `init --dry-run` planning;
 - explicit `init --write` behavior for root `AGENTS.md`;
 - backup before replacing an existing root `AGENTS.md`;
-- pattern-based redaction for supported secret-like values;
-- local tests, CI, release assets, and documented safety boundaries.
+- conservative governance diagnostics for `AIRK-GOV001` through `AIRK-GOV006`;
+- structured evidence for line-based governance findings;
+- pattern-based redaction for supported secret-like values in supported output paths;
+- local tests, Ruff linting, CI, release assets, and documented safety boundaries.
 
 The implemented product does not yet provide:
 
@@ -32,7 +34,7 @@ The implemented product does not yet provide:
 - dependency or supply-chain scanning;
 - proof that a repository is safe.
 
-The current strength is not feature breadth. The current strength is a narrow local tool with explicit boundaries.
+The current strength is not feature breadth. The current strength is a narrow local tool with explicit boundaries and a published governance baseline.
 
 ## Product hypothesis
 
@@ -150,7 +152,7 @@ Allowed claims:
 - baseline diagnostics for AI agent instruction files;
 - explicit write mode for supported init behavior;
 - pattern-based redaction for supported secret-like values;
-- pre-release support boundary for 0.1.x.
+- best-effort support boundary for the current GitHub Release line.
 
 Forbidden claims:
 
@@ -170,18 +172,20 @@ Any claim that depends on measured results must be backed by tests, fixtures, be
 
 ### v0.2: Governance baseline
 
-Goal: introduce the first narrow governance layer without changing the product into a generator, packager, or security scanner.
+Status: published in v0.2.0, with unreleased post-v0.2.0 fixes on main.
 
-Candidate capabilities:
+Implemented scope:
 
-- detect missing authority or scope sections in instruction files;
-- detect risky instruction phrases related to secrets, direct pushes, ignored CI, destructive commands, network calls, or unsupported security claims;
-- emit findings with severity, rule id, message, path, and optional line number;
-- keep `check` read-only;
-- preserve console, JSON, and Markdown output;
-- keep findings conservative and explainable.
+- missing authority or scope diagnostics;
+- missing secret-handling boundary diagnostics;
+- review or CI bypass diagnostics;
+- unsafe command execution diagnostics;
+- runtime network, LLM, or external API dependency diagnostics;
+- unsupported security or maturity claim diagnostics;
+- structured finding evidence for line-based governance findings;
+- console, JSON, and Markdown output through the existing `check` command.
 
-Non-goals for v0.2:
+Still non-goals for v0.2:
 
 - automatic remediation;
 - broad rewriting;
@@ -260,39 +264,29 @@ Candidate criteria:
 - private vulnerability reporting path or explicit documented alternative;
 - no unsupported security or maturity claims.
 
-## First implementation candidate after strategy
+## Next implementation direction after v0.2
 
-The first implementation candidate after this strategy should be narrow:
+The next implementation phase should be justified against the current repository state, not against the old v0.1 strategy snapshot.
 
-`feat/add-governance-baseline-findings`
+Good next candidates are narrow and evidence-backed:
 
-Possible scope:
+- release and package smoke hardening;
+- additional instruction-file discovery only when official tool documentation supports it;
+- a `doctor` baseline that summarizes existing scan and governance behavior without inventing new capabilities;
+- context budget approximation only after output contracts are stable.
 
-- add a small rule set for instruction governance findings;
-- analyze only supported instruction files already discovered by the current tool;
-- keep `check` read-only;
-- emit findings in existing output formats;
-- include tests and fixtures;
-- avoid a new top-level command unless the existing `check` design becomes unclear.
-
-This candidate must not be implemented until its exact rules, output shape, and non-goals are written down and reviewed.
-
-A safer intermediate phase may be:
-
-`docs/add-v0.2-governance-rules-spec`
-
-That phase would define the initial rules before touching code.
+Any next code phase must preserve local-first behavior, read-only default behavior, no runtime network access, no runtime LLM dependency, no execution of repository commands, and conservative claims.
 
 ## Decision record
 
-Decision: document product strategy before implementing v0.2 features.
+Decision: keep product strategy as the boundary document after v0.2.
 
 Reason:
 
-- the current v0.1 product is narrow and honest;
-- adjacent tools already cover repository packaging, context frameworks, and rule generation;
-- the real product wedge is instruction governance;
-- building code before fixing the product boundary increases the risk of scope drift;
-- a strategy document gives future features a reviewable standard.
+- v0.2.0 already published the first governance baseline;
+- current main contains post-v0.2.0 fixes that should become a future patch release;
+- adjacent tools still cover repository packaging, context frameworks, and broad rule generation better than this project should;
+- the real product wedge remains instruction governance;
+- future features must be justified against this document to avoid scope drift.
 
-The next code phase must be justified against this document.
+The next code phase must be justified against the current repo, current docs, current tests, and current external tool behavior.

@@ -1,12 +1,12 @@
 # Threat Model
 
-This document defines the v0.1 threat model for agent-rules-kit.
+This document defines the threat model for agent-rules-kit. It was last reviewed for the published v0.2.0 release line and the current post-v0.2.0 main state.
 
 It is intentionally narrow. agent-rules-kit is a local CLI for diagnosing AI agent instruction files. It is not a security scanner, malware detector, CI/CD auditor, sandbox, secret manager, or autonomous remediation agent.
 
 ## Scope
 
-In scope for v0.1:
+In scope for the current release line and current main state:
 
 - local repository paths provided by the user;
 - supported agent instruction files such as AGENTS.md, CLAUDE.md, GEMINI.md, Cursor rules, GitHub Copilot instructions, and GitHub instruction files;
@@ -15,7 +15,7 @@ In scope for v0.1:
 - explicit init write behavior for baseline AGENTS.md creation or replacement with backup;
 - secret-like value redaction in findings and output.
 
-Out of scope for v0.1:
+Out of scope:
 
 - network access;
 - LLM calls;
@@ -97,8 +97,8 @@ Risk: repository content or findings could be sent outside the machine.
 
 Mitigation:
 
-- v0.1 runtime behavior has no network access by design;
-- no telemetry, remote API, or LLM call is part of v0.1.
+- runtime behavior has no network access by design;
+- no telemetry, remote API, or LLM call is part of the current runtime design.
 
 ### Misleading security claims
 
@@ -139,7 +139,7 @@ Any such change must include tests and must preserve the documented boundaries.
 
 ## Residual risk
 
-Known residual risks for v0.1:
+Known residual risks:
 
 - redaction patterns may miss unknown or unusual secret formats;
 - diagnostics may be incomplete;
