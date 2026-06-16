@@ -6,7 +6,22 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
-No unreleased changes yet.
+### Fixed
+
+- Tightened governance regex coverage for review/CI bypass, unsafe command guidance, and runtime network or LLM dependency findings.
+- Expanded secret-like token redaction coverage.
+- Added context-aware governance finding suppression so nearby negative guidance can avoid false positives.
+- Added final runtime API phrase parity coverage for GOV005-style local-first boundary checks.
+
+### Changed
+
+- Synced support, security, README, and release-truth documentation after the published `v0.2.0` GitHub Release.
+- Added CLI output examples and governance rules reference documentation after the `v0.2.0` tag.
+
+### Release notes
+
+- These changes are present on `main` after `v0.2.0` and are not part of the published `v0.2.0` release artifacts.
+- The next release should be cut as a new patch release instead of moving the existing `v0.2.0` tag.
 
 ## [0.2.0] - 2026-06-15
 

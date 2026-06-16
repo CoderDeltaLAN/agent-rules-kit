@@ -118,7 +118,9 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-The published `v0.2.0` GitHub Release includes:
+Current `main` includes the published `v0.2.0` baseline plus unreleased post-release fixes intended for a future patch release.
+
+The implemented behavior includes:
 
 - discovers supported AI agent instruction files;
 - reports repository-relative paths;
@@ -131,7 +133,7 @@ The published `v0.2.0` GitHub Release includes:
 - avoids LLM calls;
 - avoids executing commands from analyzed repositories.
 
-The `v0.2.0` release also includes governance diagnostics.
+Governance diagnostics were introduced in `v0.2.0` and have received post-release fixes on `main`.
 
 These diagnostics are heuristic findings for instruction-file governance. They are meant to flag review-worthy instruction patterns, not to prove that a repository is safe.
 
@@ -139,7 +141,7 @@ These diagnostics are heuristic findings for instruction-file governance. They a
 
 ## Governance Findings
 
-The `v0.2.0` release includes the following governance finding rules, in stable evaluation order:
+Current `main` evaluates the following governance finding rules, in stable evaluation order:
 
 | Rule | Severity | Purpose |
 | --- | --- | --- |
@@ -152,7 +154,7 @@ The `v0.2.0` release includes the following governance finding rules, in stable 
 
 Governance findings are intentionally conservative and pattern-based. They may produce false positives or false negatives, and they are not a substitute for maintainer review.
 
-This v0.2 governance behavior is published in the `v0.2.0` GitHub Release.
+The `v0.2.0` GitHub Release introduced this governance rule set. Current `main` may include unreleased fixes and coverage improvements after that tag.
 
 For detailed rule purpose, evidence, limits, and false-positive notes, see `docs/RULES.md`.
 
@@ -365,15 +367,16 @@ The required status check for `main` is:
 Current status:
 
 - `v0.2.0` is published as a GitHub Release;
+- `main` contains unreleased post-`v0.2.0` fixes and documentation updates intended for a future patch release;
 - no stable support or API guarantee yet;
 - release tag `v0.2.0` points to the verified release SHA;
 - wheel and sdist artifacts are attached to the `v0.2.0` GitHub Release;
 - release assets were downloaded, checksum-verified, installed, and smoke-tested;
 - local CLI behavior implemented;
-- v0.2 governance diagnostics, structured finding evidence, and evidence redaction are published in `v0.2.0`;
+- governance diagnostics, structured finding evidence, and evidence redaction are implemented;
 - CI active;
-- branch protection active;
-- README describes the published `v0.2.0` release state and keeps PyPI marked as not published;
+- branch protection was documented in prior release-governance evidence and must be re-verified before the next release;
+- README distinguishes the published `v0.2.0` release from unreleased `main` state and keeps PyPI marked as not published;
 - security boundaries documented;
 - threat model documented.
 
