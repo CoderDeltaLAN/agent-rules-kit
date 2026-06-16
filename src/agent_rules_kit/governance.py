@@ -137,6 +137,17 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
         re.IGNORECASE,
     ),
     re.compile(
+        r"\b(validator|linter|tool|CLI|command|check|runtime|execution)\b"
+        r".{0,120}\b(depends on|requires?|needs?|uses?|using|must use|must call)\b"
+        r".{0,120}\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b"
+        r".{0,120}\b(during execution|at runtime|runtime|for validation|to validate|for analysis|to analyze)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
         r"\b(runtime|check|scan|scanning|audit|analyze|analysis|validation|validate)\b"
         r".{0,120}\b(requires?|needs?|must have|depends on)\b"
         r".{0,100}\b(internet|network|online access|network access)\b",
