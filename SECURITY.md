@@ -6,12 +6,17 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 ## Supported versions
 
-There is no stable supported release yet. The `0.1.x` line is a pre-release support boundary, not a stability guarantee.
+`v0.2.0` is published as a GitHub Release.
+
+The project is still maintained on a best-effort basis. There is no commercial SLA, no guaranteed response time, and no guarantee that every security-relevant issue will be found or fixed.
 
 | Version | Status |
 | --- | --- |
-| 0.1.x | Pre-release / best-effort security fixes |
+| 0.2.x | Current GitHub Release line / best-effort security fixes |
+| 0.1.x | Historical pre-release line / not supported |
 | < 0.1 | Not supported |
+
+This project is not published to PyPI yet. Do not claim PyPI availability until a separate release phase verifies and publishes it.
 
 ## Security boundaries
 
@@ -38,9 +43,9 @@ Use fake examples only.
 
 ## Reporting a vulnerability
 
-This repository is public and has no stable release yet.
+Private vulnerability reporting has been checked and is currently verified as disabled.
 
-Preferred sensitive-reporting path: use GitHub Security Advisories or GitHub private vulnerability reporting when available to the maintainer.
+Do not claim private vulnerability reporting is enabled.
 
 If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
 
@@ -60,14 +65,17 @@ agent-rules-kit does not aim to:
 
 ## Maintainer response
 
-Security response is best-effort for pre-release `0.1.x`. There is no commercial SLA or guaranteed response time.
+Security response is best-effort for the current `0.2.x` GitHub Release line.
 
-Before any stable release, the maintainer must define:
+There is no commercial SLA or guaranteed response time.
+
+Before any broader public distribution, the maintainer should re-check and document:
 
 - supported versions;
 - expected response time;
 - disclosure handling;
-- whether GitHub Security Advisories or private vulnerability reporting are enabled.
+- whether GitHub Security Advisories or private vulnerability reporting are enabled;
+- whether PyPI publication changes the support policy.
 
 ## Safe development rules
 
