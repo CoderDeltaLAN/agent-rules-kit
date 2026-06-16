@@ -118,7 +118,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-The published `v0.1.0` GitHub pre-release includes:
+The published `v0.2.0` GitHub Release includes:
 
 - discovers supported AI agent instruction files;
 - reports repository-relative paths;
@@ -131,7 +131,7 @@ The published `v0.1.0` GitHub pre-release includes:
 - avoids LLM calls;
 - avoids executing commands from analyzed repositories.
 
-Current `main` also contains unreleased v0.2 governance diagnostics.
+The `v0.2.0` release also includes governance diagnostics.
 
 These diagnostics are heuristic findings for instruction-file governance. They are meant to flag review-worthy instruction patterns, not to prove that a repository is safe.
 
@@ -139,7 +139,7 @@ These diagnostics are heuristic findings for instruction-file governance. They a
 
 ## Governance Findings
 
-Current `main` includes the following unreleased governance finding rules, in stable evaluation order:
+The `v0.2.0` release includes the following governance finding rules, in stable evaluation order:
 
 | Rule | Severity | Purpose |
 | --- | --- | --- |
@@ -152,7 +152,7 @@ Current `main` includes the following unreleased governance finding rules, in st
 
 Governance findings are intentionally conservative and pattern-based. They may produce false positives or false negatives, and they are not a substitute for maintainer review.
 
-This v0.2 governance behavior is present on `main` but has not been published as a versioned release yet.
+This v0.2 governance behavior is published in the `v0.2.0` GitHub Release.
 
 ---
 
@@ -179,14 +179,14 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.1.0` is available as GitHub pre-release artifacts.
+`v0.2.0` is available as GitHub Release artifacts.
 
 This project is not published to PyPI yet.
 
-Download the wheel from the `v0.1.0` GitHub Release, then install it in a virtual environment:
+Download the wheel from the `v0.2.0` GitHub Release, then install it in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install ./agent_rules_kit-0.1.0-py3-none-any.whl
+    .venv/bin/python -m pip install ./agent_rules_kit-0.2.0-py3-none-any.whl
     .venv/bin/agent-rules-kit --version
 
 The source tree can still be used directly for development:
@@ -358,16 +358,16 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.1.0` is published as a GitHub pre-release;
+- `v0.2.0` is published as a GitHub Release;
 - no public stable release yet;
-- release tag `v0.1.0` points to the verified release SHA;
-- wheel and sdist artifacts are attached to the GitHub Release;
+- release tag `v0.2.0` points to the verified release SHA;
+- wheel and sdist artifacts are attached to the `v0.2.0` GitHub Release;
 - release assets were downloaded, checksum-verified, installed, and smoke-tested;
 - local CLI behavior implemented;
-- current `main` includes unreleased v0.2 governance diagnostics, structured finding evidence, and evidence redaction;
+- v0.2 governance diagnostics, structured finding evidence, and evidence redaction are published in `v0.2.0`;
 - CI active;
 - branch protection active;
-- README distinguishes the published `v0.1.0` pre-release from current `main` / unreleased v0.2 governance behavior;
+- README describes the published `v0.2.0` release state and keeps PyPI marked as not published;
 - security boundaries documented;
 - threat model documented.
 
