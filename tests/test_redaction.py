@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import unittest
 
-from agent_rules_kit.redaction import REDACTION_TEXT, redact_secret_like_values
+from agent_rules_kit.redaction import (
+    REDACTION_TEXT,
+    SECRET_LIKE_PATTERNS,
+    redact_secret_like_values,
+)
 
 
 class RedactionTests(unittest.TestCase):
@@ -26,6 +30,15 @@ class RedactionTests(unittest.TestCase):
 
         self.assertEqual(redacted, f"anthropic={REDACTION_TEXT}")
         self.assertNotIn(secret, redacted)
+
+    def test_anthropic_like_key_matches_specific_pattern_before_generic_sk_pattern(self) -> None:
+        secret = "sk-ant-api03-" + ("I" * 36)
+
+        first_matching_pattern = next(
+            item for item in SECRET_LIKE_PATTERNS if item.pattern.search(secret)
+        )
+
+        self.assertEqual(first_matching_pattern.name, "anthropic_api_key")
 
     def test_redacts_jwt_like_token(self) -> None:
         secret = "eyJ" + ("A" * 20) + "." + ("B" * 20) + "." + ("C" * 20)

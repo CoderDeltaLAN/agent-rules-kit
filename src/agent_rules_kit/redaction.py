@@ -19,12 +19,12 @@ class RedactionPattern:
 
 SECRET_LIKE_PATTERNS: tuple[RedactionPattern, ...] = (
     RedactionPattern(
-        name="openai_api_key",
-        pattern=re.compile(r"sk-[A-Za-z0-9_-]{12,}"),
-    ),
-    RedactionPattern(
         name="anthropic_api_key",
         pattern=re.compile(r"sk-ant-[A-Za-z0-9_-]{12,}"),
+    ),
+    RedactionPattern(
+        name="openai_api_key",
+        pattern=re.compile(r"sk-[A-Za-z0-9_-]{12,}"),
     ),
     RedactionPattern(
         name="jwt_token",

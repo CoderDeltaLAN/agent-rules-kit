@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Fixed
 
+- Fixed secret redaction pattern order so Anthropic-style `sk-ant-` keys match the specific Anthropic pattern before the generic `sk-` pattern.
 - Tightened governance regex coverage for review/CI bypass, unsafe command guidance, and runtime network or LLM dependency findings.
 - Expanded secret-like token redaction coverage.
 - Added context-aware governance finding suppression so nearby negative guidance can avoid false positives.

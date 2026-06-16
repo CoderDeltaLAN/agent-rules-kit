@@ -33,6 +33,7 @@ SUPPORTED_INSTRUCTION_PATHS = {
 
 DISALLOWED_SECRET_MARKERS = (
     "sk-",
+    "sk-ant-",
     "ghp_",
     "AKIA",
     "-----BEGIN",
