@@ -14,7 +14,12 @@ EXPECTED_FIXTURE_FILES = {
     "multi-agent-overlap/.cursor/rules/agent-rules.mdc",
     "multi-agent-overlap/.github/copilot-instructions.md",
     "multi-agent-overlap/.github/instructions/agents.instructions.md",
+    "missing-authority-scope/AGENTS.md",
+    "missing-secret-boundary/AGENTS.md",
     "risky-instructions/AGENTS.md",
+    "runtime-network-llm/AGENTS.md",
+    "unsafe-command-execution/AGENTS.md",
+    "unsupported-claim/AGENTS.md",
 }
 
 SUPPORTED_INSTRUCTION_PATHS = {
@@ -31,6 +36,9 @@ DISALLOWED_SECRET_MARKERS = (
     "ghp_",
     "AKIA",
     "-----BEGIN",
+    "hf_",
+    "xoxb-",
+    "npm_",
 )
 
 
