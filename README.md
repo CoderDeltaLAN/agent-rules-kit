@@ -154,6 +154,8 @@ Governance findings are intentionally conservative and pattern-based. They may p
 
 This v0.2 governance behavior is published in the `v0.2.0` GitHub Release.
 
+For detailed rule purpose, evidence, limits, and false-positive notes, see `docs/RULES.md`.
+
 ---
 
 ## What This Project Does Not Do
