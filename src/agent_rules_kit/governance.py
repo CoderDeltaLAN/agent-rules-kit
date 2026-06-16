@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from re import Pattern
 
@@ -231,7 +231,34 @@ NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
 )
 
 
-LinePredicate = Callable[[str], bool]
+ContextPredicate = Callable[[Sequence[str], int], bool]
+
+
+def make_context_aware_predicate(
+    trigger_patterns: tuple[Pattern[str], ...],
+    negation_patterns: tuple[Pattern[str], ...],
+    *,
+    context_window: int = 2,
+) -> ContextPredicate:
+    """Return a predicate that evaluates triggers on one line and negations nearby."""
+
+    def predicate(lines: Sequence[str], index: int) -> bool:
+        if index < 0 or index >= len(lines):
+            return False
+
+        if not any(pattern.search(lines[index]) is not None for pattern in trigger_patterns):
+            return False
+
+        start = max(0, index - context_window)
+        end = min(len(lines), index + context_window + 1)
+
+        return not any(
+            pattern.search(lines[context_index]) is not None
+            for context_index in range(start, end)
+            for pattern in negation_patterns
+        )
+
+    return predicate
 
 
 def find_governance_findings(
@@ -260,7 +287,10 @@ def find_unsafe_command_execution_findings(
         rule_id=COMMAND_CONFIRMATION_RULE_ID,
         severity=Severity.WARNING,
         message=COMMAND_CONFIRMATION_MESSAGE,
-        predicate=_contains_unsafe_command_execution_guidance,
+        predicate=make_context_aware_predicate(
+            COMMAND_CONFIRMATION_PATTERNS,
+            NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS,
+        ),
     )
 
 
@@ -275,7 +305,10 @@ def find_runtime_network_llm_dependency_findings(
         rule_id=RUNTIME_NETWORK_LLM_RULE_ID,
         severity=Severity.WARNING,
         message=RUNTIME_NETWORK_LLM_MESSAGE,
-        predicate=_contains_runtime_network_llm_dependency_guidance,
+        predicate=make_context_aware_predicate(
+            RUNTIME_NETWORK_LLM_PATTERNS,
+            NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS,
+        ),
     )
 
 
@@ -346,7 +379,10 @@ def find_review_ci_bypass_findings(
         rule_id=REVIEW_CI_BYPASS_RULE_ID,
         severity=Severity.WARNING,
         message=REVIEW_CI_BYPASS_MESSAGE,
-        predicate=_contains_review_ci_bypass_guidance,
+        predicate=make_context_aware_predicate(
+            REVIEW_CI_BYPASS_PATTERNS,
+            NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS,
+        ),
     )
 
 
@@ -361,7 +397,10 @@ def find_unsupported_claim_findings(
         rule_id=UNSUPPORTED_CLAIM_RULE_ID,
         severity=Severity.WARNING,
         message=UNSUPPORTED_CLAIM_MESSAGE,
-        predicate=_contains_unsupported_claim,
+        predicate=make_context_aware_predicate(
+            UNSUPPORTED_CLAIM_PATTERNS,
+            NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS,
+        ),
     )
 
 
@@ -372,7 +411,7 @@ def _find_line_findings(
     rule_id: str,
     severity: Severity,
     message: str,
-    predicate: LinePredicate,
+    predicate: ContextPredicate,
 ) -> tuple[Finding, ...]:
     findings: list[Finding] = []
 
@@ -384,15 +423,17 @@ def _find_line_findings(
         except UnicodeDecodeError:
             continue
 
-        for line_number, line in enumerate(text.splitlines(), start=1):
-            if predicate(line):
+        lines = text.splitlines()
+
+        for index, line in enumerate(lines):
+            if predicate(lines, index):
                 findings.append(
                     Finding(
                         rule_id=rule_id,
                         severity=severity,
                         message=message,
                         path=instruction_file.path,
-                        line=line_number,
+                        line=index + 1,
                         evidence=line,
                     )
                 )
@@ -408,59 +449,9 @@ def _contains_authority_scope_boundary(text: str) -> bool:
     return any(pattern.search(text) is not None for pattern in AUTHORITY_SCOPE_PATTERNS)
 
 
-def _contains_review_ci_bypass_guidance(line: str) -> bool:
-    has_bypass_guidance = any(
-        pattern.search(line) is not None for pattern in REVIEW_CI_BYPASS_PATTERNS
-    )
-    if not has_bypass_guidance:
-        return False
-
-    return not any(
-        pattern.search(line) is not None
-        for pattern in NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS
-    )
-
-
-def _contains_unsafe_command_execution_guidance(line: str) -> bool:
-    has_unsafe_command_guidance = any(
-        pattern.search(line) is not None for pattern in COMMAND_CONFIRMATION_PATTERNS
-    )
-    if not has_unsafe_command_guidance:
-        return False
-
-    return not any(
-        pattern.search(line) is not None
-        for pattern in NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS
-    )
-
-
-def _contains_runtime_network_llm_dependency_guidance(line: str) -> bool:
-    has_runtime_network_llm_dependency = any(
-        pattern.search(line) is not None for pattern in RUNTIME_NETWORK_LLM_PATTERNS
-    )
-    if not has_runtime_network_llm_dependency:
-        return False
-
-    return not any(
-        pattern.search(line) is not None
-        for pattern in NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS
-    )
-
-
-def _contains_unsupported_claim(line: str) -> bool:
-    has_claim = any(
-        pattern.search(line) is not None for pattern in UNSUPPORTED_CLAIM_PATTERNS
-    )
-    if not has_claim:
-        return False
-
-    return not any(
-        pattern.search(line) is not None
-        for pattern in NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS
-    )
-
-
 __all__ = [
+    "ContextPredicate",
+    "make_context_aware_predicate",
     "AUTHORITY_SCOPE_MESSAGE",
     "AUTHORITY_SCOPE_PATTERNS",
     "AUTHORITY_SCOPE_RULE_ID",
