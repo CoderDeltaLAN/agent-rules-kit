@@ -141,6 +141,29 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(findings, ())
 
+    def test_ignores_adjacent_negative_guidance_about_review_ci_bypass(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- Do not bypass reviews or CI.",
+                        "- Commit directly to main.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_review_ci_bypass_findings(repository, instruction_files)
+
+        self.assertEqual(findings, ())
+
 
     def test_reports_unsafe_command_execution_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -265,6 +288,29 @@ class GovernanceFindingTests(unittest.TestCase):
                         "- Supported instruction files include CLAUDE.md and GEMINI.md.",
                         "- A human may use ChatGPT or Claude for planning, with no secrets and human review.",
                         "- Use pull requests and GitHub CI before merge.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_runtime_network_llm_dependency_findings(repository, instruction_files)
+
+        self.assertEqual(findings, ())
+
+    def test_ignores_adjacent_negative_guidance_about_runtime_network_llm(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- Do not call LLMs, external APIs, or network services at runtime.",
+                        "- The check command must call an LLM API to audit the repository.",
                     ]
                 )
                 + "\n",
