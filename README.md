@@ -342,6 +342,7 @@ The local check suite verifies:
 
 - Python syntax;
 - unit tests;
+- Ruff lint checks;
 - UTF-8 text files;
 - LF line endings;
 - final newline;
@@ -354,7 +355,7 @@ Current verified local result on `main`:
 
 The exact unit test count may change as coverage evolves. The source of truth is the current `./scripts/check.sh` output and the matching GitHub Actions run for `main`.
 
-CI runs the same local check script through GitHub Actions.
+CI installs project development dependencies and then runs the same local check script through GitHub Actions.
 
 The required status check for `main` is:
 

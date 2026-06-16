@@ -15,6 +15,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Added Ruff linting to local checks and CI by installing project development dependencies before running `./scripts/check.sh`.
 - Synced support, security, README, and release-truth documentation after the published `v0.2.0` GitHub Release.
 - Added CLI output examples and governance rules reference documentation after the `v0.2.0` tag.
 
