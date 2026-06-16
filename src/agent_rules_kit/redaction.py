@@ -31,6 +31,18 @@ SECRET_LIKE_PATTERNS: tuple[RedactionPattern, ...] = (
         pattern=re.compile(r"AKIA[0-9A-Z]{16}"),
     ),
     RedactionPattern(
+        name="huggingface_token",
+        pattern=re.compile(r"hf_[A-Za-z0-9]{20,}"),
+    ),
+    RedactionPattern(
+        name="slack_token",
+        pattern=re.compile(r"xox[bpsa]-[A-Za-z0-9-]{10,}"),
+    ),
+    RedactionPattern(
+        name="npm_token",
+        pattern=re.compile(r"npm_[A-Za-z0-9]{20,}"),
+    ),
+    RedactionPattern(
         name="private_key_block",
         pattern=re.compile(
             r"-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----",
