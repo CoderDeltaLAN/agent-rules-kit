@@ -7,6 +7,9 @@ python -m compileall -q src tests
 printf '\n== unit tests ==\n'
 PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'
 
+printf '\n== ruff ==\n'
+python -m ruff check .
+
 printf '\n== text hygiene ==\n'
 python - <<'PY'
 from __future__ import annotations
