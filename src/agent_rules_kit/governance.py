@@ -77,7 +77,8 @@ NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
 
 COMMAND_CONFIRMATION_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\brm\s+-[A-Za-z]*r[A-Za-z]*f\b|\brm\s+-[A-Za-z]*f[A-Za-z]*r\b", re.IGNORECASE),
-    re.compile(r"\bsudo\b.{0,80}\b(default|normal|routine|workflow|always|use)\b", re.IGNORECASE),
+    re.compile(r"\b(use|using|run|execute|invoke|always)\b.{0,80}\bsudo\b", re.IGNORECASE),
+    re.compile(r"\bsudo\b.{0,80}\b(default|normal|routine|workflow|always)\b", re.IGNORECASE),
     re.compile(r"\bchmod\s+-R\s+(777|[0-7]{3,4})\b", re.IGNORECASE),
     re.compile(r"\bchown\s+-R\b", re.IGNORECASE),
     re.compile(r"\b(curl|wget)\b.{0,120}\|\s*(sh|bash)\b", re.IGNORECASE),
@@ -180,7 +181,7 @@ AUTHORITY_SCOPE_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\bauthority\b", re.IGNORECASE),
     re.compile(r"\bprecedence\b", re.IGNORECASE),
     re.compile(r"\bhierarchy\b", re.IGNORECASE),
-    re.compile(r"\boverride(?:s|n|s)?\b", re.IGNORECASE),
+    re.compile(r"\b(override|overrides|overrode|overridden|overriding)\b", re.IGNORECASE),
     re.compile(r"\bappl(?:y|ies)\s+to\b", re.IGNORECASE),
     re.compile(r"\b(repository|repo)[- ]wide\b", re.IGNORECASE),
     re.compile(r"\bpath[- ]specific\b", re.IGNORECASE),
