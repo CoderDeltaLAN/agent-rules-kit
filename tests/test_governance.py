@@ -10,9 +10,16 @@ from agent_rules_kit.governance import (
     find_missing_authority_scope_findings,
     find_missing_secret_boundary_findings,
     find_review_ci_bypass_findings,
-    find_unsafe_command_execution_findings,
     find_runtime_network_llm_dependency_findings,
+    find_unsafe_command_execution_findings,
     find_unsupported_claim_findings,
+)
+
+SECRET_BOUNDARY_GUIDANCE = (
+    "- Do not commit secrets, tokens, credentials, private URLs, or customer data."
+)
+HUMAN_LLM_PLANNING_GUIDANCE = (
+    "- A human may use ChatGPT or Claude for planning, with no secrets and human review."
 )
 
 
@@ -215,7 +222,8 @@ class GovernanceFindingTests(unittest.TestCase):
                         "Rules:",
                         "",
                         "- Do not run destructive commands without explicit human confirmation.",
-                        "- Ask the maintainer before using sudo, rm -rf, chmod -R, or downloaded scripts.",
+                        "- Ask the maintainer before using sudo, rm -rf, chmod -R, "
+                        "or downloaded scripts.",
                         "- Run pytest -q.",
                         "- Run ruff check .",
                         "- Run git diff --check.",
@@ -339,7 +347,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "- The CLI does not use the OpenAI API during execution.",
                         "- Do not commit OPENAI_API_KEY or other API keys.",
                         "- Supported instruction files include CLAUDE.md and GEMINI.md.",
-                        "- A human may use ChatGPT or Claude for planning, with no secrets and human review.",
+                        HUMAN_LLM_PLANNING_GUIDANCE,
                         "- Use pull requests and GitHub CI before merge.",
                     ]
                 )
@@ -411,7 +419,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "Rules:",
                         "",
-                        "- Do not commit secrets, tokens, credentials, private URLs, or customer data.",
+                        SECRET_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",
@@ -443,7 +451,7 @@ class GovernanceFindingTests(unittest.TestCase):
                                 "",
                                 "Rules:",
                                 "",
-                                "- Do not commit secrets, tokens, credentials, private URLs, or customer data.",
+                                SECRET_BOUNDARY_GUIDANCE,
                                 f"- {guidance}",
                             ]
                         )
@@ -468,7 +476,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Read relevant files before editing.",
                         "- Run local checks before committing.",
-                        "- Do not commit secrets, tokens, credentials, private URLs, or customer data.",
+                        SECRET_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",
@@ -497,7 +505,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Read relevant files before editing.",
                         "- Run local checks before committing.",
-                        "- Do not commit secrets, tokens, credentials, private URLs, or customer data.",
+                        SECRET_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",

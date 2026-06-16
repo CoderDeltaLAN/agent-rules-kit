@@ -11,6 +11,19 @@ from agent_rules_kit.cli import main
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "repositories"
 
+REVIEW_CI_BYPASS_MESSAGE = (
+    "Instruction file appears to encourage bypassing review, CI, or safe integration "
+    "boundaries."
+)
+COMMAND_CONFIRMATION_MESSAGE = (
+    "Instruction file appears to encourage unsafe command execution without an explicit "
+    "confirmation boundary."
+)
+RUNTIME_NETWORK_LLM_MESSAGE = (
+    "Instruction file appears to encourage runtime network, LLM, or external API use that "
+    "conflicts with local-first boundaries."
+)
+
 
 class CliTests(unittest.TestCase):
     def test_version_flag_prints_version(self) -> None:
@@ -314,9 +327,10 @@ class CliTests(unittest.TestCase):
     def test_init_requires_explicit_mode(self) -> None:
         output = io.StringIO()
 
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            with redirect_stderr(output):
-                exit_code = main(["init", temporary_directory])
+        with tempfile.TemporaryDirectory() as temporary_directory, redirect_stderr(
+            output
+        ):
+            exit_code = main(["init", temporary_directory])
 
         self.assertEqual(exit_code, 2)
         self.assertIn(
@@ -355,16 +369,17 @@ class CliTests(unittest.TestCase):
     def test_init_rejects_dry_run_and_write_together(self) -> None:
         output = io.StringIO()
 
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            with redirect_stderr(output):
-                exit_code = main(
-                    [
-                        "init",
-                        temporary_directory,
-                        "--dry-run",
-                        "--write",
-                    ]
-                )
+        with tempfile.TemporaryDirectory() as temporary_directory, redirect_stderr(
+            output
+        ):
+            exit_code = main(
+                [
+                    "init",
+                    temporary_directory,
+                    "--dry-run",
+                    "--write",
+                ]
+            )
 
         self.assertEqual(exit_code, 2)
         self.assertIn(
@@ -617,7 +632,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("AIRK-GOV003 [warning] AGENTS.md:8", text)
         self.assertIn("AIRK-GOV003 [warning] AGENTS.md:10", text)
         self.assertIn(
-            "Instruction file appears to encourage bypassing review, CI, or safe integration boundaries.",
+            REVIEW_CI_BYPASS_MESSAGE,
             text,
         )
 
@@ -709,7 +724,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("| AIRK-GOV003 | warning | AGENTS.md:8 |", text)
         self.assertIn("| AIRK-GOV003 | warning | AGENTS.md:10 |", text)
         self.assertIn(
-            "Instruction file appears to encourage bypassing review, CI, or safe integration boundaries.",
+            REVIEW_CI_BYPASS_MESSAGE,
             text,
         )
 
@@ -727,7 +742,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("Findings:", text)
         self.assertIn("AIRK-GOV004 [warning] AGENTS.md:9", text)
         self.assertIn(
-            "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary.",
+            COMMAND_CONFIRMATION_MESSAGE,
             text,
         )
 
@@ -773,7 +788,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("## Findings", text)
         self.assertIn("| AIRK-GOV004 | warning | AGENTS.md:9 |", text)
         self.assertIn(
-            "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary.",
+            COMMAND_CONFIRMATION_MESSAGE,
             text,
         )
 
@@ -790,7 +805,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("Findings:", text)
         self.assertIn("AIRK-GOV005 [warning] AGENTS.md:9", text)
         self.assertIn(
-            "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries.",
+            RUNTIME_NETWORK_LLM_MESSAGE,
             text,
         )
 
@@ -836,7 +851,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("## Findings", text)
         self.assertIn("| AIRK-GOV005 | warning | AGENTS.md:9 |", text)
         self.assertIn(
-            "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries.",
+            RUNTIME_NETWORK_LLM_MESSAGE,
             text,
         )
 
