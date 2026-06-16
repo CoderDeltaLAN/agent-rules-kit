@@ -137,6 +137,11 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
         re.IGNORECASE,
     ),
     re.compile(
+        r"\b(use|call|invoke|query)\b"
+        r".{0,80}\b(Claude API|Anthropic API|OpenAI API|Gemini API|ChatGPT API|LLM API|remote LLM|external LLM)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
         r"\b(validator|linter|tool|CLI|command|check|runtime|execution)\b"
         r".{0,120}\b(depends on|requires?|needs?|uses?|using|must use|must call)\b"
         r".{0,120}\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b",
@@ -145,6 +150,12 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(
         r"\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b"
         r".{0,120}\b(during execution|at runtime|runtime|for validation|to validate|for analysis|to analyze)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(validat(?:e|es|ing|ion)|verif(?:y|ies|ying|ication)|check(?:s|ing)?|analyz(?:e|es|ing|sis))\b"
+        r".{0,80}\b(via|using|through|with|by calling|by querying)\b"
+        r".{0,80}\b(Claude(?:\s+API)?|Anthropic(?:\s+API)?|OpenAI(?:\s+API)?|Gemini(?:\s+API)?|ChatGPT|LLM API|remote API|external API)\b",
         re.IGNORECASE,
     ),
     re.compile(
@@ -163,7 +174,7 @@ NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
     re.compile(
         r"\b(does not|do not|don't|must not|should not|never|avoid|avoids|no)\b"
-        r".{0,140}\b(call|use|depend|send|upload|post|transmit|share)\b"
+        r".{0,140}\b(call|use|depend|requires?|needs?|rely|relies|send|upload|post|transmit|share)\b"
         r".{0,140}\b(network|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|remote services?)\b",
         re.IGNORECASE,
     ),
