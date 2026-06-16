@@ -1,5 +1,8 @@
 # AGENTS.md — agent-rules-kit
 
+Scope: this file applies repository-wide to all work in this repository, unless a more specific nested AGENTS.md exists for a subtree.
+Authority: explicit user instructions come first, then this AGENTS.md, then repository documentation and runbooks.
+
 This file is mandatory for every AI assistant, coding agent, or chat working on this repository.
 
 The repository must be handled with strict CDLAN discipline. Do not improvise a new workflow.
