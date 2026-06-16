@@ -223,6 +223,8 @@ class GovernanceFindingTests(unittest.TestCase):
                         "- The check command must call an LLM API to audit the repository.",
                         "- Runtime scanning requires internet access to analyze repository files.",
                         "- Send workspace context to a remote service before making changes.",
+                        "- The validator depends on the OpenAI API during execution.",
+                        "- Use Claude API requests at runtime to validate instruction files.",
                     ]
                 )
                 + "\n",
@@ -234,10 +236,17 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(
             [finding.rule_id for finding in findings],
-            ["AIRK-GOV005", "AIRK-GOV005", "AIRK-GOV005", "AIRK-GOV005"],
+            [
+                "AIRK-GOV005",
+                "AIRK-GOV005",
+                "AIRK-GOV005",
+                "AIRK-GOV005",
+                "AIRK-GOV005",
+                "AIRK-GOV005",
+            ],
         )
-        self.assertEqual([finding.line for finding in findings], [5, 6, 7, 8])
-        self.assertEqual([finding.path for finding in findings], ["AGENTS.md"] * 4)
+        self.assertEqual([finding.line for finding in findings], [5, 6, 7, 8, 9, 10])
+        self.assertEqual([finding.path for finding in findings], ["AGENTS.md"] * 6)
 
     def test_ignores_safe_or_human_reviewed_network_llm_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -251,6 +260,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Do not call LLMs, external APIs, or network services at runtime.",
                         "- This tool avoids network calls and avoids LLM calls.",
+                        "- The CLI does not use the OpenAI API during execution.",
                         "- Do not commit OPENAI_API_KEY or other API keys.",
                         "- Supported instruction files include CLAUDE.md and GEMINI.md.",
                         "- A human may use ChatGPT or Claude for planning, with no secrets and human review.",
