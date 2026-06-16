@@ -1,6 +1,6 @@
 # Support Policy
 
-agent-rules-kit has a published `v0.2.0` GitHub Release line, but no stable support or API guarantee yet.
+agent-rules-kit has a published `v0.2.0` GitHub Release line and unreleased post-`v0.2.0` fixes on `main`, but no stable support or API guarantee yet.
 
 There is no guaranteed support response time.
 
@@ -11,6 +11,7 @@ This project is maintained on a best-effort basis.
 At this stage:
 
 - `v0.2.0` is the current published GitHub Release line;
+- `main` contains unreleased post-`v0.2.0` fixes intended for a future patch release;
 - no stable support or API guarantee exists;
 - no commercial SLA exists;
 - no support response time is promised;

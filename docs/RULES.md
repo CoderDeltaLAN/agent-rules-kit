@@ -1,6 +1,8 @@
 # Governance Rules Reference
 
-This document describes the governance finding rules published in `agent-rules-kit` v0.2.0.
+This document describes the current governance finding rules on `main`.
+
+`v0.2.0` introduced the governance rule set. Current `main` may include unreleased fixes and coverage improvements after that tag.
 
 The rules are conservative, deterministic, pattern-based diagnostics for supported AI agent instruction files. They are designed to flag review-worthy instruction patterns, not to prove that a repository is safe, compliant, production-ready, or free of secrets.
 
@@ -19,7 +21,7 @@ Governance findings do not execute repository commands, call external APIs, call
 
 ## Stable rule order
 
-`v0.2.0` evaluates governance findings in this order:
+Current `main` evaluates governance findings in this order:
 
 1. `AIRK-GOV006` — unsupported security or maturity claim.
 2. `AIRK-GOV003` — review or CI bypass guidance.

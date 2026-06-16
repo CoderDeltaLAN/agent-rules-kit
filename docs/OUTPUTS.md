@@ -1,6 +1,8 @@
 # Output Examples
 
-This document shows representative `agent-rules-kit` v0.2.0 CLI outputs generated from fixtures in this repository.
+This document shows representative `agent-rules-kit` CLI outputs generated from fixtures in the current repository state.
+
+`v0.2.0` release artifacts may differ from unreleased `main` if post-release fixes have not yet been cut into a new release.
 
 The examples document output shape, exit codes, and redaction expectations. They are not a claim that the analyzed repository is safe, complete, production-ready, compliant, or free of secrets.
 

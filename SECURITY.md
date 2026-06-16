@@ -8,6 +8,8 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 `v0.2.0` is published as a GitHub Release.
 
+Current `main` contains unreleased post-`v0.2.0` fixes intended for a future patch release.
+
 The project is still maintained on a best-effort basis. There is no commercial SLA, no guaranteed response time, and no guarantee that every security-relevant issue will be found or fixed.
 
 | Version | Status |
