@@ -359,7 +359,7 @@ The required status check for `main` is:
 Current status:
 
 - `v0.2.0` is published as a GitHub Release;
-- no public stable release yet;
+- no stable support or API guarantee yet;
 - release tag `v0.2.0` points to the verified release SHA;
 - wheel and sdist artifacts are attached to the `v0.2.0` GitHub Release;
 - release assets were downloaded, checksum-verified, installed, and smoke-tested;
