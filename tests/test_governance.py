@@ -271,6 +271,59 @@ class GovernanceFindingTests(unittest.TestCase):
         self.assertEqual([finding.line for finding in findings], [5, 6, 7, 8, 9, 10])
         self.assertEqual([finding.path for finding in findings], ["AGENTS.md"] * 6)
 
+    def test_reports_gold_runtime_api_phrase_variants(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- use the Claude API for validation.",
+                        "- call the OpenAI API to check results.",
+                        "- This check requires the OpenAI API.",
+                        "- analysis needs Claude API to run.",
+                        "- validate changes via Claude API.",
+                        "- verify output using OpenAI API.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_runtime_network_llm_dependency_findings(repository, instruction_files)
+
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-GOV005"] * 6)
+        self.assertEqual([finding.line for finding in findings], [5, 6, 7, 8, 9, 10])
+        self.assertEqual([finding.path for finding in findings], ["AGENTS.md"] * 6)
+
+    def test_ignores_adjacent_negative_runtime_api_requirement_guidance(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# AGENTS.md",
+                        "",
+                        "Rules:",
+                        "",
+                        "- Do not require Claude API or external APIs at runtime.",
+                        "- This check requires the OpenAI API.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_runtime_network_llm_dependency_findings(repository, instruction_files)
+
+        self.assertEqual(findings, ())
+
+
     def test_ignores_safe_or_human_reviewed_network_llm_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
