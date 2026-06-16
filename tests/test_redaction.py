@@ -45,6 +45,30 @@ class RedactionTests(unittest.TestCase):
         self.assertEqual(redacted, f"key:\n{REDACTION_TEXT}")
         self.assertNotIn("abc123", redacted)
 
+    def test_redacts_huggingface_like_token(self) -> None:
+        secret = "hf_" + ("F" * 36)
+
+        redacted = redact_secret_like_values(f"huggingface={secret}")
+
+        self.assertEqual(redacted, f"huggingface={REDACTION_TEXT}")
+        self.assertNotIn(secret, redacted)
+
+    def test_redacts_slack_like_token(self) -> None:
+        secret = "xoxb-" + ("1" * 12) + "-" + ("2" * 12) + "-" + ("G" * 24)
+
+        redacted = redact_secret_like_values(f"slack={secret}")
+
+        self.assertEqual(redacted, f"slack={REDACTION_TEXT}")
+        self.assertNotIn(secret, redacted)
+
+    def test_redacts_npm_like_token(self) -> None:
+        secret = "npm_" + ("H" * 36)
+
+        redacted = redact_secret_like_values(f"npm={secret}")
+
+        self.assertEqual(redacted, f"npm={REDACTION_TEXT}")
+        self.assertNotIn(secret, redacted)
+
     def test_redacts_multiple_secret_like_values(self) -> None:
         openai_like = "sk-" + ("D" * 24)
         github_like = "gho_" + ("E" * 36)
