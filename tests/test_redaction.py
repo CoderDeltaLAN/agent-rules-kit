@@ -19,6 +19,22 @@ class RedactionTests(unittest.TestCase):
         self.assertEqual(redacted, f"token={REDACTION_TEXT}")
         self.assertNotIn(secret, redacted)
 
+    def test_redacts_anthropic_like_key(self) -> None:
+        secret = "sk-ant-api03-" + ("I" * 36)
+
+        redacted = redact_secret_like_values(f"anthropic={secret}")
+
+        self.assertEqual(redacted, f"anthropic={REDACTION_TEXT}")
+        self.assertNotIn(secret, redacted)
+
+    def test_redacts_jwt_like_token(self) -> None:
+        secret = "eyJ" + ("A" * 20) + "." + ("B" * 20) + "." + ("C" * 20)
+
+        redacted = redact_secret_like_values(f"jwt={secret}")
+
+        self.assertEqual(redacted, f"jwt={REDACTION_TEXT}")
+        self.assertNotIn(secret, redacted)
+
     def test_redacts_github_like_token(self) -> None:
         secret = "ghp_" + ("B" * 36)
 
