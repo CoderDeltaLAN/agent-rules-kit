@@ -156,6 +156,8 @@ This v0.2 governance behavior is published in the `v0.2.0` GitHub Release.
 
 For detailed rule purpose, evidence, limits, and false-positive notes, see `docs/RULES.md`.
 
+For CLI output examples in console, JSON, and Markdown formats, see `docs/OUTPUTS.md`.
+
 ---
 
 ## What This Project Does Not Do
@@ -294,7 +296,9 @@ See:
     │       └── ci.yml
     ├── docs/
     │   ├── BUILD-PLAN.md
+    │   ├── OUTPUTS.md
     │   ├── PRODUCT-STRATEGY.md
+    │   ├── RULES.md
     │   ├── THREAT-MODEL.md
     │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
     │   └── screenshots/
