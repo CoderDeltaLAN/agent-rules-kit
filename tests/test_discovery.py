@@ -63,9 +63,10 @@ class InstructionDiscoveryTests(unittest.TestCase):
             discover_instruction_files(FIXTURE_ROOT / "missing-repo")
 
     def test_discovery_rejects_file_root(self) -> None:
-        with tempfile.NamedTemporaryFile() as temporary_file:
-            with self.assertRaises(ValueError):
-                discover_instruction_files(temporary_file.name)
+        with tempfile.NamedTemporaryFile() as temporary_file, self.assertRaises(
+            ValueError
+        ):
+            discover_instruction_files(temporary_file.name)
 
 
 if __name__ == "__main__":

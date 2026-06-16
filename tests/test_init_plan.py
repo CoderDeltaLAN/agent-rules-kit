@@ -42,9 +42,10 @@ class InitPlanTests(unittest.TestCase):
                 build_init_plan(missing_root)
 
     def test_build_init_plan_rejects_file_root(self) -> None:
-        with tempfile.NamedTemporaryFile() as temporary_file:
-            with self.assertRaises(ValueError):
-                build_init_plan(temporary_file.name)
+        with tempfile.NamedTemporaryFile() as temporary_file, self.assertRaises(
+            ValueError
+        ):
+            build_init_plan(temporary_file.name)
 
 
 if __name__ == "__main__":

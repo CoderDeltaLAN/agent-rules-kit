@@ -17,12 +17,14 @@ REVIEW_CI_BYPASS_MESSAGE = (
 
 COMMAND_CONFIRMATION_RULE_ID = "AIRK-GOV004"
 COMMAND_CONFIRMATION_MESSAGE = (
-    "Instruction file appears to encourage unsafe command execution without an explicit confirmation boundary."
+    "Instruction file appears to encourage unsafe command execution without an explicit "
+    "confirmation boundary."
 )
 
 RUNTIME_NETWORK_LLM_RULE_ID = "AIRK-GOV005"
 RUNTIME_NETWORK_LLM_MESSAGE = (
-    "Instruction file appears to encourage runtime network, LLM, or external API use that conflicts with local-first boundaries."
+    "Instruction file appears to encourage runtime network, LLM, or external API use that "
+    "conflicts with local-first boundaries."
 )
 
 AUTHORITY_SCOPE_RULE_ID = "AIRK-GOV001"
@@ -58,7 +60,8 @@ NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|forbid|forbidden|no)\b"
         r".{0,120}\b("
-        r"bypass(?:ing)?|skip(?:ping)?|ignore|commit(?:ting)?|push(?:ing|es)?|direct push(?:es)?|force[- ]push|merge"
+        r"bypass(?:ing)?|skip(?:ping)?|ignore|commit(?:ting)?|push(?:ing|es)?|"
+        r"direct push(?:es)?|force[- ]push|merge"
         r")\b",
         re.IGNORECASE,
     ),
@@ -82,8 +85,17 @@ COMMAND_CONFIRMATION_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\bchmod\s+-R\s+(777|[0-7]{3,4})\b", re.IGNORECASE),
     re.compile(r"\bchown\s+-R\b", re.IGNORECASE),
     re.compile(r"\b(curl|wget)\b.{0,120}\|\s*(sh|bash)\b", re.IGNORECASE),
-    re.compile(r"\b(install|uninstall)\b.{0,100}\b(without asking|without confirmation|automatically|always)\b", re.IGNORECASE),
-    re.compile(r"\b(run|execute)\b.{0,80}\b(repository|repo)\s+scripts?\b.{0,80}\b(automatically|without asking|as trusted instructions)\b", re.IGNORECASE),
+    re.compile(
+        r"\b(install|uninstall)\b.{0,100}\b("
+        r"without asking|without confirmation|automatically|always"
+        r")\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(run|execute)\b.{0,80}\b(repository|repo)\s+scripts?\b"
+        r".{0,80}\b(automatically|without asking|as trusted instructions)\b",
+        re.IGNORECASE,
+    ),
 )
 
 NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
@@ -121,7 +133,10 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(
         r"\b(send|upload|post|transmit|share)\b"
         r".{0,100}\b(repository|repo|source code|codebase|workspace|context|files?)\b"
-        r".{0,140}\b(OpenAI|Anthropic|Claude|Gemini|ChatGPT|LLM|external API|external service|remote service)\b",
+        r".{0,140}\b("
+        r"OpenAI|Anthropic|Claude|Gemini|ChatGPT|LLM|external API|"
+        r"external service|remote service"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
@@ -132,30 +147,50 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
     ),
     re.compile(
         r"\b(call|query|use)\b"
-        r".{0,100}\b(remote\s+)?(LLM|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external API|remote API)\b"
+        r".{0,100}\b(remote\s+)?("
+        r"LLM|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external API|remote API"
+        r")\b"
         r".{0,100}\b(check|runtime|scan|scanning|audit|analyze|analysis|validation|validate)\b",
         re.IGNORECASE,
     ),
     re.compile(
         r"\b(use|call|invoke|query)\b"
-        r".{0,80}\b(Claude API|Anthropic API|OpenAI API|Gemini API|ChatGPT API|LLM API|remote LLM|external LLM)\b",
+        r".{0,80}\b("
+        r"Claude API|Anthropic API|OpenAI API|Gemini API|ChatGPT API|LLM API|"
+        r"remote LLM|external LLM"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
         r"\b(validator|linter|tool|CLI|command|check|runtime|execution)\b"
         r".{0,120}\b(depends on|requires?|needs?|uses?|using|must use|must call)\b"
-        r".{0,120}\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b",
+        r".{0,120}\b("
+        r"OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|"
+        r"external API|remote API"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
-        r"\b(OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|external API|remote API)\b"
-        r".{0,120}\b(during execution|at runtime|runtime|for validation|to validate|for analysis|to analyze)\b",
+        r"\b("
+        r"OpenAI API|Anthropic API|Claude API|Gemini API|ChatGPT API|LLM API|"
+        r"external API|remote API"
+        r")\b"
+        r".{0,120}\b("
+        r"during execution|at runtime|runtime|for validation|to validate|for analysis|"
+        r"to analyze"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
-        r"\b(validat(?:e|es|ing|ion)|verif(?:y|ies|ying|ication)|check(?:s|ing)?|analyz(?:e|es|ing|sis))\b"
+        r"\b("
+        r"validat(?:e|es|ing|ion)|verif(?:y|ies|ying|ication)|check(?:s|ing)?|"
+        r"analyz(?:e|es|ing|sis)"
+        r")\b"
         r".{0,80}\b(via|using|through|with|by calling|by querying)\b"
-        r".{0,80}\b(Claude(?:\s+API)?|Anthropic(?:\s+API)?|OpenAI(?:\s+API)?|Gemini(?:\s+API)?|ChatGPT|LLM API|remote API|external API)\b",
+        r".{0,80}\b("
+        r"Claude(?:\s+API)?|Anthropic(?:\s+API)?|OpenAI(?:\s+API)?|"
+        r"Gemini(?:\s+API)?|ChatGPT|LLM API|remote API|external API"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
@@ -169,13 +204,22 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
 NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|avoids|forbid|forbidden|no|without)\b"
-        r".{0,180}\b(network|internet|online|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|remote services?|API calls?)\b",
+        r".{0,180}\b("
+        r"network|internet|online|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|"
+        r"external APIs?|remote services?|API calls?"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
         r"\b(does not|do not|don't|must not|should not|never|avoid|avoids|no)\b"
-        r".{0,140}\b(call|use|depend|requires?|needs?|rely|relies|send|upload|post|transmit|share)\b"
-        r".{0,140}\b(network|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|remote services?)\b",
+        r".{0,140}\b("
+        r"call|use|depend|requires?|needs?|rely|relies|send|upload|post|"
+        r"transmit|share"
+        r")\b"
+        r".{0,140}\b("
+        r"network|LLMs?|OpenAI|Anthropic|Claude|Gemini|ChatGPT|external APIs?|"
+        r"remote services?"
+        r")\b",
         re.IGNORECASE,
     ),
     re.compile(
