@@ -24,6 +24,40 @@ HUMAN_LLM_PLANNING_GUIDANCE = (
 
 
 class GovernanceFindingTests(unittest.TestCase):
+    def test_combined_governance_reports_invalid_utf8_instruction_file_once(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_bytes(
+                b"# AGENTS.md\n- Commit directly to main.\xff\n"
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_governance_findings(repository, instruction_files)
+
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].rule_id, "AIRK-SYS001")
+        self.assertEqual(findings[0].severity.value, "warning")
+        self.assertEqual(
+            findings[0].message,
+            "Instruction file could not be analyzed because it is not valid UTF-8.",
+        )
+        self.assertEqual(findings[0].path, "AGENTS.md")
+        self.assertIsNone(findings[0].line)
+        self.assertIsNone(findings[0].evidence)
+
+    def test_rule_specific_governance_reports_invalid_utf8_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_bytes(
+                b"# AGENTS.md\n- Commit directly to main.\xff\n"
+            )
+
+            instruction_files = discover_instruction_files(repository)
+            findings = find_review_ci_bypass_findings(repository, instruction_files)
+
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-SYS001"])
+        self.assertEqual([finding.path for finding in findings], ["AGENTS.md"])
+
     def test_reports_unsupported_security_and_maturity_claims(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)

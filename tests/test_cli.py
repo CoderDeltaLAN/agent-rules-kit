@@ -497,6 +497,27 @@ class CliTests(unittest.TestCase):
         self.assertIn("| AIRK-GOV006 | warning | AGENTS.md:5 |", text)
         self.assertIn("| AIRK-GOV006 | warning | AGENTS.md:6 |", text)
 
+    def test_check_json_reports_invalid_utf8_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            (repository / "AGENTS.md").write_bytes(
+                b"# AGENTS.md\n- Commit directly to main.\xff\n"
+            )
+
+            output = io.StringIO()
+            with redirect_stdout(output):
+                exit_code = main(["check", str(repository), "--format", "json"])
+
+        payload = json.loads(output.getvalue())
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(payload["summary"]["finding_count"], 1)
+        self.assertEqual(payload["findings"][0]["rule_id"], "AIRK-SYS001")
+        self.assertEqual(payload["findings"][0]["severity"], "warning")
+        self.assertEqual(payload["findings"][0]["path"], "AGENTS.md")
+        self.assertNotIn("line", payload["findings"][0])
+        self.assertNotIn("evidence", payload["findings"][0])
+
     def test_check_json_reports_empty_findings_for_clean_fixture(self) -> None:
         output = io.StringIO()
 

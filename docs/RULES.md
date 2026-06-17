@@ -24,16 +24,29 @@ Governance findings do not execute repository commands, call external APIs, call
 
 Current `main` evaluates governance findings in this order:
 
-1. `AIRK-GOV006` — unsupported security or maturity claim.
-2. `AIRK-GOV003` — review or CI bypass guidance.
-3. `AIRK-GOV004` — unsafe command execution guidance.
-4. `AIRK-GOV005` — runtime network or LLM dependency guidance.
-5. `AIRK-GOV002` — missing secret-handling boundary.
-6. `AIRK-GOV001` — missing instruction scope or authority.
+1. `AIRK-SYS001` — unreadable supported instruction file.
+2. `AIRK-GOV006` — unsupported security or maturity claim.
+3. `AIRK-GOV003` — review or CI bypass guidance.
+4. `AIRK-GOV004` — unsafe command execution guidance.
+5. `AIRK-GOV005` — runtime network or LLM dependency guidance.
+6. `AIRK-GOV002` — missing secret-handling boundary.
+7. `AIRK-GOV001` — missing instruction scope or authority.
 
 Future rule-order changes must remain deterministic, documented, fixture-backed, and conservative.
 
 ## Rule reference
+
+### AIRK-SYS001 — Unreadable instruction file
+
+Flags supported instruction files that cannot be analyzed as UTF-8.
+
+Purpose:
+
+- prevent supported instruction files from being discovered but silently skipped;
+- make encoding problems visible in console, JSON, and Markdown output;
+- avoid printing raw undecodable bytes as evidence.
+
+This finding reports the repository-relative instruction file path and does not include line, column, or evidence fields.
 
 ### AIRK-GOV006 — Unsupported security or maturity claim
 

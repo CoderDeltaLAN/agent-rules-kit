@@ -13,6 +13,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Fixed
 
+- Report non-UTF-8 supported instruction files as `AIRK-SYS001` findings instead of silently skipping governance analysis.
 - Updated generated `AGENTS.md` baseline content so `init --write` no longer creates instructions that fail the current governance scope or authority check.
 - Fixed secret redaction pattern order so Anthropic-style `sk-ant-` keys match the specific Anthropic pattern before the generic `sk-` pattern.
 - Tightened governance regex coverage for review/CI bypass, unsafe command guidance, and runtime network or LLM dependency findings.

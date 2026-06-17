@@ -27,6 +27,11 @@ RUNTIME_NETWORK_LLM_MESSAGE = (
     "conflicts with local-first boundaries."
 )
 
+UNREADABLE_INSTRUCTION_FILE_RULE_ID = "AIRK-SYS001"
+UNREADABLE_INSTRUCTION_FILE_MESSAGE = (
+    "Instruction file could not be analyzed because it is not valid UTF-8."
+)
+
 AUTHORITY_SCOPE_RULE_ID = "AIRK-GOV001"
 AUTHORITY_SCOPE_MESSAGE = "Instruction file may lack clear scope or authority."
 
@@ -321,14 +326,38 @@ def find_governance_findings(
     instruction_files: tuple[InstructionFile, ...],
 ) -> tuple[Finding, ...]:
     """Return all governance findings in stable rule order."""
-    return (
-        *find_unsupported_claim_findings(repository_root, instruction_files),
-        *find_review_ci_bypass_findings(repository_root, instruction_files),
-        *find_unsafe_command_execution_findings(repository_root, instruction_files),
-        *find_runtime_network_llm_dependency_findings(repository_root, instruction_files),
-        *find_missing_secret_boundary_findings(repository_root, instruction_files),
-        *find_missing_authority_scope_findings(repository_root, instruction_files),
+    return _deduplicate_findings(
+        (
+            *find_unsupported_claim_findings(repository_root, instruction_files),
+            *find_review_ci_bypass_findings(repository_root, instruction_files),
+            *find_unsafe_command_execution_findings(repository_root, instruction_files),
+            *find_runtime_network_llm_dependency_findings(repository_root, instruction_files),
+            *find_missing_secret_boundary_findings(repository_root, instruction_files),
+            *find_missing_authority_scope_findings(repository_root, instruction_files),
+        )
     )
+
+
+def _unreadable_instruction_file_finding(path: str) -> Finding:
+    return Finding(
+        rule_id=UNREADABLE_INSTRUCTION_FILE_RULE_ID,
+        severity=Severity.WARNING,
+        message=UNREADABLE_INSTRUCTION_FILE_MESSAGE,
+        path=path,
+    )
+
+
+def _deduplicate_findings(findings: tuple[Finding, ...]) -> tuple[Finding, ...]:
+    unique: list[Finding] = []
+    seen: set[Finding] = set()
+
+    for finding in findings:
+        if finding in seen:
+            continue
+        seen.add(finding)
+        unique.append(finding)
+
+    return tuple(unique)
 
 
 def find_unsafe_command_execution_findings(
@@ -380,6 +409,7 @@ def find_missing_authority_scope_findings(
         try:
             text = candidate.read_text(encoding="utf-8")
         except UnicodeDecodeError:
+            findings.append(_unreadable_instruction_file_finding(instruction_file.path))
             continue
 
         if not _contains_authority_scope_boundary(text):
@@ -408,6 +438,7 @@ def find_missing_secret_boundary_findings(
         try:
             text = candidate.read_text(encoding="utf-8")
         except UnicodeDecodeError:
+            findings.append(_unreadable_instruction_file_finding(instruction_file.path))
             continue
 
         if not _contains_secret_boundary(text):
@@ -476,6 +507,7 @@ def _find_line_findings(
         try:
             text = candidate.read_text(encoding="utf-8")
         except UnicodeDecodeError:
+            findings.append(_unreadable_instruction_file_finding(instruction_file.path))
             continue
 
         lines = text.splitlines()
