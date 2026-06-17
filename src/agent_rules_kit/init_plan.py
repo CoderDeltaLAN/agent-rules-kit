@@ -43,6 +43,9 @@ def build_init_plan(root: Path | str) -> InitPlan:
     target_path = "AGENTS.md"
     candidate = root_path / target_path
 
+    if candidate.is_symlink():
+        raise ValueError("refusing to plan init for symlinked path: AGENTS.md")
+
     if candidate.exists():
         action = InitPlanAction.BACKUP_AND_REPLACE
         reason = "existing file would be backed up before replacement"

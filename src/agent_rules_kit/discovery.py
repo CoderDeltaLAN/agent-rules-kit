@@ -44,13 +44,13 @@ def discover_instruction_files(root: Path | str) -> tuple[InstructionFile, ...]:
 
     for relative_path, kind in _exact_instruction_paths():
         candidate = root_path / relative_path
-        if candidate.is_file():
+        if _is_supported_instruction_path(candidate):
             discovered.append(InstructionFile(path=relative_path, kind=kind))
 
     cursor_rules_dir = root_path / ".cursor" / "rules"
-    if cursor_rules_dir.is_dir():
+    if _is_safe_instruction_directory(root_path, cursor_rules_dir):
         for candidate in sorted(cursor_rules_dir.glob("*.mdc")):
-            if candidate.is_file():
+            if _is_supported_instruction_path(candidate):
                 discovered.append(
                     InstructionFile(
                         path=candidate.relative_to(root_path).as_posix(),
@@ -59,9 +59,9 @@ def discover_instruction_files(root: Path | str) -> tuple[InstructionFile, ...]:
                 )
 
     github_instructions_dir = root_path / ".github" / "instructions"
-    if github_instructions_dir.is_dir():
+    if _is_safe_instruction_directory(root_path, github_instructions_dir):
         for candidate in sorted(github_instructions_dir.glob("*.md")):
-            if candidate.is_file():
+            if _is_supported_instruction_path(candidate):
                 discovered.append(
                     InstructionFile(
                         path=candidate.relative_to(root_path).as_posix(),
@@ -70,6 +70,26 @@ def discover_instruction_files(root: Path | str) -> tuple[InstructionFile, ...]:
                 )
 
     return tuple(discovered)
+
+
+def _is_supported_instruction_path(candidate: Path) -> bool:
+    return candidate.is_file() or candidate.is_symlink()
+
+
+def _is_safe_instruction_directory(root_path: Path, candidate: Path) -> bool:
+    return candidate.is_dir() and not _has_symlink_component(root_path, candidate)
+
+
+def _has_symlink_component(root_path: Path, candidate: Path) -> bool:
+    relative_path = candidate.relative_to(root_path)
+    current = root_path
+
+    for part in relative_path.parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+
+    return False
 
 
 def _exact_instruction_paths() -> tuple[tuple[str, InstructionFileKind], ...]:

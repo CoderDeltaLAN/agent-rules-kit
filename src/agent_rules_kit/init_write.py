@@ -66,9 +66,12 @@ def write_init_files(root: Path | str) -> InitWriteResult:
         target = root_path / planned_file.path
         backup_path: Path | None = None
 
+        if target.is_symlink():
+            raise ValueError("refusing to write init file through symlinked path: AGENTS.md")
+
         if planned_file.action == InitPlanAction.BACKUP_AND_REPLACE:
             backup_path = _next_backup_path(target)
-            shutil.copy2(target, backup_path)
+            _copy_file_to_new_regular_path(target, backup_path)
 
         _write_text_atomic(target, BASELINE_AGENTS_CONTENT)
 
@@ -94,13 +97,22 @@ def _write_text_atomic(target: Path, content: str) -> None:
     temporary_path = _next_available_path(
         target.with_name(f".{target.name}.agent-rules-kit.tmp")
     )
+    temporary_created = False
 
     try:
-        temporary_path.write_text(content, encoding="utf-8")
+        with temporary_path.open("x", encoding="utf-8") as temporary_file:
+            temporary_created = True
+            temporary_file.write(content)
         temporary_path.replace(target)
     finally:
-        if temporary_path.exists():
+        if temporary_created and _path_exists_or_is_symlink(temporary_path):
             temporary_path.unlink()
+
+
+def _copy_file_to_new_regular_path(source: Path, destination: Path) -> None:
+    with source.open("rb") as source_file, destination.open("xb") as destination_file:
+        shutil.copyfileobj(source_file, destination_file)
+    shutil.copystat(source, destination, follow_symlinks=False)
 
 
 def _next_backup_path(target: Path) -> Path:
@@ -108,15 +120,19 @@ def _next_backup_path(target: Path) -> Path:
 
 
 def _next_available_path(candidate: Path) -> Path:
-    if not candidate.exists():
+    if not _path_exists_or_is_symlink(candidate):
         return candidate
 
     for index in range(1, 1000):
         indexed_candidate = candidate.with_name(f"{candidate.name}.{index}")
-        if not indexed_candidate.exists():
+        if not _path_exists_or_is_symlink(indexed_candidate):
             return indexed_candidate
 
     raise RuntimeError(f"could not find available backup path for: {candidate}")
+
+
+def _path_exists_or_is_symlink(candidate: Path) -> bool:
+    return candidate.exists() or candidate.is_symlink()
 
 
 __all__ = [

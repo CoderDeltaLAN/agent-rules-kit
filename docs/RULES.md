@@ -25,12 +25,13 @@ Governance findings do not execute repository commands, call external APIs, call
 Current `main` evaluates governance findings in this order:
 
 1. `AIRK-SYS001` — unreadable supported instruction file.
-2. `AIRK-GOV006` — unsupported security or maturity claim.
-3. `AIRK-GOV003` — review or CI bypass guidance.
-4. `AIRK-GOV004` — unsafe command execution guidance.
-5. `AIRK-GOV005` — runtime network or LLM dependency guidance.
-6. `AIRK-GOV002` — missing secret-handling boundary.
-7. `AIRK-GOV001` — missing instruction scope or authority.
+2. `AIRK-SYS002` — symlinked supported instruction file path.
+3. `AIRK-GOV006` — unsupported security or maturity claim.
+4. `AIRK-GOV003` — review or CI bypass guidance.
+5. `AIRK-GOV004` — unsafe command execution guidance.
+6. `AIRK-GOV005` — runtime network or LLM dependency guidance.
+7. `AIRK-GOV002` — missing secret-handling boundary.
+8. `AIRK-GOV001` — missing instruction scope or authority.
 
 Future rule-order changes must remain deterministic, documented, fixture-backed, and conservative.
 
@@ -45,6 +46,19 @@ Purpose:
 - prevent supported instruction files from being discovered but silently skipped;
 - make encoding problems visible in console, JSON, and Markdown output;
 - avoid printing raw undecodable bytes as evidence.
+
+This finding reports the repository-relative instruction file path and does not include line, column, or evidence fields.
+
+### AIRK-SYS002 — Symlinked instruction file
+
+Flags supported instruction file paths that are symlinks and are not analyzed.
+
+Purpose:
+
+- keep local-first analysis inside explicit repository file boundaries;
+- avoid following instruction-file symlinks to external files;
+- make skipped symlink file paths visible instead of silently ignoring them;
+- avoid traversing symlinked wildcard instruction directories.
 
 This finding reports the repository-relative instruction file path and does not include line, column, or evidence fields.
 

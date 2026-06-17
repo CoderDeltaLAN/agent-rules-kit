@@ -32,6 +32,11 @@ UNREADABLE_INSTRUCTION_FILE_MESSAGE = (
     "Instruction file could not be analyzed because it is not valid UTF-8."
 )
 
+SYMLINKED_INSTRUCTION_FILE_RULE_ID = "AIRK-SYS002"
+SYMLINKED_INSTRUCTION_FILE_MESSAGE = (
+    "Instruction file path is a symlink and was not analyzed."
+)
+
 AUTHORITY_SCOPE_RULE_ID = "AIRK-GOV001"
 AUTHORITY_SCOPE_MESSAGE = "Instruction file may lack clear scope or authority."
 
@@ -347,6 +352,26 @@ def _unreadable_instruction_file_finding(path: str) -> Finding:
     )
 
 
+def _symlinked_instruction_file_finding(path: str) -> Finding:
+    return Finding(
+        rule_id=SYMLINKED_INSTRUCTION_FILE_RULE_ID,
+        severity=Severity.WARNING,
+        message=SYMLINKED_INSTRUCTION_FILE_MESSAGE,
+        path=path,
+    )
+
+
+def _has_symlink_component(repository_root: Path, relative_path: str) -> bool:
+    current = repository_root
+
+    for part in Path(relative_path).parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+
+    return False
+
+
 def _deduplicate_findings(findings: tuple[Finding, ...]) -> tuple[Finding, ...]:
     unique: list[Finding] = []
     seen: set[Finding] = set()
@@ -406,6 +431,10 @@ def find_missing_authority_scope_findings(
     for instruction_file in instruction_files:
         candidate = repository_root / instruction_file.path
 
+        if _has_symlink_component(repository_root, instruction_file.path):
+            findings.append(_symlinked_instruction_file_finding(instruction_file.path))
+            continue
+
         try:
             text = candidate.read_text(encoding="utf-8")
         except UnicodeDecodeError:
@@ -434,6 +463,10 @@ def find_missing_secret_boundary_findings(
 
     for instruction_file in instruction_files:
         candidate = repository_root / instruction_file.path
+
+        if _has_symlink_component(repository_root, instruction_file.path):
+            findings.append(_symlinked_instruction_file_finding(instruction_file.path))
+            continue
 
         try:
             text = candidate.read_text(encoding="utf-8")
@@ -503,6 +536,10 @@ def _find_line_findings(
 
     for instruction_file in instruction_files:
         candidate = repository_root / instruction_file.path
+
+        if _has_symlink_component(repository_root, instruction_file.path):
+            findings.append(_symlinked_instruction_file_finding(instruction_file.path))
+            continue
 
         try:
             text = candidate.read_text(encoding="utf-8")
