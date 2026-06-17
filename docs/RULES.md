@@ -37,6 +37,8 @@ Future rule-order changes must remain deterministic, documented, fixture-backed,
 
 ## Rule reference
 
+Line-based suppression is intentionally same-line scoped. Negative or approval language can suppress a trigger on the same line, but nearby guidance does not suppress a separate risky instruction line. This favors visible findings over hiding independent risky instructions.
+
 ### AIRK-SYS001 — Unreadable instruction file
 
 Flags supported instruction files that cannot be analyzed as UTF-8.

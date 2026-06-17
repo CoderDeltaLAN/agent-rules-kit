@@ -13,6 +13,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Fixed
 
+- Scoped governance finding suppression to same-line negation or approval cues so adjacent safe guidance no longer hides unrelated risky instructions.
 - Reject symlinked supported instruction files and harden `init --write` temporary and backup paths against symlink escapes.
 - Report non-UTF-8 supported instruction files as `AIRK-SYS001` findings instead of silently skipping governance analysis.
 - Updated generated `AGENTS.md` baseline content so `init --write` no longer creates instructions that fail the current governance scope or authority check.

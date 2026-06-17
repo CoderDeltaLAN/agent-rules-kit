@@ -182,7 +182,7 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(findings, ())
 
-    def test_ignores_adjacent_negative_guidance_about_review_ci_bypass(self) -> None:
+    def test_reports_adjacent_review_ci_bypass_despite_negative_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
             (repository / "AGENTS.md").write_text(
@@ -203,8 +203,9 @@ class GovernanceFindingTests(unittest.TestCase):
             instruction_files = discover_instruction_files(repository)
             findings = find_review_ci_bypass_findings(repository, instruction_files)
 
-        self.assertEqual(findings, ())
-
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-GOV003"])
+        self.assertEqual([finding.line for finding in findings], [6])
+        self.assertEqual([finding.evidence for finding in findings], ["- Commit directly to main."])
 
     def test_reports_unsafe_command_execution_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -342,7 +343,7 @@ class GovernanceFindingTests(unittest.TestCase):
         self.assertEqual([finding.line for finding in findings], [5, 6, 7, 8, 9, 10])
         self.assertEqual([finding.path for finding in findings], ["AGENTS.md"] * 6)
 
-    def test_ignores_adjacent_negative_runtime_api_requirement_guidance(self) -> None:
+    def test_reports_adjacent_runtime_api_requirement_despite_negative_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
             (repository / "AGENTS.md").write_text(
@@ -363,8 +364,12 @@ class GovernanceFindingTests(unittest.TestCase):
             instruction_files = discover_instruction_files(repository)
             findings = find_runtime_network_llm_dependency_findings(repository, instruction_files)
 
-        self.assertEqual(findings, ())
-
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-GOV005"])
+        self.assertEqual([finding.line for finding in findings], [6])
+        self.assertEqual(
+            [finding.evidence for finding in findings],
+            ["- This check requires the OpenAI API."],
+        )
 
     def test_ignores_safe_or_human_reviewed_network_llm_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -394,7 +399,7 @@ class GovernanceFindingTests(unittest.TestCase):
 
         self.assertEqual(findings, ())
 
-    def test_ignores_adjacent_negative_guidance_about_runtime_network_llm(self) -> None:
+    def test_reports_adjacent_runtime_network_llm_despite_negative_guidance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
             (repository / "AGENTS.md").write_text(
@@ -415,8 +420,12 @@ class GovernanceFindingTests(unittest.TestCase):
             instruction_files = discover_instruction_files(repository)
             findings = find_runtime_network_llm_dependency_findings(repository, instruction_files)
 
-        self.assertEqual(findings, ())
-
+        self.assertEqual([finding.rule_id for finding in findings], ["AIRK-GOV005"])
+        self.assertEqual([finding.line for finding in findings], [6])
+        self.assertEqual(
+            [finding.evidence for finding in findings],
+            ["- The check command must call an LLM API to audit the repository."],
+        )
 
     def test_reports_missing_secret_handling_boundary(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
