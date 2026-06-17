@@ -25,6 +25,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Clarified packaging smoke documentation to distinguish console-script execution from `python -m agent_rules_kit.cli` module execution.
 - Clarified README installation, normal CLI usage, development virtual environment requirements, local checks, and next-release audit readiness.
 - Added Ruff linting to local checks and CI by installing project development dependencies before running `./scripts/check.sh`.
 - Synced product strategy and threat model wording with the published `v0.2.0` release line and unreleased post-`v0.2.0` main state.
