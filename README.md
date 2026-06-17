@@ -39,6 +39,8 @@
   ·
   <a href="#installation">Installation</a>
   ·
+  <a href="#release-and-pypi-publishing">Release and PyPI</a>
+  ·
   <a href="#commands">Commands</a>
   ·
   <a href="#governance-findings">Governance Findings</a>
@@ -74,6 +76,16 @@
   <img
     src="docs/screenshots/readme/agent-rules-kit-output-formats.png"
     alt="Terminal screenshot showing agent-rules-kit check output in JSON and Markdown formats"
+    width="100%"
+  />
+</p>
+
+### Governance findings and structured evidence
+
+<p align="center">
+  <img
+    src="docs/screenshots/readme/agent-rules-kit-governance-findings.png"
+    alt="Terminal screenshot showing agent-rules-kit governance findings and structured JSON evidence"
     width="100%"
   />
 </p>
@@ -123,7 +135,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-Current `main` prepares the `v0.2.1` patch release metadata after the published `v0.2.0` baseline and post-release fixes.
+Current `main` prepares the `v0.2.1` patch release and PyPI publication path after the published `v0.2.0` baseline and post-release fixes.
 
 The implemented behavior includes:
 
@@ -192,22 +204,22 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.1` is the next GitHub Release line being prepared from current `main`.
+`v0.2.1` is the next GitHub Release and PyPI publication line being prepared from current `main`.
 
-This project is not published to PyPI yet.
+Release publication is configured to use PyPI Trusted Publishing from the GitHub Release workflow. The package must not be treated as available from PyPI until the `v0.2.1` GitHub Release has been published and the PyPI publish workflow has completed successfully.
 
 ### Normal CLI use
 
-Requirements for using the released CLI:
+Requirements for using a published CLI release:
 
 - Python 3.12 or newer;
 - a Python virtual environment;
-- the wheel artifact from the GitHub Release.
+- a published PyPI release of `agent-rules-kit`.
 
-After the `v0.2.1` GitHub Release is published, download the wheel from that release and install it in a virtual environment:
+After `v0.2.1` is published to PyPI, install it in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install ./agent_rules_kit-0.2.1-py3-none-any.whl
+    .venv/bin/python -m pip install agent-rules-kit==0.2.1
     .venv/bin/agent-rules-kit --version
     .venv/bin/agent-rules-kit check /path/to/repository --format console
 
@@ -232,6 +244,34 @@ The development dependency group installs tools used by local checks, including 
 The source tree can also be used directly for quick CLI inspection:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
+
+---
+
+## Release and PyPI Publishing
+
+The `v0.2.1` release path is prepared to publish through PyPI Trusted Publishing.
+
+Release publishing is handled by:
+
+    .github/workflows/publish-pypi.yml
+
+The workflow is intentionally limited:
+
+- it runs only when a GitHub Release is published;
+- it builds distributions in a separate build job;
+- it runs local checks before building distributions;
+- it verifies distributions with Twine before publishing;
+- it smoke-tests the wheel before publishing;
+- it uploads the built distributions as a short-lived workflow artifact;
+- it publishes through the `pypi` GitHub environment;
+- it grants `id-token: write` only to the publish job;
+- it does not use a static PyPI token, username, or password.
+
+Do not treat `agent-rules-kit==0.2.1` as available from PyPI until:
+
+- the `v0.2.1` GitHub Release is published from the verified release SHA;
+- the PyPI publish workflow completes successfully;
+- a clean virtual environment can install and run `agent-rules-kit==0.2.1` from PyPI.
 
 ---
 
@@ -347,7 +387,8 @@ See:
     │   ├── ISSUE_TEMPLATE/
     │   ├── pull_request_template.md
     │   └── workflows/
-    │       └── ci.yml
+    │       ├── ci.yml
+    │       └── publish-pypi.yml
     ├── docs/
     │   ├── BUILD-PLAN.md
     │   ├── OUTPUTS.md
@@ -357,6 +398,7 @@ See:
     │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
     │   └── screenshots/
     │       └── readme/
+    │           ├── agent-rules-kit-governance-findings.png
     │           ├── agent-rules-kit-help-check.png
     │           ├── agent-rules-kit-init-safety.png
     │           └── agent-rules-kit-output-formats.png
@@ -424,28 +466,30 @@ The required status check for `main` is:
 Current status:
 
 - `v0.2.0` is published as a GitHub Release;
-- `main` is preparing `v0.2.1` patch release metadata from post-`v0.2.0` fixes;
+- `main` is preparing the `v0.2.1` patch release and PyPI publication path from post-`v0.2.0` fixes;
 - no stable support or API guarantee yet;
 - release tag `v0.2.0` points to the verified release SHA;
-- wheel and sdist artifacts are attached to the `v0.2.0` GitHub Release;
-- release assets were downloaded, checksum-verified, installed, and smoke-tested;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
 - CI active;
-- branch protection was documented in prior release-governance evidence and must be re-verified before the next release;
-- README distinguishes the published `v0.2.0` release from unreleased `main` state and keeps PyPI marked as not published;
+- branch protection is active with the required `local-checks / Python 3.12` status check;
+- the `pypi` GitHub environment exists for the release publishing workflow;
+- `.github/workflows/publish-pypi.yml` is prepared to publish `v0.2.1` through PyPI Trusted Publishing when the GitHub Release is published;
+- README screenshots are generated from real local CLI commands;
 - security boundaries documented;
 - threat model documented.
 
-Before claiming the next patch release or final audit-ready state, verify:
+Before publishing `v0.2.1`, verify:
 
 - all intended unreleased fixes for the patch release are merged into `main`;
 - no known release-blocking audit finding remains open;
 - local checks pass from a development virtual environment;
 - CI passes for the release SHA;
 - sdist and wheel build and install from clean temporary environments;
-- release assets can be downloaded, checksum-verified, installed, and smoke-tested;
-- output examples are generated from real commands;
+- PyPI Trusted Publishing workflow is configured for the expected PyPI project, repository, workflow file, and `pypi` environment;
+- the GitHub Release publication triggers the PyPI publish workflow successfully through the `pypi` environment;
+- the published PyPI package installs and runs from a clean virtual environment;
+- output examples and screenshots are generated from real commands;
 - README documents normal CLI use, source-tree development use, virtual environment setup, development dependencies, and local checks;
 - README does not claim unsupported maturity;
 - SECURITY.md and CHANGELOG.md are current;
