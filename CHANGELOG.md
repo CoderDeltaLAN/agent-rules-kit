@@ -6,6 +6,10 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.2.1] - 2026-06-17
+
 ### Added
 
 - Added discovery support for Claude Code project instructions stored at `.claude/CLAUDE.md`.

@@ -7,6 +7,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
+from agent_rules_kit import __version__
 from agent_rules_kit.cli import main
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "repositories"
@@ -33,7 +34,7 @@ class CliTests(unittest.TestCase):
             exit_code = main(["--version"])
 
         self.assertEqual(exit_code, 0)
-        self.assertIn("agent-rules-kit 0.2.0", output.getvalue())
+        self.assertIn(f"agent-rules-kit {__version__}", output.getvalue())
 
     def test_help_is_default(self) -> None:
         output = io.StringIO()

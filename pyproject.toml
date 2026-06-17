@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agent-rules-kit"
-version = "0.2.0"
+version = "0.2.1"
 description = "Local read-only CLI to diagnose AGENTS.md, Claude Code, Gemini CLI, Cursor and Copilot instruction files."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -32,7 +32,7 @@ Repository = "https://github.com/CoderDeltaLAN/agent-rules-kit"
 Issues = "https://github.com/CoderDeltaLAN/agent-rules-kit/issues"
 Changelog = "https://github.com/CoderDeltaLAN/agent-rules-kit/blob/main/CHANGELOG.md"
 Security = "https://github.com/CoderDeltaLAN/agent-rules-kit/security/policy"
-Release = "https://github.com/CoderDeltaLAN/agent-rules-kit/releases/tag/v0.2.0"
+Release = "https://github.com/CoderDeltaLAN/agent-rules-kit/releases/tag/v0.2.1"
 
 [project.scripts]
 agent-rules-kit = "agent_rules_kit.cli:main"

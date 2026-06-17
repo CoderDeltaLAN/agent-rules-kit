@@ -123,7 +123,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-Current `main` includes the published `v0.2.0` baseline plus unreleased post-release fixes intended for a future patch release.
+Current `main` prepares the `v0.2.1` patch release metadata after the published `v0.2.0` baseline and post-release fixes.
 
 The implemented behavior includes:
 
@@ -192,7 +192,7 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.0` is available as GitHub Release artifacts.
+`v0.2.1` is the next GitHub Release line being prepared from current `main`.
 
 This project is not published to PyPI yet.
 
@@ -204,10 +204,10 @@ Requirements for using the released CLI:
 - a Python virtual environment;
 - the wheel artifact from the GitHub Release.
 
-Download the wheel from the `v0.2.0` GitHub Release, then install it in a virtual environment:
+After the `v0.2.1` GitHub Release is published, download the wheel from that release and install it in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install ./agent_rules_kit-0.2.0-py3-none-any.whl
+    .venv/bin/python -m pip install ./agent_rules_kit-0.2.1-py3-none-any.whl
     .venv/bin/agent-rules-kit --version
     .venv/bin/agent-rules-kit check /path/to/repository --format console
 
@@ -424,7 +424,7 @@ The required status check for `main` is:
 Current status:
 
 - `v0.2.0` is published as a GitHub Release;
-- `main` contains unreleased post-`v0.2.0` fixes and documentation updates intended for a future patch release;
+- `main` is preparing `v0.2.1` patch release metadata from post-`v0.2.0` fixes;
 - no stable support or API guarantee yet;
 - release tag `v0.2.0` points to the verified release SHA;
 - wheel and sdist artifacts are attached to the `v0.2.0` GitHub Release;
