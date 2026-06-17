@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import io
+import json
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
+from agent_rules_kit.cli import main
 from agent_rules_kit.init_plan import InitPlanAction
 from agent_rules_kit.init_write import BASELINE_AGENTS_CONTENT, write_init_files
 
@@ -69,6 +73,22 @@ class InitWriteTests(unittest.TestCase):
 
             with self.assertRaises(ValueError):
                 write_init_files(missing_root)
+
+    def test_generated_baseline_passes_current_governance_check(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+
+            write_init_files(repository)
+
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                exit_code = main(["check", str(repository), "--format", "json"])
+
+            payload = json.loads(stdout.getvalue())
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(payload["summary"]["finding_count"], 0)
+            self.assertEqual(payload["findings"], [])
 
 
 if __name__ == "__main__":
