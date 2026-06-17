@@ -12,6 +12,7 @@ No unreleased changes.
 
 ### Added
 
+- Added a PyPI Trusted Publishing workflow for the final `v0.2.1` release path, triggered only by GitHub Release publication and configured for the `pypi` environment without static PyPI credentials.
 - Added discovery support for Claude Code project instructions stored at `.claude/CLAUDE.md`.
 - Added CI smoke checks for the installed `agent-rules-kit` console script and a minimal JSON `check` command.
 
@@ -29,6 +30,7 @@ No unreleased changes.
 
 ### Changed
 
+- Split the PyPI publishing workflow into separate build and publish jobs so distributions are built, checked, smoke-tested, uploaded as a short-lived workflow artifact, and published with OIDC `id-token: write` scoped only to the publish job.
 - Clarified packaging smoke documentation to distinguish console-script execution from `python -m agent_rules_kit.cli` module execution.
 - Clarified README installation, normal CLI usage, development virtual environment requirements, local checks, and next-release audit readiness.
 - Added Ruff linting to local checks and CI by installing project development dependencies before running `./scripts/check.sh`.
