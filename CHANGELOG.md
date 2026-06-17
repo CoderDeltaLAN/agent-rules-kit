@@ -6,7 +6,9 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
-No unreleased changes.
+### Changed
+
+- Documented the published `v0.2.1` GitHub Release and PyPI package state on `main`.
 
 ## [0.2.1] - 2026-06-17
 

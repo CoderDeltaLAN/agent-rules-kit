@@ -135,7 +135,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-Current `main` prepares the `v0.2.1` patch release and PyPI publication path after the published `v0.2.0` baseline and post-release fixes.
+`v0.2.1` is published as a GitHub Release and as the first PyPI package line for `agent-rules-kit`. Current `main` may include post-release documentation updates after that published package.
 
 The implemented behavior includes:
 
@@ -204,9 +204,9 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.1` is the next GitHub Release and PyPI publication line being prepared from current `main`.
+`v0.2.1` is published as a GitHub Release and PyPI package.
 
-Release publication is configured to use PyPI Trusted Publishing from the GitHub Release workflow. The package must not be treated as available from PyPI until the `v0.2.1` GitHub Release has been published and the PyPI publish workflow has completed successfully.
+The published package can be installed from PyPI. Release publication uses PyPI Trusted Publishing from the GitHub Release workflow.
 
 ### Normal CLI use
 
@@ -216,7 +216,7 @@ Requirements for using a published CLI release:
 - a Python virtual environment;
 - a published PyPI release of `agent-rules-kit`.
 
-After `v0.2.1` is published to PyPI, install it in a virtual environment:
+Install `v0.2.1` in a virtual environment:
 
     python -m venv .venv
     .venv/bin/python -m pip install agent-rules-kit==0.2.1
@@ -249,7 +249,7 @@ The source tree can also be used directly for quick CLI inspection:
 
 ## Release and PyPI Publishing
 
-The `v0.2.1` release path is prepared to publish through PyPI Trusted Publishing.
+The `v0.2.1` release was published through PyPI Trusted Publishing.
 
 Release publishing is handled by:
 
@@ -267,11 +267,11 @@ The workflow is intentionally limited:
 - it grants `id-token: write` only to the publish job;
 - it does not use a static PyPI token, username, or password.
 
-Do not treat `agent-rules-kit==0.2.1` as available from PyPI until:
+The published `v0.2.1` package must remain verifiable by:
 
-- the `v0.2.1` GitHub Release is published from the verified release SHA;
-- the PyPI publish workflow completes successfully;
-- a clean virtual environment can install and run `agent-rules-kit==0.2.1` from PyPI.
+- the GitHub Release tag pointing to the verified release SHA;
+- a successful PyPI publish workflow run;
+- a clean virtual environment installing and running `agent-rules-kit==0.2.1` from PyPI.
 
 ---
 
@@ -465,8 +465,9 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.2.0` is published as a GitHub Release;
-- `main` is preparing the `v0.2.1` patch release and PyPI publication path from post-`v0.2.0` fixes;
+- `v0.2.1` is published as a GitHub Release and PyPI package;
+- `v0.2.0` remains the previous published GitHub Release baseline;
+- `main` may include post-`v0.2.1` documentation or maintenance updates;
 - no stable support or API guarantee yet;
 - release tag `v0.2.0` points to the verified release SHA;
 - local CLI behavior implemented;
@@ -479,7 +480,7 @@ Current status:
 - security boundaries documented;
 - threat model documented.
 
-Before publishing `v0.2.1`, verify:
+For future releases, verify:
 
 - all intended unreleased fixes for the patch release are merged into `main`;
 - no known release-blocking audit finding remains open;
