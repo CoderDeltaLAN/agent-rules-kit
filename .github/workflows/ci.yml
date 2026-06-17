@@ -36,3 +36,8 @@ jobs:
 
       - name: Run local checks
         run: ./scripts/check.sh
+
+      - name: Run installed package smoke checks
+        run: |
+          agent-rules-kit --version
+          agent-rules-kit check tests/fixtures/repositories/single-agent --format json | python -m json.tool

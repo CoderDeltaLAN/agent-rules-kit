@@ -6,6 +6,10 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+### Added
+
+- Added CI smoke checks for the installed `agent-rules-kit` console script and a minimal JSON `check` command.
+
 ### Fixed
 
 - Updated generated `AGENTS.md` baseline content so `init --write` no longer creates instructions that fail the current governance scope or authority check.
