@@ -1,0 +1,76 @@
+name: Publish PyPI
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-pypi-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish / PyPI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools and project development dependencies
+        run: |
+          python -m pip install -U build twine
+          python -m pip install -e '.[dev]'
+
+      - name: Verify release ref matches package version
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          version = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+          ref_name = os.environ.get("GITHUB_REF_NAME", "")
+          event_name = os.environ.get("GITHUB_EVENT_NAME", "")
+
+          print(f"project_version={version}")
+          print(f"github_event={event_name}")
+          print(f"github_ref_name={ref_name}")
+
+          if event_name == "release" and ref_name != f"v{version}":
+              raise SystemExit(f"release ref {ref_name!r} does not match package version v{version}")
+          PY
+
+      - name: Run local checks
+        run: ./scripts/check.sh
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Check distributions
+        run: python -m twine check dist/*
+
+      - name: Smoke test wheel
+        run: |
+          python -m venv /tmp/agent-rules-kit-wheel-smoke
+          /tmp/agent-rules-kit-wheel-smoke/bin/python -m pip install dist/*.whl
+          /tmp/agent-rules-kit-wheel-smoke/bin/python -m pip check
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit --version
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit check tests/fixtures/repositories/single-agent --format json | /tmp/agent-rules-kit-wheel-smoke/bin/python -m json.tool
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
