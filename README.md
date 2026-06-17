@@ -150,6 +150,7 @@ Current `main` evaluates the following governance finding rules, in stable evalu
 
 | Rule | Severity | Purpose |
 | --- | --- | --- |
+| `AIRK-SYS001` | `warning` | Flags supported instruction files that cannot be analyzed as UTF-8. |
 | `AIRK-GOV006` | `warning` | Flags unsupported security, production-readiness, or maturity claims. |
 | `AIRK-GOV003` | `warning` | Flags guidance that appears to bypass review, CI, PRs, or safe integration. |
 | `AIRK-GOV004` | `warning` | Flags unsafe command execution guidance without an explicit confirmation boundary. |
