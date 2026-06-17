@@ -13,14 +13,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: publish / PyPI
+  build:
+    name: build / distributions
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment: pypi
     permissions:
       contents: read
-      id-token: write
 
     steps:
       - name: Checkout repository
@@ -71,6 +69,31 @@ jobs:
           /tmp/agent-rules-kit-wheel-smoke/bin/python -m pip check
           /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit --version
           /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit check tests/fixtures/repositories/single-agent --format json | /tmp/agent-rules-kit-wheel-smoke/bin/python -m json.tool
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: publish / PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v5
+        with:
+          name: python-distributions
+          path: dist
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
