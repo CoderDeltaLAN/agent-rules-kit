@@ -53,6 +53,17 @@ class InstructionDiscoveryTests(unittest.TestCase):
             ),
         )
 
+    def test_claude_dotdir_repository_discovers_project_claude_file(self) -> None:
+        self.assertEqual(
+            discover_instruction_files(FIXTURE_ROOT / "claude-dotdir"),
+            (
+                InstructionFile(
+                    path=".claude/CLAUDE.md",
+                    kind=InstructionFileKind.CLAUDE,
+                ),
+            ),
+        )
+
     def test_discovery_accepts_string_root(self) -> None:
         discovered = discover_instruction_files(str(FIXTURE_ROOT / "single-agent"))
 

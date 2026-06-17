@@ -9,6 +9,7 @@ EXPECTED_FIXTURE_FILES = {
     "empty-repo/.gitkeep",
     "single-agent/AGENTS.md",
     "multi-agent-overlap/AGENTS.md",
+    "claude-dotdir/.claude/CLAUDE.md",
     "multi-agent-overlap/CLAUDE.md",
     "multi-agent-overlap/GEMINI.md",
     "multi-agent-overlap/.cursor/rules/agent-rules.mdc",

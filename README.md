@@ -37,6 +37,8 @@
   ·
   <a href="#overview">Overview</a>
   ·
+  <a href="#installation">Installation</a>
+  ·
   <a href="#commands">Commands</a>
   ·
   <a href="#governance-findings">Governance Findings</a>
@@ -44,6 +46,8 @@
   <a href="#safety-boundary">Safety Boundary</a>
   ·
   <a href="#quality-gates">Quality Gates</a>
+  ·
+  <a href="#development-status">Development Status</a>
   ·
   <a href="#maintainer-workflow">Maintainer Workflow</a>
   ·
@@ -96,6 +100,7 @@ It focuses on files such as:
 
 - `AGENTS.md`
 - `CLAUDE.md`
+- `.claude/CLAUDE.md`
 - `GEMINI.md`
 - `.cursor/rules/*.mdc`
 - `.github/copilot-instructions.md`
@@ -189,13 +194,40 @@ A clean report means only that the implemented checks did not find a supported i
 
 This project is not published to PyPI yet.
 
+### Normal CLI use
+
+Requirements for using the released CLI:
+
+- Python 3.12 or newer;
+- a Python virtual environment;
+- the wheel artifact from the GitHub Release.
+
 Download the wheel from the `v0.2.0` GitHub Release, then install it in a virtual environment:
 
     python -m venv .venv
     .venv/bin/python -m pip install ./agent_rules_kit-0.2.0-py3-none-any.whl
     .venv/bin/agent-rules-kit --version
+    .venv/bin/agent-rules-kit check /path/to/repository --format console
 
-The source tree can still be used directly for development:
+Normal CLI use does not require Ruff or any development dependency.
+
+### Development from source
+
+Requirements for working on the repository and running local checks:
+
+- Python 3.12 or newer;
+- a Python virtual environment;
+- editable install with development dependencies.
+
+Set up a local development environment from the source tree:
+
+    python -m venv .venv
+    .venv/bin/python -m pip install -e '.[dev]'
+    PATH="$PWD/.venv/bin:$PATH" ./scripts/check.sh
+
+The development dependency group installs tools used by local checks, including Ruff. Installing only a system `ruff` binary is not enough for `./scripts/check.sh` if the active Python cannot import the `ruff` module.
+
+The source tree can also be used directly for quick CLI inspection:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
 
@@ -204,6 +236,12 @@ The source tree can still be used directly for development:
 ## Commands
 
 ### Check a repository
+
+Installed CLI usage:
+
+    .venv/bin/agent-rules-kit check /path/to/repository --format console
+
+Source-tree development usage:
 
     PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent
 
@@ -215,9 +253,21 @@ Example console output:
 
 ### JSON output
 
+Installed CLI usage:
+
+    .venv/bin/agent-rules-kit check /path/to/repository --format json
+
+Source-tree development usage:
+
     PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format json
 
 ### Markdown output
+
+Installed CLI usage:
+
+    .venv/bin/agent-rules-kit check /path/to/repository --format markdown
+
+Source-tree development usage:
 
     PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format markdown
 
@@ -336,7 +386,11 @@ See:
 
 Local verification is handled by:
 
-    ./scripts/check.sh
+    PATH="$PWD/.venv/bin:$PATH" ./scripts/check.sh
+
+Run this after installing development dependencies with:
+
+    .venv/bin/python -m pip install -e '.[dev]'
 
 The local check suite verifies:
 
@@ -381,13 +435,16 @@ Current status:
 - security boundaries documented;
 - threat model documented.
 
-For future releases, verify:
+Before claiming the next patch release or final audit-ready state, verify:
 
-- local checks pass;
+- all intended unreleased fixes for the patch release are merged into `main`;
+- no known release-blocking audit finding remains open;
+- local checks pass from a development virtual environment;
 - CI passes for the release SHA;
 - sdist and wheel build and install from clean temporary environments;
 - release assets can be downloaded, checksum-verified, installed, and smoke-tested;
 - output examples are generated from real commands;
+- README documents normal CLI use, source-tree development use, virtual environment setup, development dependencies, and local checks;
 - README does not claim unsupported maturity;
 - SECURITY.md and CHANGELOG.md are current;
 - private vulnerability reporting is enabled or its absence is clearly documented;
