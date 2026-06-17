@@ -303,9 +303,9 @@ def make_context_aware_predicate(
     trigger_patterns: tuple[Pattern[str], ...],
     negation_patterns: tuple[Pattern[str], ...],
     *,
-    context_window: int = 2,
+    context_window: int = 0,
 ) -> ContextPredicate:
-    """Return a predicate that evaluates triggers on one line and negations nearby."""
+    """Return a predicate that evaluates triggers with same-line negation scope."""
 
     def predicate(lines: Sequence[str], index: int) -> bool:
         if index < 0 or index >= len(lines):
