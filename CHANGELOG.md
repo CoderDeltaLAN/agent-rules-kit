@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added discovery support for Claude Code project instructions stored at `.claude/CLAUDE.md`.
 - Added CI smoke checks for the installed `agent-rules-kit` console script and a minimal JSON `check` command.
 
 ### Fixed
@@ -21,6 +22,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Clarified README installation, normal CLI usage, development virtual environment requirements, local checks, and next-release audit readiness.
 - Added Ruff linting to local checks and CI by installing project development dependencies before running `./scripts/check.sh`.
 - Synced product strategy and threat model wording with the published `v0.2.0` release line and unreleased post-`v0.2.0` main state.
 - Synced support, security, README, and release-truth documentation after the published `v0.2.0` GitHub Release.

@@ -12,6 +12,7 @@ These rules apply to supported instruction files discovered by `agent-rules-kit`
 
 - `AGENTS.md`;
 - `CLAUDE.md`;
+- `.claude/CLAUDE.md`;
 - `GEMINI.md`;
 - `.cursor/rules/*.mdc`;
 - `.github/copilot-instructions.md`;

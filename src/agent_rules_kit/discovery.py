@@ -76,6 +76,7 @@ def _exact_instruction_paths() -> tuple[tuple[str, InstructionFileKind], ...]:
     return (
         ("AGENTS.md", InstructionFileKind.AGENTS),
         ("CLAUDE.md", InstructionFileKind.CLAUDE),
+        (".claude/CLAUDE.md", InstructionFileKind.CLAUDE),
         ("GEMINI.md", InstructionFileKind.GEMINI),
         (".github/copilot-instructions.md", InstructionFileKind.COPILOT),
     )
