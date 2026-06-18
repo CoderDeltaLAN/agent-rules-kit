@@ -8,6 +8,20 @@ This project has a published GitHub Release line, but no stable support or API g
 
 No unreleased changes.
 
+## [0.2.3] - 2026-06-18
+
+### Changed
+
+- Released a documentation-only patch for the public `v0.2.3` GitHub Release and PyPI package line.
+- Synced SUPPORT.md with the current `v0.2.3` GitHub Release and PyPI package state.
+- Updated package metadata, README.md, SECURITY.md, and CHANGELOG.md release references from `v0.2.2` to `v0.2.3` without changing runtime behavior.
+- Preserved the existing runtime behavior, governance diagnostics, CI workflow, PyPI Trusted Publishing workflow, and previous release tags.
+
+### Release notes
+
+- No runtime code or behavior changes are included in this patch release.
+- The existing `v0.2.2` tag was not moved; `v0.2.3` is cut as a new docs-only patch release.
+
 ## [0.2.2] - 2026-06-18
 
 ### Changed

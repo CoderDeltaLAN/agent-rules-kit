@@ -1,88 +1,55 @@
 # Support Policy
 
-agent-rules-kit has a published `v0.2.0` GitHub Release line and unreleased post-`v0.2.0` fixes on `main`, but no stable support or API guarantee yet.
+`agent-rules-kit` is a small open source project maintained on a best-effort basis.
 
-There is no guaranteed support response time.
+There is no commercial SLA, no guaranteed response time, no production-readiness guarantee, and no stable API guarantee yet.
 
-## Current status
+## Current published line
 
-This project is maintained on a best-effort basis.
+`v0.2.3` is the current published GitHub Release and PyPI package line.
 
-At this stage:
+`v0.2.2` remains the previous published GitHub Release and PyPI package baseline.
 
-- `v0.2.0` is the current published GitHub Release line;
-- `main` contains unreleased post-`v0.2.0` fixes intended for a future patch release;
-- no stable support or API guarantee exists;
-- no commercial SLA exists;
-- no support response time is promised;
-- no production readiness is claimed;
-- no security guarantees are provided;
-- PyPI publication is not claimed.
+Current `main` may include post-`v0.2.3` documentation or maintenance updates after the published package.
 
-## What this project is
+## Package availability
 
-agent-rules-kit is a local Python CLI for diagnosing baseline quality of AI agent instruction files in repositories.
+The package is published on PyPI as:
 
-It is intended to help detect missing, weak, duplicated, or risky instruction patterns.
+    agent-rules-kit==0.2.3
 
-## What this project is not
+Future PyPI availability claims must be verified per release before updating this policy.
 
-agent-rules-kit is not:
+## What support means
 
-- a security scanner;
-- a dependency vulnerability scanner;
-- a CI/CD security auditor;
-- a universal AI agent framework;
-- a tool that executes commands from analyzed repositories;
-- a guarantee that a repository is safe.
+Best-effort support may include:
 
-## Before opening an issue
+- clarifying documented behavior;
+- reviewing reproducible bug reports;
+- correcting stale documentation;
+- considering small fixes that preserve the project safety boundary.
 
-Before reporting a problem, check:
+Best-effort support does not include:
 
-- README.md for project purpose and limits;
-- AGENTS.md for workflow and AI assistant rules;
-- SECURITY.md for security boundaries and reporting limits;
-- CONTRIBUTING.md for contribution rules;
-- CHANGELOG.md for release history and unreleased changes.
+- guaranteed fixes;
+- private consulting through GitHub issues;
+- production incident response;
+- security guarantees;
+- dependency vulnerability scanning;
+- support for behavior outside the documented scope.
 
-## Good support requests
+## Security and vulnerability handling
 
-Good requests include:
+Private vulnerability reporting is currently disabled for this repository.
 
-- clear description of the problem;
-- expected behavior;
-- actual behavior;
-- reproduction steps;
-- relevant command output;
-- operating system and Python version;
-- whether the issue affects correctness, safety, documentation, or usability.
+Do not claim GitHub Security Advisories or private vulnerability reporting are enabled unless that setting has been explicitly verified.
 
-## Unsupported requests
+Security-relevant reports should avoid posting real secrets, tokens, credentials, private URLs, customer data, or exploit material.
 
-The following requests are out of scope unless a maintainer explicitly approves a design change first:
+See `SECURITY.md` for the project security boundary and supported-version policy.
 
-- adding network behavior;
-- adding LLM runtime behavior;
-- executing commands from analyzed repositories;
-- claiming the tool makes repositories secure;
-- bypassing checks;
-- hiding known failures;
-- adding secrets or private data to examples;
-- making broad rewrites without a narrow reviewable plan.
+## Project boundaries
 
-## Security reports
+`agent-rules-kit` is local-first, read-only by default, and does not call an LLM, access the network at runtime, or execute commands from analyzed repositories.
 
-Security-sensitive reports should follow SECURITY.md.
-
-Private vulnerability reporting is currently verified as disabled. Do not claim that private vulnerability reporting is enabled.
-
-If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
-
-For non-sensitive security boundary issues, open a GitHub issue with a minimal reproduction.
-
-## Maintainer note
-
-Support must remain aligned with the project boundaries.
-
-A request should not be accepted just because it is useful. It should be accepted only if it keeps the project local-first, auditable, testable, maintainable, and honest about its limits.
+It is not a security product, not a general repository auditor, not a secret scanner, not an autonomous fixer, and not a replacement for maintainer review.

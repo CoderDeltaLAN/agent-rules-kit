@@ -6,9 +6,9 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 ## Supported versions
 
-`v0.2.2` is published as a GitHub Release and PyPI package.
+`v0.2.3` is published as a GitHub Release and PyPI package.
 
-Current `main` may include post-`v0.2.2` documentation or maintenance updates after the published package.
+Current `main` may include post-`v0.2.3` documentation or maintenance updates after the published package.
 
 The project is still maintained on a best-effort basis. There is no commercial SLA, no guaranteed response time, and no guarantee that every security-relevant issue will be found or fixed.
 
@@ -18,7 +18,7 @@ The project is still maintained on a best-effort basis. There is no commercial S
 | 0.1.x | Historical pre-release line / not supported |
 | < 0.1 | Not supported |
 
-`agent-rules-kit==0.2.2` is published on PyPI. Future PyPI availability claims must be verified per release before updating this policy.
+`agent-rules-kit==0.2.3` is published on PyPI. Future PyPI availability claims must be verified per release before updating this policy.
 
 ## Security boundaries
 
