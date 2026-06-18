@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from agent_rules_kit import __version__
+from agent_rules_kit.budget import BudgetReport, build_budget_report
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
 from agent_rules_kit.findings import Finding
 from agent_rules_kit.governance import find_governance_findings
@@ -82,6 +83,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository root to inspect. Defaults to the current directory.",
     )
 
+    budget_parser = subparsers.add_parser(
+        "budget",
+        help="Estimate local instruction-file size and context pressure.",
+    )
+    budget_parser.add_argument(
+        "repository",
+        nargs="?",
+        default=".",
+        help="Repository root to inspect. Defaults to the current directory.",
+    )
+
     return parser
 
 
@@ -107,7 +119,59 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "doctor":
         return _run_doctor(Path(args.repository))
 
+    if args.command == "budget":
+        return _run_budget(Path(args.repository))
+
     parser.print_help()
+    return 0
+
+
+def _run_budget(repository_root: Path) -> int:
+    try:
+        instruction_files = discover_instruction_files(repository_root)
+        report = build_budget_report(repository_root, instruction_files)
+    except ValueError as error:
+        print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
+        return 2
+
+    return _print_console_budget(repository_root, report)
+
+
+def _print_console_budget(repository_root: Path, report: BudgetReport) -> int:
+    print(f"agent-rules-kit budget: {redact_secret_like_values(str(repository_root))}")
+
+    if not report.files:
+        print("Status: no_instruction_files")
+        print("Supported instruction files: 0")
+        print("Total bytes: 0")
+        print("Total characters: 0")
+        print("Total lines: 0")
+        print("Approximate words: 0")
+        print(
+            "Next step: add a supported agent instruction file before estimating "
+            "context pressure."
+        )
+        return 1
+
+    print("Status: ok")
+    print(f"Supported instruction files: {len(report.files)}")
+    print(f"Total bytes: {report.total_bytes}")
+    print(f"Total characters: {report.total_characters}")
+    print(f"Total lines: {report.total_lines}")
+    print(f"Approximate words: {report.total_approximate_words}")
+    print("Files:")
+
+    for file_item in report.files:
+        path = redact_secret_like_values(file_item.path)
+        print(
+            f"- {path} [{file_item.kind}] - "
+            f"{file_item.byte_count} bytes, "
+            f"{file_item.character_count} characters, "
+            f"{file_item.line_count} lines, "
+            f"{file_item.approximate_word_count} approximate words"
+        )
+
+    print("Next step: review large instruction files before adding more agent guidance.")
     return 0
 
 

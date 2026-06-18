@@ -133,6 +133,67 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertIn("ERROR: repository root does not exist:", output.getvalue())
 
+    def test_budget_reports_single_agent_size_summary(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["budget", str(FIXTURE_ROOT / "single-agent")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit budget:", text)
+        self.assertIn("Status: ok", text)
+        self.assertIn("Supported instruction files: 1", text)
+        self.assertIn("Total bytes: 321", text)
+        self.assertIn("Total characters: 321", text)
+        self.assertIn("Total lines: 11", text)
+        self.assertIn("Approximate words:", text)
+        self.assertIn("- AGENTS.md [agents] - 321 bytes, 321 characters, 11 lines,", text)
+
+    def test_budget_reports_multi_agent_totals(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["budget", str(FIXTURE_ROOT / "multi-agent-overlap")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Supported instruction files: 6", text)
+        self.assertIn("Total bytes: 1423", text)
+        self.assertIn("Total characters: 1423", text)
+        self.assertIn("Total lines: 52", text)
+        self.assertIn("- AGENTS.md [agents] - 310 bytes, 310 characters, 11 lines,", text)
+        self.assertIn(
+            "- .github/instructions/agents.instructions.md [github-instruction] - "
+            "185 bytes, 185 characters, 7 lines,",
+            text,
+        )
+
+    def test_budget_returns_one_when_no_instruction_files_are_found(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["budget", str(FIXTURE_ROOT / "empty-repo")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Status: no_instruction_files", text)
+        self.assertIn("Supported instruction files: 0", text)
+        self.assertIn("Total bytes: 0", text)
+        self.assertIn("Approximate words: 0", text)
+
+    def test_budget_returns_two_for_invalid_repository_root(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["budget", str(FIXTURE_ROOT / "missing-repo")])
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn("ERROR: repository root does not exist:", output.getvalue())
+
     def test_check_returns_two_for_invalid_repository_root(self) -> None:
         output = io.StringIO()
 

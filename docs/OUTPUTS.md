@@ -12,14 +12,14 @@ Implemented command surface:
 - `agent-rules-kit check`;
 - `agent-rules-kit init --dry-run`;
 - `agent-rules-kit init --write`;
-- `agent-rules-kit doctor`.
+- `agent-rules-kit doctor`;
+- `agent-rules-kit budget`.
 
 Planned v0.3 command surface:
 
-- `agent-rules-kit budget`;
 - `agent-rules-kit explain`.
 
-`doctor` is implemented as the first v0.3 command baseline. The remaining planned commands are not implemented yet. Their output contracts are design targets for future phases and must not be documented as available behavior until their implementation phases are merged.
+`doctor` and `budget` are implemented as v0.3 command baselines. The remaining planned command is not implemented yet. Its output contract is a design target for a future phase and must not be documented as available behavior until its implementation phase is merged.
 
 ## Contract status
 
@@ -73,7 +73,7 @@ Future behavior should preserve that distinction unless a dedicated phase change
 | `init --dry-run` | console | yes | Read-only plan; no files modified. |
 | `init --write` | console | yes | Explicit write mode with backup behavior for existing root `AGENTS.md`. |
 | `doctor` | console | yes | Read-only repository-level diagnosis summary. |
-| `budget` | to be defined | no | Planned v0.3 read-only local size/context-pressure approximation. |
+| `budget` | console | yes | Read-only local size and context-pressure approximation. |
 | `explain` | to be defined | no | Planned v0.3 local rule explanation command. |
 
 ## Exit codes
@@ -92,6 +92,9 @@ Summary for current implemented commands:
 | `init --dry-run` | `0` | Plan completed successfully without writing files. |
 | `init --write` | `0` | Explicit write completed successfully. |
 | `init` | `2` | Missing mode, conflicting modes, invalid repository input, symlink refusal, or command-line usage error. |
+| `budget` | `0` | Budget approximation completed for supported instruction files. |
+| `budget` | `1` | No supported instruction files were found. |
+| `budget` | `2` | Invalid repository input, unsupported instruction-file input, or command-line usage error. |
 
 ## JSON contract for `check`
 
@@ -219,30 +222,33 @@ Current `doctor` exit-code behavior:
 
 `doctor` is read-only. It does not audit GitHub branch protection, CI, dependencies, or security certification.
 
+## Budget output contract
+
+Current `budget` console output includes:
+
+- command header;
+- status line;
+- supported instruction file count;
+- total bytes;
+- total characters;
+- total lines;
+- approximate word count;
+- one metrics line per supported instruction file when files exist;
+- short next-step guidance.
+
+Current `budget` exit-code behavior:
+
+- `0`: budget approximation completed for supported instruction files;
+- `1`: no supported instruction files were found;
+- `2`: invalid repository input, unsupported instruction-file input, or command-line usage error.
+
+`budget` is read-only. It uses deterministic local metrics only. It does not perform tokenizer-specific counting, model-specific context-window analysis, remote tokenization, LLM calls, pricing estimates, or optimization claims.
+
+`Approximate words` is a local whitespace-based approximation, not a model token count.
+
 ## Planned v0.3 command contracts
 
-The remaining commands are design targets. They are not available until their dedicated implementation phases are merged.
-
-### `budget`
-
-Planned purpose:
-
-- read-only local size/context-pressure approximation;
-- report deterministic local metrics such as bytes, characters, lines, approximate words, file count, and totals.
-
-Planned output direction:
-
-- no model-specific token-count promise;
-- no remote tokenization;
-- no LLM call;
-- no pricing estimate;
-- use the word approximation for non-token metrics.
-
-Planned exit-code direction:
-
-- `0`: budget calculation completed for supported input;
-- `1`: no supported instruction files were found, if the command operates on discovered instruction files;
-- `2`: invalid input or command-line usage error.
+The remaining command is a design target. It is not available until its dedicated implementation phase is merged.
 
 ### `explain`
 

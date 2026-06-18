@@ -52,6 +52,21 @@ Notes:
 - `doctor` findings do not currently make the command fail.
 - `doctor` does not audit GitHub branch protection, CI, dependencies, or security certification.
 
+### `budget`
+
+| Condition | Exit code | Stdout | Stderr |
+| --- | ---: | --- | --- |
+| Supported instruction files found | `0` | Console budget approximation | Empty unless lower-level runtime fails unexpectedly |
+| No supported instruction files found | `1` | Console no-result budget summary | Empty unless lower-level runtime fails unexpectedly |
+| Invalid repository input, unsupported instruction-file input, or command-line usage error | `2` | Empty | Error message or argparse-dependent |
+
+Notes:
+
+- `budget` is read-only.
+- `budget` uses deterministic local metrics only.
+- `budget` does not perform tokenizer-specific counting, remote tokenization, LLM calls, pricing estimates, or optimization claims.
+- `Approximate words` is not a model token count.
+
 ### `init --dry-run`
 
 | Condition | Exit code | Stdout | Stderr |
@@ -83,18 +98,6 @@ Notes:
 
 The following commands are not implemented yet. Their exit-code contracts are design targets for future implementation phases.
 
-### `budget`
-
-Planned direction:
-
-| Condition | Exit code |
-| --- | ---: |
-| Budget approximation completed for supported input | `0` |
-| No supported instruction files found, if the command operates only on discovered instruction files | `1` |
-| Invalid repository input or command-line usage error | `2` |
-
-The implementation must not promise tokenizer-specific exactness unless a later explicit tokenizer phase is approved.
-
 ### `explain`
 
 Planned direction:
@@ -119,6 +122,8 @@ The contract regression matrix currently checks:
 - `check --format json` and `check --format markdown` preserve the same success and no-result exit-code behavior;
 - `doctor` exits `0` when supported instruction files are found;
 - `doctor` exits `1` when no supported instruction files are found;
+- `budget` exits `0` when supported instruction files are found;
+- `budget` exits `1` when no supported instruction files are found;
 - `init --dry-run` exits `0`;
 - `init` without `--dry-run` or `--write` exits `2` and writes the supported error to stderr.
 
