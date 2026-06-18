@@ -173,6 +173,97 @@ class GoldenOutputTests(unittest.TestCase):
             "ERROR: init currently requires --dry-run or --write.\n",
         )
 
+    def test_current_cli_contract_matrix_matches_expected_channels_and_exit_codes(self) -> None:
+        cases = [
+            {
+                "name": "version",
+                "args": ["--version"],
+                "exit_code": 0,
+                "stdout_contains": ["agent-rules-kit 0.2.3\n"],
+                "stderr": "",
+            },
+            {
+                "name": "help-without-command",
+                "args": [],
+                "exit_code": 0,
+                "stdout_contains": ["usage: agent-rules-kit", "check", "init"],
+                "stderr": "",
+            },
+            {
+                "name": "check-console-clean",
+                "args": ["check", str(FIXTURE_ROOT / "single-agent")],
+                "exit_code": 0,
+                "stdout_contains": [
+                    "Found 1 supported instruction file(s):",
+                    "- AGENTS.md [agents]",
+                ],
+                "stderr": "",
+            },
+            {
+                "name": "check-console-empty",
+                "args": ["check", str(FIXTURE_ROOT / "empty-repo")],
+                "exit_code": 1,
+                "stdout_contains": ["No supported agent instruction files found."],
+                "stderr": "",
+            },
+            {
+                "name": "check-json-clean",
+                "args": ["check", str(FIXTURE_ROOT / "single-agent"), "--format", "json"],
+                "exit_code": 0,
+                "json_status": "ok",
+                "stderr": "",
+            },
+            {
+                "name": "check-json-empty",
+                "args": ["check", str(FIXTURE_ROOT / "empty-repo"), "--format", "json"],
+                "exit_code": 1,
+                "json_status": "no_instruction_files",
+                "stderr": "",
+            },
+            {
+                "name": "check-markdown-clean",
+                "args": ["check", str(FIXTURE_ROOT / "single-agent"), "--format", "markdown"],
+                "exit_code": 0,
+                "stdout_contains": ["# agent-rules-kit check", "- Status: ok"],
+                "stderr": "",
+            },
+            {
+                "name": "check-markdown-empty",
+                "args": ["check", str(FIXTURE_ROOT / "empty-repo"), "--format", "markdown"],
+                "exit_code": 1,
+                "stdout_contains": ["# agent-rules-kit check", "- Status: no_instruction_files"],
+                "stderr": "",
+            },
+            {
+                "name": "init-dry-run",
+                "args": ["init", str(FIXTURE_ROOT / "single-agent"), "--dry-run"],
+                "exit_code": 0,
+                "stdout_contains": ["Mode: dry-run", "No files will be modified."],
+                "stderr": "",
+            },
+            {
+                "name": "init-missing-mode",
+                "args": ["init", str(FIXTURE_ROOT / "single-agent")],
+                "exit_code": 2,
+                "stdout": "",
+                "stderr": "ERROR: init currently requires --dry-run or --write.\n",
+            },
+        ]
+
+        for case in cases:
+            with self.subTest(case=case["name"]):
+                result = run_cli(case["args"])
+
+                self.assertEqual(result.exit_code, case["exit_code"])
+                if "stdout" in case:
+                    self.assertEqual(result.stdout, case["stdout"])
+                for expected_text in case.get("stdout_contains", []):
+                    self.assertIn(expected_text, result.stdout)
+                if "json_status" in case:
+                    payload = json.loads(result.stdout)
+                    self.assertEqual(payload["status"], case["json_status"])
+                self.assertEqual(result.stderr, case["stderr"])
+
 
 if __name__ == "__main__":
     unittest.main()
