@@ -177,6 +177,34 @@ class GoldenOutputTests(unittest.TestCase):
             "Next step: no governance findings were detected by implemented checks.\n",
         )
 
+    def test_budget_single_agent_fixture_matches_golden_output(self) -> None:
+        repository = FIXTURE_ROOT / "single-agent"
+        content = (repository / "AGENTS.md").read_text(encoding="utf-8")
+        byte_count = len(content.encode("utf-8"))
+        character_count = len(content)
+        line_count = content.count("\n") + (0 if content.endswith("\n") else 1)
+        word_count = len(content.split())
+
+        result = run_cli(["budget", str(repository)])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(
+            result.stdout,
+            f"agent-rules-kit budget: {repository}\n"
+            "Status: ok\n"
+            "Supported instruction files: 1\n"
+            f"Total bytes: {byte_count}\n"
+            f"Total characters: {character_count}\n"
+            f"Total lines: {line_count}\n"
+            f"Approximate words: {word_count}\n"
+            "Files:\n"
+            "- AGENTS.md [agents] - "
+            f"{byte_count} bytes, {character_count} characters, "
+            f"{line_count} lines, {word_count} approximate words\n"
+            "Next step: review large instruction files before adding more agent guidance.\n",
+        )
+
     def test_init_without_mode_matches_golden_error_output(self) -> None:
         repository = FIXTURE_ROOT / "single-agent"
 
@@ -262,6 +290,24 @@ class GoldenOutputTests(unittest.TestCase):
                 "args": ["doctor", str(FIXTURE_ROOT / "empty-repo")],
                 "exit_code": 1,
                 "stdout_contains": ["Status: no_instruction_files", "Findings: 0"],
+                "stderr": "",
+            },
+            {
+                "name": "budget-clean",
+                "args": ["budget", str(FIXTURE_ROOT / "single-agent")],
+                "exit_code": 0,
+                "stdout_contains": [
+                    "Status: ok",
+                    "Supported instruction files: 1",
+                    "Total bytes: 321",
+                ],
+                "stderr": "",
+            },
+            {
+                "name": "budget-empty",
+                "args": ["budget", str(FIXTURE_ROOT / "empty-repo")],
+                "exit_code": 1,
+                "stdout_contains": ["Status: no_instruction_files", "Total bytes: 0"],
                 "stderr": "",
             },
             {
