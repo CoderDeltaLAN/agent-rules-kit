@@ -177,7 +177,7 @@ The `v0.2.0` GitHub Release introduced this governance rule set. The published `
 
 For detailed rule purpose, evidence, limits, and false-positive notes, see `docs/RULES.md`.
 
-For CLI output examples in console, JSON, and Markdown formats, see `docs/OUTPUTS.md`.
+For CLI output examples in console, JSON, and Markdown formats, see `docs/OUTPUTS.md`. For the CLI exit-code contract, see `docs/EXIT-CODES.md`.
 
 ---
 
