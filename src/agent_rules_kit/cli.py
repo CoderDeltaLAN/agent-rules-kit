@@ -71,6 +71,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write baseline files, backing up existing files first.",
     )
 
+    doctor_parser = subparsers.add_parser(
+        "doctor",
+        help="Summarize repository-level instruction health.",
+    )
+    doctor_parser.add_argument(
+        "repository",
+        nargs="?",
+        default=".",
+        help="Repository root to inspect. Defaults to the current directory.",
+    )
+
     return parser
 
 
@@ -93,8 +104,87 @@ def main(argv: Sequence[str] | None = None) -> int:
             write=args.write,
         )
 
+    if args.command == "doctor":
+        return _run_doctor(Path(args.repository))
+
     parser.print_help()
     return 0
+
+
+def _run_doctor(repository_root: Path) -> int:
+    try:
+        instruction_files = discover_instruction_files(repository_root)
+    except ValueError as error:
+        print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
+        return 2
+
+    findings = find_governance_findings(repository_root, instruction_files)
+    return _print_console_doctor(repository_root, instruction_files, findings)
+
+
+def _print_console_doctor(
+    repository_root: Path,
+    instruction_files: tuple[InstructionFile, ...],
+    findings: tuple[Finding, ...],
+) -> int:
+    print(f"agent-rules-kit doctor: {redact_secret_like_values(str(repository_root))}")
+
+    if not instruction_files:
+        print("Status: no_instruction_files")
+        print("Supported instruction files: 0")
+        print("Findings: 0")
+        print(
+            "Next step: add a supported agent instruction file before reviewing "
+            "governance findings."
+        )
+        return 1
+
+    status = "review" if findings else "ok"
+    print(f"Status: {status}")
+    print(f"Supported instruction files: {len(instruction_files)}")
+    print(f"Findings: {len(findings)}")
+
+    if findings:
+        print("Findings by severity:")
+        for severity, count in _count_findings_by_severity(findings):
+            print(f"- {severity}: {count}")
+
+        print("Findings by rule:")
+        for rule_id, count in _count_findings_by_rule(findings):
+            print(f"- {rule_id}: {count}")
+
+        print("Next step: review the listed governance findings with `agent-rules-kit check`.")
+    else:
+        print("Next step: no governance findings were detected by implemented checks.")
+
+    return 0
+
+
+def _count_findings_by_severity(
+    findings: tuple[Finding, ...],
+) -> tuple[tuple[str, int], ...]:
+    counts: dict[str, int] = {}
+
+    for finding in findings:
+        severity = finding.severity.value
+        counts[severity] = counts.get(severity, 0) + 1
+
+    return tuple(
+        (severity, counts[severity])
+        for severity in ("info", "warning", "error")
+        if severity in counts
+    )
+
+
+def _count_findings_by_rule(
+    findings: tuple[Finding, ...],
+) -> tuple[tuple[str, int], ...]:
+    counts: dict[str, int] = {}
+
+    for finding in findings:
+        counts[finding.rule_id] = counts.get(finding.rule_id, 0) + 1
+
+    return tuple(counts.items())
 
 
 def _run_check(repository_root: Path, *, output_format: str = "console") -> int:

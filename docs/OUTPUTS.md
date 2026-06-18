@@ -11,15 +11,15 @@ Implemented command surface:
 - `agent-rules-kit --version`;
 - `agent-rules-kit check`;
 - `agent-rules-kit init --dry-run`;
-- `agent-rules-kit init --write`.
+- `agent-rules-kit init --write`;
+- `agent-rules-kit doctor`.
 
 Planned v0.3 command surface:
 
-- `agent-rules-kit doctor`;
 - `agent-rules-kit budget`;
 - `agent-rules-kit explain`.
 
-The planned commands are not implemented yet. Their output contracts are design targets for future phases and must not be documented as available behavior until their implementation phases are merged.
+`doctor` is implemented as the first v0.3 command baseline. The remaining planned commands are not implemented yet. Their output contracts are design targets for future phases and must not be documented as available behavior until their implementation phases are merged.
 
 ## Contract status
 
@@ -72,7 +72,7 @@ Future behavior should preserve that distinction unless a dedicated phase change
 | `check --format markdown` | Markdown | yes | Human-readable Markdown report. |
 | `init --dry-run` | console | yes | Read-only plan; no files modified. |
 | `init --write` | console | yes | Explicit write mode with backup behavior for existing root `AGENTS.md`. |
-| `doctor` | to be defined | no | Planned v0.3 read-only repository summary. |
+| `doctor` | console | yes | Read-only repository-level diagnosis summary. |
 | `budget` | to be defined | no | Planned v0.3 read-only local size/context-pressure approximation. |
 | `explain` | to be defined | no | Planned v0.3 local rule explanation command. |
 
@@ -200,29 +200,28 @@ Current `init` does not support JSON or Markdown output.
 
 `init --dry-run` is read-only. `init --write` is explicit write mode and must remain separate from read-only diagnosis commands.
 
-## Planned v0.3 command contracts
+## Doctor output contract
 
-These commands are design targets. They are not available until their dedicated implementation phases are merged.
+Current `doctor` console output includes:
 
-### `doctor`
+- command header;
+- status line;
+- supported instruction file count;
+- finding count;
+- finding counts by severity and rule when findings exist;
+- short next-step guidance.
 
-Planned purpose:
-
-- read-only repository-level diagnosis summary;
-- reuse discovery and governance findings;
-- summarize supported instruction files, finding counts, and high-level review status.
-
-Planned output direction:
-
-- console summary first;
-- JSON only if the implementation phase explicitly defines and tests it;
-- no branch protection, CI, dependency, or security certification audit in v0.3.
-
-Planned exit-code direction:
+Current `doctor` exit-code behavior:
 
 - `0`: diagnosis completed and supported instruction files were found;
-- `1`: no supported instruction files were found, if this mirrors `check`;
-- `2`: invalid input or command-line usage error.
+- `1`: no supported instruction files were found;
+- `2`: invalid repository input or command-line usage error.
+
+`doctor` is read-only. It does not audit GitHub branch protection, CI, dependencies, or security certification.
+
+## Planned v0.3 command contracts
+
+The remaining commands are design targets. They are not available until their dedicated implementation phases are merged.
 
 ### `budget`
 
