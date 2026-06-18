@@ -135,7 +135,7 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-`v0.2.1` is published as a GitHub Release and as the first PyPI package line for `agent-rules-kit`. Current `main` reflects that published state and may include later documentation or maintenance updates.
+`v0.2.2` is published as a GitHub Release and PyPI package for `agent-rules-kit`. Current `main` reflects that published state and may include later documentation or maintenance updates.
 
 The implemented behavior includes:
 
@@ -150,7 +150,7 @@ The implemented behavior includes:
 - avoids LLM calls;
 - avoids executing commands from analyzed repositories.
 
-Governance diagnostics were introduced in `v0.2.0` and hardened through the published `v0.2.1` release.
+Governance diagnostics were introduced in `v0.2.0` and hardened through the published `v0.2.1` release. `v0.2.2` is a documentation-only public-truth patch.
 
 These diagnostics are heuristic findings for instruction-file governance. They are meant to flag review-worthy instruction patterns, not to prove that a repository is safe.
 
@@ -173,7 +173,7 @@ Current `main` evaluates the following governance finding rules, in stable evalu
 
 Governance findings are intentionally conservative and pattern-based. They may produce false positives or false negatives, and they are not a substitute for maintainer review.
 
-The `v0.2.0` GitHub Release introduced this governance rule set. The published `v0.2.1` release includes subsequent governance hardening, coverage expansion, and release/PyPI documentation sync without moving the `v0.2.0` tag.
+The `v0.2.0` GitHub Release introduced this governance rule set. The published `v0.2.1` release includes subsequent governance hardening and coverage expansion without moving the `v0.2.0` tag. The published `v0.2.2` release syncs public release, PyPI, and security documentation without runtime behavior changes.
 
 For detailed rule purpose, evidence, limits, and false-positive notes, see `docs/RULES.md`.
 
@@ -204,7 +204,7 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.1` is published as a GitHub Release and PyPI package.
+`v0.2.2` is published as a GitHub Release and PyPI package.
 
 The published package can be installed from PyPI. Release publication uses PyPI Trusted Publishing from the GitHub Release workflow.
 
@@ -216,10 +216,10 @@ Requirements for using a published CLI release:
 - a Python virtual environment;
 - a published PyPI release of `agent-rules-kit`.
 
-Install `v0.2.1` in a virtual environment:
+Install `v0.2.2` in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install agent-rules-kit==0.2.1
+    .venv/bin/python -m pip install agent-rules-kit==0.2.2
     .venv/bin/agent-rules-kit --version
     .venv/bin/agent-rules-kit check /path/to/repository --format console
 
@@ -249,7 +249,7 @@ The source tree can also be used directly for quick CLI inspection:
 
 ## Release and PyPI Publishing
 
-The `v0.2.1` release was published through PyPI Trusted Publishing.
+The `v0.2.2` release was published through PyPI Trusted Publishing.
 
 Release publishing is handled by:
 
@@ -267,11 +267,11 @@ The workflow is intentionally limited:
 - it grants `id-token: write` only to the publish job;
 - it does not use a static PyPI token, username, or password.
 
-The published `v0.2.1` package must remain verifiable by:
+The published `v0.2.2` package must remain verifiable by:
 
 - the GitHub Release tag pointing to the verified release SHA;
 - a successful PyPI publish workflow run;
-- a clean virtual environment installing and running `agent-rules-kit==0.2.1` from PyPI.
+- a clean virtual environment installing and running `agent-rules-kit==0.2.2` from PyPI.
 
 ---
 
@@ -465,17 +465,17 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.2.1` is published as a GitHub Release and PyPI package;
-- `v0.2.0` remains the previous published GitHub Release baseline;
-- `main` may include post-`v0.2.1` documentation or maintenance updates;
+- `v0.2.2` is published as a GitHub Release and PyPI package;
+- `v0.2.1` remains the previous published GitHub Release and PyPI package baseline;
+- `main` may include post-`v0.2.2` documentation or maintenance updates;
 - no stable support or API guarantee yet;
-- release tag `v0.2.1` points to the verified release SHA;
+- release tag `v0.2.2` points to the verified release SHA;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
 - CI active;
 - branch protection is active with the required `local-checks / Python 3.12` status check;
 - the `pypi` GitHub environment exists for the release publishing workflow;
-- `.github/workflows/publish-pypi.yml` published `v0.2.1` through PyPI Trusted Publishing and remains the release publishing workflow;
+- `.github/workflows/publish-pypi.yml` published `v0.2.2` through PyPI Trusted Publishing and remains the release publishing workflow;
 - README screenshots are generated from real local CLI commands;
 - security boundaries documented;
 - threat model documented.
