@@ -6,9 +6,9 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 ## Supported versions
 
-`v0.2.0` is published as a GitHub Release.
+`v0.2.1` is published as a GitHub Release and PyPI package.
 
-Current `main` contains unreleased post-`v0.2.0` fixes intended for a future patch release.
+Current `main` may include post-`v0.2.1` documentation or maintenance updates after the published package.
 
 The project is still maintained on a best-effort basis. There is no commercial SLA, no guaranteed response time, and no guarantee that every security-relevant issue will be found or fixed.
 
@@ -18,7 +18,7 @@ The project is still maintained on a best-effort basis. There is no commercial S
 | 0.1.x | Historical pre-release line / not supported |
 | < 0.1 | Not supported |
 
-This project is not published to PyPI yet. Do not claim PyPI availability until a separate release phase verifies and publishes it.
+`agent-rules-kit==0.2.1` is published on PyPI. Future PyPI availability claims must be verified per release before updating this policy.
 
 ## Security boundaries
 
@@ -71,13 +71,13 @@ Security response is best-effort for the current `0.2.x` GitHub Release line.
 
 There is no commercial SLA or guaranteed response time.
 
-Before any broader public distribution, the maintainer should re-check and document:
+For future releases or broader public distribution, the maintainer should re-check and document:
 
 - supported versions;
 - expected response time;
 - disclosure handling;
 - whether GitHub Security Advisories or private vulnerability reporting are enabled;
-- whether PyPI publication changes the support policy.
+- whether the published package channel changes the support policy.
 
 ## Safe development rules
 

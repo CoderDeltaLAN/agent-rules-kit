@@ -9,6 +9,7 @@ This project has a published GitHub Release line, but no stable support or API g
 ### Changed
 
 - Documented the published `v0.2.1` GitHub Release and PyPI package state on `main`.
+- Synced public security, README, and changelog wording after `v0.2.1` publication, PyPI availability, and GitHub Release assets were verified.
 
 ## [0.2.1] - 2026-06-17
 
@@ -42,8 +43,8 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Release notes
 
-- These changes are present on `main` after `v0.2.0` and are not part of the published `v0.2.0` release artifacts.
-- The next release should be cut as a new patch release instead of moving the existing `v0.2.0` tag.
+- These changes were accumulated on `main` after `v0.2.0` and are released in `v0.2.1`.
+- The existing `v0.2.0` tag was not moved; `v0.2.1` was cut as a new patch release.
 
 ## [0.2.0] - 2026-06-15
 
