@@ -6,7 +6,10 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- Added v0.3 architecture and roadmap planning documentation.
+- Added initial output and exit-code contract documentation for existing `check` and `init` behavior and planned v0.3 `doctor`, `budget`, and `explain` commands.
 
 ## [0.2.3] - 2026-06-18
 
