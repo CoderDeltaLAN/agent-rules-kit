@@ -34,6 +34,23 @@ It is:
 
 A clean report only means the implemented checks completed according to their documented behavior.
 
+## Test evidence
+
+Current output behavior is covered by `tests/test_golden_outputs.py`.
+
+That test module currently pins representative exact output for:
+
+- `check` console output for a clean fixture;
+- `check --format json` output for a clean fixture;
+- `check` console output for an empty repository;
+- `check --format markdown` output for governance findings;
+- `init --dry-run` console output for an existing root `AGENTS.md`;
+- `init` missing-mode stderr behavior.
+
+It also includes a contract regression matrix for current version, no-command help, `check` console/JSON/Markdown success and no-result behavior, `init --dry-run`, and missing-mode `init` behavior.
+
+This is regression evidence for implemented behavior on current `main`. It is not a stable public API guarantee before v1.0.
+
 ## Output channels
 
 Current behavior:

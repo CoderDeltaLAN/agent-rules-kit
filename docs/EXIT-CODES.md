@@ -103,6 +103,22 @@ Planned direction:
 
 Unknown rule IDs should fail predictably. They should not silently produce generic guidance.
 
+## Test evidence
+
+Current implemented exit-code behavior is covered by `tests/test_golden_outputs.py`.
+
+The contract regression matrix currently checks:
+
+- `agent-rules-kit --version` exits `0`;
+- `agent-rules-kit` without a subcommand exits `0` and prints help;
+- `check` exits `0` when supported instruction files are found;
+- `check` exits `1` when no supported instruction files are found;
+- `check --format json` and `check --format markdown` preserve the same success and no-result exit-code behavior;
+- `init --dry-run` exits `0`;
+- `init` without `--dry-run` or `--write` exits `2` and writes the supported error to stderr.
+
+These tests are evidence for current implemented behavior. They do not turn this pre-v1.0 contract into a stable public API guarantee.
+
 ## Maintenance rules
 
 Update this document when:

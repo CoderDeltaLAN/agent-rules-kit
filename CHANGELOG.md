@@ -10,6 +10,8 @@ This project has a published GitHub Release line, but no stable support or API g
 
 - Added v0.3 architecture and roadmap planning documentation.
 - Added initial output and exit-code contract documentation for existing `check` and `init` behavior and planned v0.3 `doctor`, `budget`, and `explain` commands.
+- Added golden output foundation tests for current `check` and `init` console, JSON, Markdown, stdout, stderr, and exit-code behavior.
+- Added a CLI contract regression matrix for current version, help, `check`, and `init` output channels and exit codes.
 
 ## [0.2.3] - 2026-06-18
 
