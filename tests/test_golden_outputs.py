@@ -161,6 +161,22 @@ class GoldenOutputTests(unittest.TestCase):
             "existing file would be backed up before replacement\n",
         )
 
+    def test_doctor_clean_fixture_matches_golden_output(self) -> None:
+        repository = FIXTURE_ROOT / "single-agent"
+
+        result = run_cli(["doctor", str(repository)])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(
+            result.stdout,
+            f"agent-rules-kit doctor: {repository}\n"
+            "Status: ok\n"
+            "Supported instruction files: 1\n"
+            "Findings: 0\n"
+            "Next step: no governance findings were detected by implemented checks.\n",
+        )
+
     def test_init_without_mode_matches_golden_error_output(self) -> None:
         repository = FIXTURE_ROOT / "single-agent"
 
@@ -232,6 +248,20 @@ class GoldenOutputTests(unittest.TestCase):
                 "args": ["check", str(FIXTURE_ROOT / "empty-repo"), "--format", "markdown"],
                 "exit_code": 1,
                 "stdout_contains": ["# agent-rules-kit check", "- Status: no_instruction_files"],
+                "stderr": "",
+            },
+            {
+                "name": "doctor-clean",
+                "args": ["doctor", str(FIXTURE_ROOT / "single-agent")],
+                "exit_code": 0,
+                "stdout_contains": ["Status: ok", "Supported instruction files: 1"],
+                "stderr": "",
+            },
+            {
+                "name": "doctor-empty",
+                "args": ["doctor", str(FIXTURE_ROOT / "empty-repo")],
+                "exit_code": 1,
+                "stdout_contains": ["Status: no_instruction_files", "Findings: 0"],
                 "stderr": "",
             },
             {

@@ -75,6 +75,64 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn("No supported agent instruction files found.", output.getvalue())
 
+    def test_doctor_reports_clean_fixture_summary(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["doctor", str(FIXTURE_ROOT / "single-agent")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit doctor:", text)
+        self.assertIn("Status: ok", text)
+        self.assertIn("Supported instruction files: 1", text)
+        self.assertIn("Findings: 0", text)
+        self.assertIn(
+            "Next step: no governance findings were detected by implemented checks.",
+            text,
+        )
+
+    def test_doctor_reports_governance_summary(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["doctor", str(FIXTURE_ROOT / "risky-instructions")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("Status: review", text)
+        self.assertIn("Supported instruction files: 1", text)
+        self.assertIn("Findings: 3", text)
+        self.assertIn("Findings by severity:", text)
+        self.assertIn("- warning: 3", text)
+        self.assertIn("Findings by rule:", text)
+        self.assertIn("- AIRK-GOV003: 3", text)
+        self.assertIn("agent-rules-kit check", text)
+
+    def test_doctor_returns_one_when_no_instruction_files_are_found(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["doctor", str(FIXTURE_ROOT / "empty-repo")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Status: no_instruction_files", text)
+        self.assertIn("Supported instruction files: 0", text)
+        self.assertIn("Findings: 0", text)
+
+    def test_doctor_returns_two_for_invalid_repository_root(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["doctor", str(FIXTURE_ROOT / "missing-repo")])
+
+        self.assertEqual(exit_code, 2)
+        self.assertIn("ERROR: repository root does not exist:", output.getvalue())
+
     def test_check_returns_two_for_invalid_repository_root(self) -> None:
         output = io.StringIO()
 

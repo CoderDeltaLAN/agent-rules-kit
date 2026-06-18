@@ -37,6 +37,21 @@ Notes:
 - `check` returns `1` only for the supported no-instruction-files state.
 - `check` returns `2` for repository validation errors raised by discovery and for argparse usage errors.
 
+### `doctor`
+
+| Condition | Exit code | Stdout | Stderr |
+| --- | ---: | --- | --- |
+| Supported instruction files found | `0` | Console diagnosis summary | Empty unless lower-level runtime fails unexpectedly |
+| No supported instruction files found | `1` | Console no-result diagnosis summary | Empty unless lower-level runtime fails unexpectedly |
+| Invalid repository input or command-line usage error | `2` | Empty | Error message or argparse-dependent |
+
+Notes:
+
+- `doctor` is read-only.
+- `doctor` reuses the existing discovery and governance diagnostics.
+- `doctor` findings do not currently make the command fail.
+- `doctor` does not audit GitHub branch protection, CI, dependencies, or security certification.
+
 ### `init --dry-run`
 
 | Condition | Exit code | Stdout | Stderr |
@@ -67,18 +82,6 @@ Notes:
 ## Planned v0.3 exit-code direction
 
 The following commands are not implemented yet. Their exit-code contracts are design targets for future implementation phases.
-
-### `doctor`
-
-Planned direction:
-
-| Condition | Exit code |
-| --- | ---: |
-| Repository diagnosis completed with supported instruction files | `0` |
-| No supported instruction files found, if aligned with `check` | `1` |
-| Invalid repository input or command-line usage error | `2` |
-
-The implementation phase must decide and test whether no supported instruction files should mirror `check` with `1`.
 
 ### `budget`
 
@@ -114,6 +117,8 @@ The contract regression matrix currently checks:
 - `check` exits `0` when supported instruction files are found;
 - `check` exits `1` when no supported instruction files are found;
 - `check --format json` and `check --format markdown` preserve the same success and no-result exit-code behavior;
+- `doctor` exits `0` when supported instruction files are found;
+- `doctor` exits `1` when no supported instruction files are found;
 - `init --dry-run` exits `0`;
 - `init` without `--dry-run` or `--write` exits `2` and writes the supported error to stderr.
 
