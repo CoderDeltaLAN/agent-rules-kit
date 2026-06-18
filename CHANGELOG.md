@@ -6,10 +6,20 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.2.2] - 2026-06-18
+
 ### Changed
 
-- Documented the published `v0.2.1` GitHub Release and PyPI package state on `main`.
-- Synced public security, README, and changelog wording after `v0.2.1` publication, PyPI availability, and GitHub Release assets were verified.
+- Released a documentation-only patch for the public `v0.2.2` GitHub Release and PyPI package line.
+- Synced SECURITY.md, README.md, CHANGELOG.md, package metadata, and release references so the published package no longer points users at stale `v0.2.1` public-truth wording.
+- Preserved the existing runtime behavior, governance diagnostics, CI workflow, PyPI Trusted Publishing workflow, and previous release tags.
+
+### Release notes
+
+- No runtime code or behavior changes are included in this patch release.
+- The existing `v0.2.1` tag was not moved; `v0.2.2` is cut as a new docs-only patch release.
 
 ## [0.2.1] - 2026-06-17
 
@@ -37,7 +47,7 @@ This project has a published GitHub Release line, but no stable support or API g
 - Clarified packaging smoke documentation to distinguish console-script execution from `python -m agent_rules_kit.cli` module execution.
 - Clarified README installation, normal CLI usage, development virtual environment requirements, local checks, and next-release audit readiness.
 - Added Ruff linting to local checks and CI by installing project development dependencies before running `./scripts/check.sh`.
-- Synced product strategy and threat model wording with the published `v0.2.0` release line and unreleased post-`v0.2.0` main state.
+- Synced product strategy and threat model wording with the published `v0.2.0` release line and the pre-`v0.2.1` main state.
 - Synced support, security, README, and release-truth documentation after the published `v0.2.0` GitHub Release.
 - Added CLI output examples and governance rules reference documentation after the `v0.2.0` tag.
 
