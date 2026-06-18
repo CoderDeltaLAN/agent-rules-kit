@@ -205,6 +205,23 @@ class GoldenOutputTests(unittest.TestCase):
             "Next step: review large instruction files before adding more agent guidance.\n",
         )
 
+    def test_explain_known_rule_matches_golden_output(self) -> None:
+        result = run_cli(["explain", "AIRK-GOV003"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(
+            result.stdout,
+            "agent-rules-kit explain: AIRK-GOV003\n"
+            "Title: Review or CI bypass guidance\n"
+            "Category: governance\n"
+            "Summary: Flags instruction text that appears to encourage "
+            "bypassing review, CI, PRs, branch protection, or safe integration "
+            "flow.\n"
+            "Limits: Does not audit real GitHub settings, CI configuration, "
+            "or branch protection.\n",
+        )
+
     def test_init_without_mode_matches_golden_error_output(self) -> None:
         repository = FIXTURE_ROOT / "single-agent"
 
@@ -309,6 +326,30 @@ class GoldenOutputTests(unittest.TestCase):
                 "exit_code": 1,
                 "stdout_contains": ["Status: no_instruction_files", "Total bytes: 0"],
                 "stderr": "",
+            },
+            {
+                "name": "explain-list",
+                "args": ["explain", "--list"],
+                "exit_code": 0,
+                "stdout_contains": ["Known rules:", "AIRK-GOV001"],
+                "stderr": "",
+            },
+            {
+                "name": "explain-known-rule",
+                "args": ["explain", "AIRK-GOV003"],
+                "exit_code": 0,
+                "stdout_contains": [
+                    "agent-rules-kit explain: AIRK-GOV003",
+                    "Review or CI bypass guidance",
+                ],
+                "stderr": "",
+            },
+            {
+                "name": "explain-unknown-rule",
+                "args": ["explain", "AIRK-GOV999"],
+                "exit_code": 2,
+                "stdout": "",
+                "stderr": "ERROR: unknown rule ID: AIRK-GOV999\n",
             },
             {
                 "name": "init-dry-run",

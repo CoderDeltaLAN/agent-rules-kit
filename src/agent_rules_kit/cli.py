@@ -11,6 +11,11 @@ from pathlib import Path
 from agent_rules_kit import __version__
 from agent_rules_kit.budget import BudgetReport, build_budget_report
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
+from agent_rules_kit.explain import (
+    RuleExplanation,
+    get_rule_explanation,
+    list_rule_explanations,
+)
 from agent_rules_kit.findings import Finding
 from agent_rules_kit.governance import find_governance_findings
 from agent_rules_kit.init_plan import InitPlan, build_init_plan
@@ -94,6 +99,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository root to inspect. Defaults to the current directory.",
     )
 
+    explain_parser = subparsers.add_parser(
+        "explain",
+        help="Explain known governance rule IDs.",
+    )
+    explain_parser.add_argument(
+        "rule_id",
+        nargs="?",
+        help="Known rule ID to explain, such as AIRK-GOV003.",
+    )
+    explain_parser.add_argument(
+        "--list",
+        action="store_true",
+        dest="list_rules",
+        help="List known rule IDs.",
+    )
+
     return parser
 
 
@@ -122,8 +143,54 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "budget":
         return _run_budget(Path(args.repository))
 
+    if args.command == "explain":
+        return _run_explain(args.rule_id, list_rules=args.list_rules)
+
     parser.print_help()
     return 0
+
+
+def _run_explain(rule_id: str | None, *, list_rules: bool) -> int:
+    if list_rules and rule_id is not None:
+        print("ERROR: explain accepts either --list or a rule ID.", file=sys.stderr)
+        return 2
+
+    if list_rules:
+        _print_known_rules()
+        return 0
+
+    if rule_id is None:
+        print("ERROR: explain requires --list or RULE_ID.", file=sys.stderr)
+        return 2
+
+    explanation = get_rule_explanation(rule_id)
+    if explanation is None:
+        print(
+            f"ERROR: unknown rule ID: {redact_secret_like_values(rule_id)}",
+            file=sys.stderr,
+        )
+        return 2
+
+    _print_rule_explanation(explanation)
+    return 0
+
+
+def _print_known_rules() -> None:
+    print("agent-rules-kit explain")
+    print("Known rules:")
+    for explanation in list_rule_explanations():
+        print(
+            f"- {explanation.rule_id} [{explanation.category}] "
+            f"{explanation.title}"
+        )
+
+
+def _print_rule_explanation(explanation: RuleExplanation) -> None:
+    print(f"agent-rules-kit explain: {explanation.rule_id}")
+    print(f"Title: {explanation.title}")
+    print(f"Category: {explanation.category}")
+    print(f"Summary: {explanation.summary}")
+    print(f"Limits: {explanation.limits}")
 
 
 def _run_budget(repository_root: Path) -> int:
