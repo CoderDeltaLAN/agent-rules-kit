@@ -150,6 +150,7 @@ The implemented behavior includes:
 - provides read-only `doctor` repository diagnosis output on `main`;
 - provides read-only `budget` local size and context-pressure approximation output on `main`;
 - provides read-only `explain` output for known governance rule IDs on `main`;
+- provides read-only `dedupe` duplicate instruction-line detection on `main`;
 - redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
@@ -362,6 +363,14 @@ If root `AGENTS.md` already exists, it is backed up before replacement:
 `budget` reports deterministic local size metrics. It is an approximation, not tokenizer-specific counting:
 
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
+
+### Dedupe command
+
+`dedupe` reports repeated instruction lines across supported instruction files:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli dedupe tests/fixtures/repositories/multi-agent-overlap
+
+The first baseline is conservative: it detects repeated normalized lines across files, not broad semantic duplication.
 
 ### Explain command
 

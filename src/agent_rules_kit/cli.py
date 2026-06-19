@@ -10,6 +10,7 @@ from pathlib import Path
 
 from agent_rules_kit import __version__
 from agent_rules_kit.budget import BudgetReport, build_budget_report
+from agent_rules_kit.dedupe import DedupeReport, build_dedupe_report
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
 from agent_rules_kit.explain import (
     RuleExplanation,
@@ -99,6 +100,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository root to inspect. Defaults to the current directory.",
     )
 
+    dedupe_parser = subparsers.add_parser(
+        "dedupe",
+        help="Detect repeated instruction lines across supported instruction files.",
+    )
+    dedupe_parser.add_argument(
+        "repository",
+        nargs="?",
+        default=".",
+        help="Repository root to inspect. Defaults to the current directory.",
+    )
+
     explain_parser = subparsers.add_parser(
         "explain",
         help="Explain known governance rule IDs.",
@@ -142,6 +154,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "budget":
         return _run_budget(Path(args.repository))
+
+    if args.command == "dedupe":
+        return _run_dedupe(Path(args.repository))
 
     if args.command == "explain":
         return _run_explain(args.rule_id, list_rules=args.list_rules)
@@ -192,6 +207,53 @@ def _print_rule_explanation(explanation: RuleExplanation) -> None:
     print(f"Summary: {explanation.summary}")
     print(f"Limits: {explanation.limits}")
 
+
+
+def _run_dedupe(repository_root: Path) -> int:
+    try:
+        instruction_files = discover_instruction_files(repository_root)
+        report = build_dedupe_report(repository_root, instruction_files)
+    except ValueError as error:
+        print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
+        return 2
+
+    return _print_console_dedupe(repository_root, instruction_files, report)
+
+
+def _print_console_dedupe(
+    repository_root: Path,
+    instruction_files: tuple[InstructionFile, ...],
+    report: DedupeReport,
+) -> int:
+    print(f"agent-rules-kit dedupe: {redact_secret_like_values(str(repository_root))}")
+
+    if not instruction_files:
+        print("Status: no_instruction_files")
+        print("Supported instruction files: 0")
+        print("Duplicate groups: 0")
+        print("Duplicate lines: 0")
+        print("Next step: add a supported agent instruction file before checking duplication.")
+        return 1
+
+    status = "review" if report.groups else "ok"
+    print(f"Status: {status}")
+    print(f"Supported instruction files: {len(instruction_files)}")
+    print(f"Duplicate groups: {report.duplicate_group_count}")
+    print(f"Duplicate lines: {report.duplicate_line_count}")
+
+    if report.groups:
+        print("Duplicate groups:")
+        for index, group in enumerate(report.groups, start=1):
+            evidence = redact_secret_like_values(group.locations[0].evidence)
+            print(f"{index}. {evidence}")
+            for location in group.locations:
+                path = redact_secret_like_values(location.path)
+                print(f"   - {path}:{location.line}")
+        print("Next step: move repeated instructions into one source of truth or import path.")
+    else:
+        print("Next step: no repeated instruction lines were detected by implemented checks.")
+
+    return 0
 
 def _run_budget(repository_root: Path) -> int:
     try:
