@@ -2,7 +2,7 @@
 
 This document describes the current `agent-rules-kit` CLI output contract and representative output examples.
 
-The contract is intentionally narrow. It documents implemented behavior on current `main` and the planned v0.3 command direction without promising a stable public API before v1.0.
+The contract is intentionally narrow. It documents implemented behavior on current `main` without promising a stable public API before v1.0.
 
 ## Scope
 
@@ -14,9 +14,11 @@ Implemented command surface:
 - `agent-rules-kit init --write`;
 - `agent-rules-kit doctor`;
 - `agent-rules-kit budget`;
+- `agent-rules-kit dedupe`;
+- `agent-rules-kit conflicts`;
 - `agent-rules-kit explain`.
 
-`doctor`, `budget`, and `explain` are implemented as v0.3.0 command baselines. Release publication is verified by the dedicated GitHub Release and PyPI workflow evidence, not by this output contract alone.
+`doctor`, `budget`, and `explain` are implemented as v0.3.0 command baselines. `dedupe` and `conflicts` are implemented on current `main` after v0.3.0 and must not be described as published package behavior until the next release is cut and verified. Release publication is verified by the dedicated GitHub Release and PyPI workflow evidence, not by this output contract alone.
 
 ## Contract status
 
@@ -71,6 +73,8 @@ Future behavior should preserve that distinction unless a dedicated phase change
 | `init --write` | console | yes | Explicit write mode with backup behavior for existing root `AGENTS.md`. |
 | `doctor` | console | yes | Read-only repository-level diagnosis summary. |
 | `budget` | console | yes | Read-only local size and context-pressure approximation. |
+| `dedupe` | console | yes | Read-only duplicate instruction-line detection. |
+| `conflicts` | console | yes | Read-only contradictory-guidance detection. |
 | `explain` | console | yes | Read-only local governance rule explanation command. |
 
 ## Exit codes
@@ -92,6 +96,12 @@ Summary for current implemented commands:
 | `budget` | `0` | Budget approximation completed for supported instruction files. |
 | `budget` | `1` | No supported instruction files were found. |
 | `budget` | `2` | Invalid repository input, unsupported instruction-file input, or command-line usage error. |
+| `dedupe` | `0` | Duplicate-line detection completed for supported instruction files. |
+| `dedupe` | `1` | No supported instruction files were found. |
+| `dedupe` | `2` | Invalid repository input, unsupported instruction-file input, or command-line usage error. |
+| `conflicts` | `0` | Contradictory-guidance detection completed for supported instruction files. |
+| `conflicts` | `1` | No supported instruction files were found. |
+| `conflicts` | `2` | Invalid repository input, unsupported instruction-file input, or command-line usage error. |
 | `explain` | `0` | Known rule listed or explained. |
 | `explain` | `2` | Unknown rule ID, conflicting input, missing input, or command-line usage error. |
 
@@ -244,6 +254,46 @@ Current `budget` exit-code behavior:
 `budget` is read-only. It uses deterministic local metrics only. It does not perform tokenizer-specific counting, model-specific context-window analysis, remote tokenization, LLM calls, pricing estimates, or optimization claims.
 
 `Approximate words` is a local whitespace-based approximation, not a model token count.
+
+## Dedupe output contract
+
+Current `dedupe` console output includes:
+
+- command header;
+- status line;
+- supported instruction file count;
+- duplicate group count;
+- duplicate line count;
+- duplicate groups with locations when repeated normalized lines are detected;
+- short next-step guidance.
+
+Current `dedupe` exit-code behavior:
+
+- `0`: duplicate-line detection completed and supported instruction files were found;
+- `1`: no supported instruction files were found;
+- `2`: invalid repository input, unsupported instruction-file input, or command-line usage error.
+
+`dedupe` is read-only. It detects repeated normalized lines across supported instruction files. It does not perform semantic duplication analysis.
+
+## Conflicts output contract
+
+Current `conflicts` console output includes:
+
+- command header;
+- status line;
+- supported instruction file count;
+- conflict group count;
+- conflict line count;
+- conflict groups with allowing and blocking guidance locations when implemented opposite-guidance patterns are detected;
+- short next-step guidance.
+
+Current `conflicts` exit-code behavior:
+
+- `0`: contradictory-guidance detection completed and supported instruction files were found;
+- `1`: no supported instruction files were found;
+- `2`: invalid repository input, unsupported instruction-file input, or command-line usage error.
+
+`conflicts` is read-only. It detects implemented deterministic pattern families for opposite guidance. It does not perform broad semantic contradiction analysis.
 
 ## Explain output contract
 

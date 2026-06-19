@@ -151,6 +151,7 @@ The implemented behavior includes:
 - provides read-only `budget` local size and context-pressure approximation output on `main`;
 - provides read-only `explain` output for known governance rule IDs on `main`;
 - provides read-only `dedupe` duplicate instruction-line detection on `main`;
+- provides read-only `conflicts` contradictory-guidance detection on `main`;
 - redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
@@ -257,6 +258,8 @@ The v0.3.0 commands can also be tested from the source tree:
 
     PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
+    PYTHONPATH=src python -m agent_rules_kit.cli dedupe tests/fixtures/repositories/multi-agent-overlap
+    PYTHONPATH=src python -m agent_rules_kit.cli conflicts tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
 
 These source-tree commands are development checks. Published-package behavior must be verified from a clean PyPI install during release closeout.
@@ -372,6 +375,14 @@ If root `AGENTS.md` already exists, it is backed up before replacement:
 
 The first baseline is conservative: it detects repeated normalized lines across files, not broad semantic duplication.
 
+### Conflicts command
+
+`conflicts` reports contradictory guidance across supported instruction files:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli conflicts tests/fixtures/repositories/multi-agent-overlap
+
+The first baseline is conservative: it detects implemented pattern families for opposite guidance, not broad semantic contradiction.
+
 ### Explain command
 
 `explain` lists or explains known local governance rule IDs:
@@ -379,7 +390,7 @@ The first baseline is conservative: it detects repeated normalized lines across 
     PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
     PYTHONPATH=src python -m agent_rules_kit.cli explain --list
 
-These commands are part of the v0.3.0 command surface.
+These commands are implemented on current `main`. `doctor`, `budget`, and `explain` are part of the published v0.3.0 command surface. `dedupe` and `conflicts` are post-v0.3.0 `main` additions until the next release is cut and verified.
 
 ---
 
@@ -457,6 +468,8 @@ See:
     │       ├── __init__.py
     │       ├── budget.py
     │       ├── cli.py
+    │       ├── conflicts.py
+    │       ├── dedupe.py
     │       ├── discovery.py
     │       ├── explain.py
     │       ├── findings.py
@@ -521,7 +534,7 @@ Current status:
 - release tag `v0.3.0` points to the verified release SHA;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
-- `doctor`, `budget`, and `explain` are implemented as v0.3.0 commands;
+- `doctor`, `budget`, and `explain` are implemented as v0.3.0 commands, while `dedupe` and `conflicts` are implemented on current `main` as post-v0.3.0 read-only command additions;
 - CI active;
 - branch protection is active with the required `local-checks / Python 3.12` status check;
 - the `pypi` GitHub environment exists for the release publishing workflow;
