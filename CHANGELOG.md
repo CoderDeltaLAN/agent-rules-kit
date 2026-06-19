@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added an OpenSSF Scorecard evaluation record with current official workflow constraints and a deferred workflow decision.
 - Added a dependency graph and Dependabot settings record with manual GitHub UI evidence and deferred version-update policy.
 - Added a private vulnerability reporting verification record and documented that GitHub private vulnerability reporting is enabled after manual UI verification.
 - Added a dedicated CodeQL workflow for Python code scanning without changing the protected CI required check name.
