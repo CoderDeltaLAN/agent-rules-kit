@@ -46,9 +46,11 @@ Use fake examples only.
 
 ## Reporting a vulnerability
 
-Private vulnerability reporting has been checked and is currently verified as disabled.
+Private vulnerability reporting is enabled for this repository.
 
-Do not claim private vulnerability reporting is enabled.
+Use GitHub private vulnerability reporting for sensitive vulnerability reports when available.
+
+See `docs/PRIVATE-VULNERABILITY-REPORTING.md` for the verification record and limits of this disclosure channel.
 
 If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
 
