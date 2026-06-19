@@ -104,24 +104,25 @@ Recommended future Dependabot phase boundaries:
 
 ## OpenSSF Scorecard
 
-OpenSSF Scorecard can provide an external supply-chain hygiene signal.
+OpenSSF Scorecard has been evaluated in a dedicated read-only phase.
 
-Potential value:
+Current documentation:
 
-- independent security posture feedback;
-- useful portfolio signal if interpreted honestly;
-- may surface action pinning, branch protection, token permissions, and dependency update gaps.
+- `docs/OPENSSF-SCORECARD-EVALUATION.md` records the current official workflow constraints, repository fit, risks, and deferred workflow decision.
 
-Risks and constraints:
+Decision:
 
-- scores are not proof of security;
-- action pinning recommendations may create maintenance overhead;
-- adopting Scorecard should not force rushed changes to CI, release, or branch protection.
+- do not add a Scorecard workflow in this evaluation branch;
+- do not add a Scorecard badge before real results are reviewed;
+- do not make Scorecard a required status check at first;
+- do not add an admin PAT or repository secret only to improve Scorecard scoring;
+- treat Scorecard as an external supply-chain hygiene signal, not a proof of security.
 
-Decision for this phase:
+Recommended future Scorecard phase boundary:
 
-- do not add Scorecard here;
-- record it as a later evaluation candidate after CodeQL and Dependabot decisions.
+- add only Scorecard workflow configuration if accepted;
+- keep it separate from CodeQL, Dependabot, action pinning, branch protection, release, and PyPI changes;
+- use supported default-branch triggers unless a later phase explicitly accepts experimental trigger behavior.
 
 ## GitHub Actions pinning policy
 
@@ -150,9 +151,8 @@ This phase is documentation-only evaluation.
 
 Recommended next hardening order:
 
-1. `security/add-codeql-analysis` if the maintainer wants an additional code-scanning signal.
-2. `security/verify-private-vulnerability-reporting-setting` if the maintainer wants to enable and document private reporting.
-3. `security/evaluate-dependabot-alerts-and-updates` for dependency alert and update policy.
-4. `security/evaluate-action-pinning-policy` for GitHub Actions pinning.
+1. `security/add-openssf-scorecard-workflow` if the maintainer accepts adding Scorecard as a separate workflow signal.
+2. `security/evaluate-action-pinning-policy` for GitHub Actions pinning.
+3. `supply-chain/add-dependabot-version-updates` if normal dependency version-update automation is accepted.
 
 None of these future phases should be mixed with release, PyPI, branch protection, runtime behavior, or product feature changes.
