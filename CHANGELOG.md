@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added a non-required Python 3.13 compatibility CI job without changing the protected Python 3.12 required check name.
 - Added a local post-release audit script for repeatable maintainer verification.
 - Documented the v0.3.0 post-release audit findings and v0.3.1 maintenance hardening target.
 
