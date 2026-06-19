@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from re import Pattern
 
 REDACTION_TEXT = "[REDACTED]"
 
@@ -14,7 +13,7 @@ class RedactionPattern:
     """A named pattern used to redact secret-like values."""
 
     name: str
-    pattern: Pattern[str]
+    pattern: re.Pattern[str]
 
 
 SECRET_LIKE_PATTERNS: tuple[RedactionPattern, ...] = (

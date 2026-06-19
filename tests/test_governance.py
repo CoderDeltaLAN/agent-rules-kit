@@ -15,7 +15,7 @@ from agent_rules_kit.governance import (
     find_unsupported_claim_findings,
 )
 
-SECRET_BOUNDARY_GUIDANCE = (
+SENSITIVE_VALUE_BOUNDARY_GUIDANCE = (
     "- Do not commit secrets, tokens, credentials, private URLs, or customer data."
 )
 HUMAN_LLM_PLANNING_GUIDANCE = (
@@ -258,7 +258,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Do not run destructive commands without explicit human confirmation.",
                         "- Ask the maintainer before using sudo, rm -rf, chmod -R, "
-                        "or downloaded scripts.",
+                        + "or downloaded scripts.",
                         "- Run pytest -q.",
                         "- Run ruff check .",
                         "- Run git diff --check.",
@@ -462,7 +462,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "Rules:",
                         "",
-                        SECRET_BOUNDARY_GUIDANCE,
+                        SENSITIVE_VALUE_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",
@@ -494,7 +494,7 @@ class GovernanceFindingTests(unittest.TestCase):
                                 "",
                                 "Rules:",
                                 "",
-                                SECRET_BOUNDARY_GUIDANCE,
+                                SENSITIVE_VALUE_BOUNDARY_GUIDANCE,
                                 f"- {guidance}",
                             ]
                         )
@@ -519,7 +519,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Read relevant files before editing.",
                         "- Run local checks before committing.",
-                        SECRET_BOUNDARY_GUIDANCE,
+                        SENSITIVE_VALUE_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",
@@ -548,7 +548,7 @@ class GovernanceFindingTests(unittest.TestCase):
                         "",
                         "- Read relevant files before editing.",
                         "- Run local checks before committing.",
-                        SECRET_BOUNDARY_GUIDANCE,
+                        SENSITIVE_VALUE_BOUNDARY_GUIDANCE,
                     ]
                 )
                 + "\n",

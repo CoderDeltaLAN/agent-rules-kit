@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from re import Pattern
 
 from agent_rules_kit.discovery import InstructionFile
 from agent_rules_kit.findings import Finding, Severity
@@ -48,7 +47,7 @@ UNSUPPORTED_CLAIM_MESSAGE = (
     "Instruction file may contain an unsupported security or maturity claim."
 )
 
-REVIEW_CI_BYPASS_PATTERNS: tuple[Pattern[str], ...] = (
+REVIEW_CI_BYPASS_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\b(ignore|skip)\s+(failing\s+)?(checks|tests|ci)\b", re.IGNORECASE),
     re.compile(r"\bskip\s+(code\s+)?review\b", re.IGNORECASE),
     re.compile(r"\b(commit|push)\s+directly\s+to\s+main\b", re.IGNORECASE),
@@ -66,7 +65,7 @@ REVIEW_CI_BYPASS_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
+NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|forbid|forbidden|no)\b"
         r".{0,120}\b("
@@ -88,7 +87,7 @@ NEGATED_REVIEW_CI_BYPASS_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-COMMAND_CONFIRMATION_PATTERNS: tuple[Pattern[str], ...] = (
+COMMAND_CONFIRMATION_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\brm\s+-[A-Za-z]*r[A-Za-z]*f\b|\brm\s+-[A-Za-z]*f[A-Za-z]*r\b", re.IGNORECASE),
     re.compile(r"\b(use|using|run|execute|invoke|always)\b.{0,80}\bsudo\b", re.IGNORECASE),
     re.compile(r"\bsudo\b.{0,80}\b(default|normal|routine|workflow|always)\b", re.IGNORECASE),
@@ -108,7 +107,7 @@ COMMAND_CONFIRMATION_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
+NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|forbid|forbidden|no)\b"
         r".{0,140}\b("
@@ -139,7 +138,7 @@ NEGATED_COMMAND_CONFIRMATION_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
+RUNTIME_NETWORK_LLM_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(
         r"\b(send|upload|post|transmit|share)\b"
         r".{0,100}\b(repository|repo|source code|codebase|workspace|context|files?)\b"
@@ -211,7 +210,7 @@ RUNTIME_NETWORK_LLM_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
+NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|avoids|forbid|forbidden|no|without)\b"
         r".{0,180}\b("
@@ -242,7 +241,7 @@ NEGATED_RUNTIME_NETWORK_LLM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
     ),
 )
 
-SECRET_BOUNDARY_PATTERNS: tuple[Pattern[str], ...] = (
+SECRET_BOUNDARY_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\bsecret(?:s)?\b", re.IGNORECASE),
     re.compile(r"\btoken(?:s)?\b", re.IGNORECASE),
     re.compile(r"\bcredential(?:s)?\b", re.IGNORECASE),
@@ -252,7 +251,7 @@ SECRET_BOUNDARY_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\bsensitive\s+(value(?:s)?|information|data)\b", re.IGNORECASE),
 )
 
-AUTHORITY_SCOPE_PATTERNS: tuple[Pattern[str], ...] = (
+AUTHORITY_SCOPE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\bscope\b", re.IGNORECASE),
     re.compile(r"\bauthority\b", re.IGNORECASE),
     re.compile(r"\bprecedence\b", re.IGNORECASE),
@@ -265,7 +264,7 @@ AUTHORITY_SCOPE_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\binstruction\s+(chain|order|source|sources)\b", re.IGNORECASE),
 )
 
-UNSUPPORTED_CLAIM_PATTERNS: tuple[Pattern[str], ...] = (
+UNSUPPORTED_CLAIM_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\bguarantee[sd]?\s+(security|safety)\b", re.IGNORECASE),
     re.compile(r"\bguaranteed\s+(secure|safe|security|safety)\b", re.IGNORECASE),
     re.compile(
@@ -277,7 +276,7 @@ UNSUPPORTED_CLAIM_PATTERNS: tuple[Pattern[str], ...] = (
     re.compile(r"\benterprise[- ]grade\b", re.IGNORECASE),
 )
 
-NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS: tuple[Pattern[str], ...] = (
+NEGATED_UNSUPPORTED_CLAIM_CONTEXT_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(
         r"\b(do not|don't|must not|should not|never|avoid|forbid|forbidden|no)\b"
         r".{0,120}\b("
@@ -300,8 +299,8 @@ ContextPredicate = Callable[[Sequence[str], int], bool]
 
 
 def make_context_aware_predicate(
-    trigger_patterns: tuple[Pattern[str], ...],
-    negation_patterns: tuple[Pattern[str], ...],
+    trigger_patterns: tuple[re.Pattern[str], ...],
+    negation_patterns: tuple[re.Pattern[str], ...],
     *,
     context_window: int = 0,
 ) -> ContextPredicate:
