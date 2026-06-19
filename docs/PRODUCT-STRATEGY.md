@@ -1,12 +1,12 @@
 # Product Strategy Roadmap
 
-This document defines the product direction for agent-rules-kit after the published v0.2.0 GitHub Release and current post-v0.2.0 main fixes.
+This document defines the product direction for agent-rules-kit after the published v0.3.0 GitHub Release and PyPI package, with current post-v0.3.0 maintenance hardening on main.
 
 It is a strategy document, not an implementation plan for a specific feature. It must not be used to claim capabilities that are not already implemented.
 
 ## Current product truth
 
-agent-rules-kit has a published v0.2.0 GitHub Release line. Current main contains unreleased post-v0.2.0 fixes intended for a future patch release.
+agent-rules-kit has a published v0.3.0 GitHub Release and PyPI package line. `v0.2.3` remains the previous published GitHub Release and PyPI package baseline. Current main contains post-v0.3.0 maintenance hardening intended for a future patch release.
 
 The implemented product currently supports:
 
@@ -19,14 +19,17 @@ The implemented product currently supports:
 - conservative governance diagnostics for `AIRK-GOV001` through `AIRK-GOV006`;
 - structured evidence for line-based governance findings;
 - pattern-based redaction for supported secret-like values in supported output paths;
-- local tests, Ruff linting, CI, release assets, and documented safety boundaries.
+- read-only `doctor` repository diagnosis output;
+- read-only `budget` deterministic local size and context-pressure approximation output;
+- read-only `explain` output for known governance rule IDs;
+- local tests, Ruff linting, CI, release assets, PyPI publication, and documented safety boundaries.
 
 The implemented product does not yet provide:
 
 - governance scoring;
 - cross-file consistency analysis;
 - instruction conflict detection;
-- context budget analysis;
+- exact tokenizer-specific token accounting;
 - policy profiles;
 - remediation workflows;
 - broad rule generation;
@@ -172,7 +175,7 @@ Any claim that depends on measured results must be backed by tests, fixtures, be
 
 ### v0.2: Governance baseline
 
-Status: published in v0.2.0, with unreleased post-v0.2.0 fixes on main.
+Status: historical baseline published in v0.2.0 and hardened through the v0.2.x patch line.
 
 Implemented scope:
 
@@ -194,24 +197,23 @@ Still non-goals for v0.2:
 - repository-wide code analysis;
 - LLM-based evaluation.
 
-### v0.3: Context budget approximation
+### v0.3: Local diagnosis toolkit baseline
 
-Goal: help maintainers understand instruction-file weight without promising exact token savings.
+Status: published in v0.3.0.
 
-Candidate capabilities:
+Implemented scope:
 
-- file count;
-- byte count;
-- line count;
-- approximate character budget;
-- large-file warnings;
-- duplicate-section hints if simple and explainable.
+- read-only `doctor` repository diagnosis output;
+- read-only `budget` deterministic local size and context-pressure approximation output;
+- read-only `explain` output for known governance rule IDs;
+- updated output and release documentation for the v0.3.0 command surface.
 
-Non-goals for v0.3:
+Still non-goals for v0.3:
 
 - exact token accounting across providers;
 - cost prediction;
-- model-specific optimization promises.
+- model-specific optimization promises;
+- JSON output for `doctor` and `budget`.
 
 ### v0.4: Cross-file consistency lint
 
@@ -264,16 +266,18 @@ Candidate criteria:
 - private vulnerability reporting path or explicit documented alternative;
 - no unsupported security or maturity claims.
 
-## Next implementation direction after v0.2
+## Next implementation direction after v0.3.0
 
-The next implementation phase should be justified against the current repository state, not against the old v0.1 strategy snapshot.
+The next implementation phase should be justified against the current repository state, not against older strategy snapshots.
 
 Good next candidates are narrow and evidence-backed:
 
+- v0.3.1 maintenance hardening before new product features;
 - release and package smoke hardening;
+- README, support, security, and strategy public-truth checks;
+- supply-chain workflow additions only after dedicated evaluation phases;
 - additional instruction-file discovery only when official tool documentation supports it;
-- a `doctor` baseline that summarizes existing scan and governance behavior without inventing new capabilities;
-- context budget approximation only after output contracts are stable.
+- JSON output for `doctor` and `budget` in a later feature release.
 
 Any next code phase must preserve local-first behavior, read-only default behavior, no runtime network access, no runtime LLM dependency, no execution of repository commands, and conservative claims.
 
@@ -283,8 +287,8 @@ Decision: keep product strategy as the boundary document after v0.2.
 
 Reason:
 
-- v0.2.0 already published the first governance baseline;
-- current main contains post-v0.2.0 fixes that should become a future patch release;
+- v0.3.0 already published the local diagnosis toolkit baseline;
+- current main contains post-v0.3.0 maintenance hardening that should become a future patch release;
 - adjacent tools still cover repository packaging, context frameworks, and broad rule generation better than this project should;
 - the real product wedge remains instruction governance;
 - future features must be justified against this document to avoid scope drift.
