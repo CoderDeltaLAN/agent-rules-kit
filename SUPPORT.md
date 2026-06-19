@@ -38,13 +38,13 @@ Best-effort support does not include:
 
 ## Security and vulnerability handling
 
-Private vulnerability reporting is currently disabled for this repository.
+Private vulnerability reporting is enabled for this repository after manual GitHub UI verification.
 
-Do not claim GitHub Security Advisories or private vulnerability reporting are enabled unless that setting has been explicitly verified.
+Use GitHub private vulnerability reporting for sensitive vulnerability reports when available. This disclosure channel does not change the best-effort support boundary and is not a security guarantee.
 
 Security-relevant reports should avoid posting real secrets, tokens, credentials, private URLs, customer data, or exploit material.
 
-See `SECURITY.md` for the project security boundary and supported-version policy.
+See `SECURITY.md` and `docs/PRIVATE-VULNERABILITY-REPORTING.md` for the project security boundary, supported-version policy, verification record, and limits of this disclosure channel.
 
 ## Project boundaries
 
