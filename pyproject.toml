@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.25"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
@@ -8,7 +8,8 @@ version = "0.3.0"
 description = "Local read-only CLI to diagnose AGENTS.md, Claude Code, Gemini CLI, Cursor and Copilot instruction files."
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "CoderDeltaLAN" }]
 keywords = ["ai-agents", "agent-instructions", "agents-md", "cli", "developer-tools", "python", "linting", "code-quality", "repository-diagnostics", "github-copilot", "cursor", "claude-code", "gemini-cli", "read-only", "local-first"]
 classifiers = [
@@ -16,9 +17,12 @@ classifiers = [
   "Environment :: Console",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
-  "Topic :: Software Development :: Quality Assurance"
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Utilities"
 ]
 dependencies = []
 
@@ -28,6 +32,8 @@ dev = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/CoderDeltaLAN/agent-rules-kit"
+Documentation = "https://github.com/CoderDeltaLAN/agent-rules-kit#readme"
 Repository = "https://github.com/CoderDeltaLAN/agent-rules-kit"
 Issues = "https://github.com/CoderDeltaLAN/agent-rules-kit/issues"
 Changelog = "https://github.com/CoderDeltaLAN/agent-rules-kit/blob/main/CHANGELOG.md"
