@@ -84,7 +84,9 @@ Current repository setting record:
 - Dependabot security updates are manually verified as enabled;
 - Dependabot version updates are deferred because no `.github/dependabot.yml` exists in this phase;
 - automatic dependency submission is deferred;
-- malware alerts and grouped security updates are not claimed as enabled in this record unless separately verified by a later UI check.
+- Dependabot malware alerts and grouped security updates are manually verified as enabled by the follow-up Advanced Security UI evidence;
+- Dependabot version updates remain disabled / not configured because no `.github/dependabot.yml` exists;
+- terminal/API probes are preferred for repeatable evidence, while UI evidence is retained only for settings without a clear API state in this phase.
 
 See `docs/DEPENDABOT-DEPENDENCY-GRAPH.md` for the dedicated settings record.
 
@@ -100,6 +102,7 @@ Recommended future Dependabot phase boundaries:
 
 - inspect and document the existing Dependabot rule before claiming it as a control;
 - decide whether to add `.github/dependabot.yml` for version updates in a separate branch;
+- keep malware alerts and grouped security updates documented as repository-maintenance signals, not security guarantees;
 - do not combine version-update automation with CodeQL, release, or security-policy changes.
 
 ## OpenSSF Scorecard

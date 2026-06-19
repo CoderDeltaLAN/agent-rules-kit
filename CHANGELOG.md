@@ -19,6 +19,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Synced Dependabot malware alerts and grouped security updates documentation with follow-up Advanced Security UI evidence, while keeping Dependabot version updates deferred.
 - Synced product strategy and support public-truth wording with v0.3.0, and expanded the post-release audit guard for stale version and private reporting claims.
 - Improved PyPI package metadata with SPDX license metadata, explicit license files, project URLs, and additional classifiers.
 - Synced the README source-tree layout with the actual v0.3.0 module structure.

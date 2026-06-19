@@ -67,6 +67,13 @@ require_contains docs/THREAT-MODEL.md 'v0\.3\.0 doctor, budget, and explain comm
 require_contains docs/PRODUCT-STRATEGY.md 'published v0\.3\.0 GitHub Release and PyPI package line'
 require_contains docs/PRODUCT-STRATEGY.md 'Status: published in v0\.3\.0'
 require_contains SUPPORT.md 'Private vulnerability reporting is enabled'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'Dependabot malware alerts | Enabled'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'Grouped security updates | Enabled'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'Dependabot version updates | Disabled / not configured'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'Evidence is ranked in this record as follows'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'vulnerability-alerts` returned HTTP `204`'
+require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'private-vulnerability-reporting` returned `enabled: true`'
+require_contains docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md 'Dependabot malware alerts and grouped security updates are manually verified as enabled'
 require_contains docs/V0.3.0-POST-RELEASE-AUDIT.md 'v0\.3\.0'
 printf 'OK: v0.3.0 documentation sanity checks passed.\n'
 
