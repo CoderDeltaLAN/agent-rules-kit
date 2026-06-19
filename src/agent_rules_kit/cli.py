@@ -10,6 +10,7 @@ from pathlib import Path
 
 from agent_rules_kit import __version__
 from agent_rules_kit.budget import BudgetReport, build_budget_report
+from agent_rules_kit.conflicts import ConflictReport, build_conflict_report
 from agent_rules_kit.dedupe import DedupeReport, build_dedupe_report
 from agent_rules_kit.discovery import InstructionFile, discover_instruction_files
 from agent_rules_kit.explain import (
@@ -111,6 +112,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repository root to inspect. Defaults to the current directory.",
     )
 
+    conflicts_parser = subparsers.add_parser(
+        "conflicts",
+        help="Detect contradictory guidance across supported instruction files.",
+    )
+    conflicts_parser.add_argument(
+        "repository",
+        nargs="?",
+        default=".",
+        help="Repository root to inspect. Defaults to the current directory.",
+    )
+
     explain_parser = subparsers.add_parser(
         "explain",
         help="Explain known governance rule IDs.",
@@ -157,6 +169,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "dedupe":
         return _run_dedupe(Path(args.repository))
+
+    if args.command == "conflicts":
+        return _run_conflicts(Path(args.repository))
 
     if args.command == "explain":
         return _run_explain(args.rule_id, list_rules=args.list_rules)
@@ -208,6 +223,59 @@ def _print_rule_explanation(explanation: RuleExplanation) -> None:
     print(f"Limits: {explanation.limits}")
 
 
+
+
+def _run_conflicts(repository_root: Path) -> int:
+    try:
+        instruction_files = discover_instruction_files(repository_root)
+        report = build_conflict_report(repository_root, instruction_files)
+    except ValueError as error:
+        print(f"ERROR: {redact_secret_like_values(str(error))}", file=sys.stderr)
+        return 2
+
+    return _print_console_conflicts(repository_root, instruction_files, report)
+
+
+def _print_console_conflicts(
+    repository_root: Path,
+    instruction_files: tuple[InstructionFile, ...],
+    report: ConflictReport,
+) -> int:
+    print(f"agent-rules-kit conflicts: {redact_secret_like_values(str(repository_root))}")
+
+    if not instruction_files:
+        print("Status: no_instruction_files")
+        print("Supported instruction files: 0")
+        print("Conflict groups: 0")
+        print("Conflict lines: 0")
+        print("Next step: add a supported agent instruction file before checking conflicts.")
+        return 1
+
+    status = "review" if report.groups else "ok"
+    print(f"Status: {status}")
+    print(f"Supported instruction files: {len(instruction_files)}")
+    print(f"Conflict groups: {report.conflict_group_count}")
+    print(f"Conflict lines: {report.conflict_line_count}")
+
+    if report.groups:
+        print("Conflict groups:")
+        for index, group in enumerate(report.groups, start=1):
+            print(f"{index}. {group.topic}: {group.summary}")
+            print("   Allowing guidance:")
+            for location in group.allow_locations:
+                path = redact_secret_like_values(location.path)
+                evidence = redact_secret_like_values(location.evidence)
+                print(f"   - {path}:{location.line} {evidence}")
+            print("   Blocking guidance:")
+            for location in group.block_locations:
+                path = redact_secret_like_values(location.path)
+                evidence = redact_secret_like_values(location.evidence)
+                print(f"   - {path}:{location.line} {evidence}")
+        print("Next step: choose one source of truth and remove or narrow the opposing guidance.")
+    else:
+        print("Next step: no contradictory guidance was detected by implemented checks.")
+
+    return 0
 
 def _run_dedupe(repository_root: Path) -> int:
     try:
