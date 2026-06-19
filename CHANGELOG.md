@@ -6,7 +6,9 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- Documented the v0.3.0 post-release audit findings and v0.3.1 maintenance hardening target.
 
 ## [0.3.0] - 2026-06-19
 
