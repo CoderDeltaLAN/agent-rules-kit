@@ -135,7 +135,9 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-`v0.2.3` is published as a GitHub Release and PyPI package for `agent-rules-kit`. Current `main` reflects that published state and may include later documentation or maintenance updates.
+`v0.2.3` remains the current published GitHub Release and PyPI package for `agent-rules-kit`.
+
+Current `main` contains the v0.3.0 release-candidate command baselines. Until the dedicated release phase completes, `v0.3.0` must not be described as a published GitHub Release or PyPI package.
 
 The implemented behavior includes:
 
@@ -145,6 +147,9 @@ The implemented behavior includes:
 - provides `init --dry-run` for planning baseline instruction files;
 - provides explicit `init --write` behavior for creating or replacing root `AGENTS.md`;
 - backs up existing root `AGENTS.md` before replacement;
+- provides read-only `doctor` repository diagnosis output on `main`;
+- provides read-only `budget` local size and context-pressure approximation output on `main`;
+- provides read-only `explain` output for known governance rule IDs on `main`;
 - redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
@@ -204,7 +209,9 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.3` is published as a GitHub Release and PyPI package.
+`v0.2.3` is the current published GitHub Release and PyPI package.
+
+The v0.3.0 command baselines are present on `main` but are not published until the dedicated release phase completes tag, GitHub Release, PyPI publication, and clean-install verification.
 
 The published package can be installed from PyPI. Release publication uses PyPI Trusted Publishing from the GitHub Release workflow.
 
@@ -244,6 +251,16 @@ The development dependency group installs tools used by local checks, including 
 The source tree can also be used directly for quick CLI inspection:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
+
+### v0.3.0 release-candidate commands from source
+
+Until `v0.3.0` is published, the new command baselines should be tested from the source tree:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
+    PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
+    PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
+
+These source-tree commands are release-candidate behavior, not PyPI publication evidence.
 
 ---
 
@@ -336,6 +353,27 @@ If root `AGENTS.md` already exists, it is backed up before replacement:
 
     AGENTS.md.agent-rules-kit.bak
 
+### Doctor release-candidate command
+
+`doctor` summarizes supported instruction files, finding counts, and review status from local source-tree execution until `v0.3.0` is published:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
+
+### Budget release-candidate command
+
+`budget` reports deterministic local size metrics. It is an approximation, not tokenizer-specific counting:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
+
+### Explain release-candidate command
+
+`explain` lists or explains known local governance rule IDs:
+
+    PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
+    PYTHONPATH=src python -m agent_rules_kit.cli explain --list
+
+These v0.3.0 commands are source-tree release-candidate behavior until the dedicated release phase publishes and verifies the package.
+
 ---
 
 ## Output Formats
@@ -391,11 +429,14 @@ See:
     │       └── publish-pypi.yml
     ├── docs/
     │   ├── BUILD-PLAN.md
+    │   ├── EXIT-CODES.md
     │   ├── OUTPUTS.md
     │   ├── PRODUCT-STRATEGY.md
     │   ├── RULES.md
     │   ├── THREAT-MODEL.md
     │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
+    │   ├── V0.3-ARCHITECTURE-ROADMAP.md
+    │   ├── V0.3.0-RELEASE-NOTES-DRAFT.md
     │   └── screenshots/
     │       └── readme/
     │           ├── agent-rules-kit-governance-findings.png
@@ -407,8 +448,11 @@ See:
     ├── src/
     │   └── agent_rules_kit/
     │       ├── __init__.py
+    │       ├── budget.py
     │       ├── cli.py
     │       ├── discovery.py
+    │       ├── doctor.py
+    │       ├── explain.py
     │       ├── findings.py
     │       ├── governance.py
     │       ├── init_plan.py
@@ -465,13 +509,14 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.2.3` is published as a GitHub Release and PyPI package;
-- `v0.2.2` remains the previous published GitHub Release and PyPI package baseline;
-- `main` may include post-`v0.2.3` documentation or maintenance updates;
+- `v0.2.3` is published as the current GitHub Release and PyPI package;
+- `main` contains the v0.3.0 release-candidate command baselines;
+- `v0.3.0` is not published yet and must not be claimed as available from PyPI until the dedicated release phase verifies it;
 - no stable support or API guarantee yet;
 - release tag `v0.2.3` points to the verified release SHA;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
+- `doctor`, `budget`, and `explain` are implemented on `main` as v0.3.0 release-candidate commands;
 - CI active;
 - branch protection is active with the required `local-checks / Python 3.12` status check;
 - the `pypi` GitHub environment exists for the release publishing workflow;
