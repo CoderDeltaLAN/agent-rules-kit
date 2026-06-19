@@ -9,6 +9,7 @@ This project has a published GitHub Release line, but no stable support or API g
 ### Added
 
 - Added a read-only `dedupe` baseline command for deterministic duplicate instruction-line detection across supported instruction files.
+- Added a read-only `conflicts` baseline command for deterministic contradictory-guidance detection across supported instruction files.
 - Added an OpenSSF Scorecard evaluation record with current official workflow constraints and a deferred workflow decision.
 - Added a dependency graph and Dependabot settings record with manual GitHub UI evidence and deferred version-update policy.
 - Added a private vulnerability reporting verification record and documented that GitHub private vulnerability reporting is enabled after manual UI verification.

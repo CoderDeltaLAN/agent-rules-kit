@@ -67,6 +67,34 @@ Notes:
 - `budget` does not perform tokenizer-specific counting, remote tokenization, LLM calls, pricing estimates, or optimization claims.
 - `Approximate words` is not a model token count.
 
+### `dedupe`
+
+| Condition | Exit code | Stdout | Stderr |
+| --- | ---: | --- | --- |
+| Supported instruction files found | `0` | Console duplicate-line report | Empty unless lower-level runtime fails unexpectedly |
+| No supported instruction files found | `1` | Console no-result duplicate-line summary | Empty unless lower-level runtime fails unexpectedly |
+| Invalid repository input, unsupported instruction-file input, or command-line usage error | `2` | Empty | Error message or argparse-dependent |
+
+Notes:
+
+- `dedupe` is read-only.
+- `dedupe` uses deterministic local normalization only.
+- `dedupe` detects repeated normalized lines across supported instruction files, not broad semantic duplication.
+
+### `conflicts`
+
+| Condition | Exit code | Stdout | Stderr |
+| --- | ---: | --- | --- |
+| Supported instruction files found | `0` | Console contradictory-guidance report | Empty unless lower-level runtime fails unexpectedly |
+| No supported instruction files found | `1` | Console no-result conflict summary | Empty unless lower-level runtime fails unexpectedly |
+| Invalid repository input, unsupported instruction-file input, or command-line usage error | `2` | Empty | Error message or argparse-dependent |
+
+Notes:
+
+- `conflicts` is read-only.
+- `conflicts` uses deterministic local pattern families only.
+- `conflicts` detects implemented opposite-guidance patterns, not broad semantic contradiction.
+
 ### `explain`
 
 | Condition | Exit code | Stdout | Stderr |
@@ -108,9 +136,9 @@ Notes:
 - It backs up an existing root `AGENTS.md` before replacement.
 - It must remain explicit and separate from read-only diagnosis commands.
 
-## Planned v0.3 exit-code direction
+## Planned command exit-code direction
 
-No remaining v0.3 command exit-code target is documented here after the `explain` baseline. Future release or documentation phases must update this file only from verified behavior.
+No remaining planned command exit-code target is documented here. Future release or documentation phases must update this file only from verified behavior.
 
 ## Test evidence
 
@@ -127,6 +155,10 @@ The contract regression matrix currently checks:
 - `doctor` exits `1` when no supported instruction files are found;
 - `budget` exits `0` when supported instruction files are found;
 - `budget` exits `1` when no supported instruction files are found;
+- `dedupe` exits `0` when supported instruction files are found;
+- `dedupe` exits `1` when no supported instruction files are found;
+- `conflicts` exits `0` when supported instruction files are found;
+- `conflicts` exits `1` when no supported instruction files are found;
 - `explain --list` exits `0`;
 - `explain RULE_ID` exits `0` for known rule IDs;
 - `explain RULE_ID` exits `2` for unknown rule IDs;
