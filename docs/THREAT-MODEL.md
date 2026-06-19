@@ -1,6 +1,6 @@
 # Threat Model
 
-This document defines the threat model for agent-rules-kit. It was last reviewed for the published v0.2.0 release line and the current post-v0.2.0 main state.
+This document defines the threat model for agent-rules-kit. It was last reviewed for the published v0.3.0 release line and the current post-v0.3.0 main state, including the v0.3.0 doctor, budget, and explain command surface.
 
 It is intentionally narrow. agent-rules-kit is a local CLI for diagnosing AI agent instruction files. It is not a security scanner, malware detector, CI/CD auditor, sandbox, secret manager, or autonomous remediation agent.
 
@@ -11,6 +11,9 @@ In scope for the current release line and current main state:
 - local repository paths provided by the user;
 - supported agent instruction files such as AGENTS.md, CLAUDE.md, GEMINI.md, Cursor rules, GitHub Copilot instructions, and GitHub instruction files;
 - diagnostic output in console, JSON, and Markdown;
+- read-only doctor repository diagnosis summaries;
+- read-only budget size and context-pressure approximation output;
+- read-only explain output for local governance rule IDs;
 - explicit init planning;
 - explicit init write behavior for baseline AGENTS.md creation or replacement with backup;
 - secret-like value redaction in findings and output.
