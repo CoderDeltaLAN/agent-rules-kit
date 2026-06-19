@@ -194,6 +194,48 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertIn("ERROR: repository root does not exist:", output.getvalue())
 
+
+    def test_dedupe_reports_duplicate_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            duplicate = "Run unit tests before opening a pull request."
+            (root / "AGENTS.md").write_text(
+                f"# Agent instructions\n\n- {duplicate}\n",
+                encoding="utf-8",
+            )
+            (root / "CLAUDE.md").write_text(
+                f"# Claude instructions\n\n{duplicate}\n",
+                encoding="utf-8",
+            )
+
+            output = io.StringIO()
+
+            with redirect_stdout(output):
+                exit_code = main(["dedupe", str(root)])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit dedupe:", text)
+        self.assertIn("Status: review", text)
+        self.assertIn("Supported instruction files: 2", text)
+        self.assertIn("Duplicate groups: 1", text)
+        self.assertIn("Duplicate lines: 2", text)
+        self.assertIn("AGENTS.md:3", text)
+        self.assertIn("CLAUDE.md:3", text)
+
+    def test_dedupe_returns_one_when_no_instruction_files_are_found(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["dedupe", str(FIXTURE_ROOT / "empty-repo")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Status: no_instruction_files", text)
+        self.assertIn("Duplicate groups: 0", text)
+
     def test_explain_lists_known_rules(self) -> None:
         output = io.StringIO()
 
