@@ -82,10 +82,10 @@ Current repository setting record:
 - dependency graph is manually verified as enabled;
 - Dependabot alerts are manually verified as enabled;
 - Dependabot security updates are manually verified as enabled;
-- Dependabot version updates are deferred because no `.github/dependabot.yml` exists in this phase;
+- Dependabot version updates are configured by `.github/dependabot.yml` with low-noise monthly `pip` and `github-actions` checks;
 - automatic dependency submission is deferred;
 - Dependabot malware alerts and grouped security updates are manually verified as enabled by the follow-up Advanced Security UI evidence;
-- Dependabot version updates remain disabled / not configured because no `.github/dependabot.yml` exists;
+- Dependabot version updates are capped at 2 open version-update PRs per configured ecosystem;
 - terminal/API probes are preferred for repeatable evidence, while UI evidence is retained only for settings without a clear API state in this phase.
 
 See `docs/DEPENDABOT-DEPENDENCY-GRAPH.md` for the dedicated settings record.
@@ -101,7 +101,7 @@ Risks and constraints:
 Recommended future Dependabot phase boundaries:
 
 - inspect and document the existing Dependabot rule before claiming it as a control;
-- decide whether to add `.github/dependabot.yml` for version updates in a separate branch;
+- monitor Dependabot version-update PR volume before increasing cadence or scope;
 - keep malware alerts and grouped security updates documented as repository-maintenance signals, not security guarantees;
 - do not combine version-update automation with CodeQL, release, or security-policy changes.
 
