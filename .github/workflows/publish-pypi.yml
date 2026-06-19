@@ -69,6 +69,10 @@ jobs:
           /tmp/agent-rules-kit-wheel-smoke/bin/python -m pip check
           /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit --version
           /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit check tests/fixtures/repositories/single-agent --format json | /tmp/agent-rules-kit-wheel-smoke/bin/python -m json.tool
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit doctor tests/fixtures/repositories/single-agent
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit budget tests/fixtures/repositories/single-agent
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit explain AIRK-GOV003
+          /tmp/agent-rules-kit-wheel-smoke/bin/agent-rules-kit explain --list
 
       - name: Upload distributions
         uses: actions/upload-artifact@v4

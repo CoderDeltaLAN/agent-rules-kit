@@ -16,7 +16,7 @@ Implemented command surface:
 - `agent-rules-kit budget`;
 - `agent-rules-kit explain`.
 
-`doctor`, `budget`, and `explain` are implemented as v0.3 command baselines. Release preparation remains a separate phase and must not imply tag, release, or PyPI publication until those phases are completed.
+`doctor`, `budget`, and `explain` are implemented as v0.3.0 command baselines. Release publication is verified by the dedicated GitHub Release and PyPI workflow evidence, not by this output contract alone.
 
 ## Contract status
 

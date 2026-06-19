@@ -135,9 +135,9 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-`v0.2.3` remains the current published GitHub Release and PyPI package for `agent-rules-kit`.
+`v0.3.0` is the current GitHub Release and PyPI package for `agent-rules-kit`.
 
-Current `main` contains the v0.3.0 release-candidate command baselines. Until the dedicated release phase completes, `v0.3.0` must not be described as a published GitHub Release or PyPI package.
+`v0.2.3` remains the previous published GitHub Release and PyPI package baseline.
 
 The implemented behavior includes:
 
@@ -209,9 +209,7 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.2.3` is the current published GitHub Release and PyPI package.
-
-The v0.3.0 command baselines are present on `main` but are not published until the dedicated release phase completes tag, GitHub Release, PyPI publication, and clean-install verification.
+`v0.3.0` is the current published GitHub Release and PyPI package.
 
 The published package can be installed from PyPI. Release publication uses PyPI Trusted Publishing from the GitHub Release workflow.
 
@@ -223,10 +221,10 @@ Requirements for using a published CLI release:
 - a Python virtual environment;
 - a published PyPI release of `agent-rules-kit`.
 
-Install `v0.2.3` in a virtual environment:
+Install `v0.3.0` in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install agent-rules-kit==0.2.3
+    .venv/bin/python -m pip install agent-rules-kit==0.3.0
     .venv/bin/agent-rules-kit --version
     .venv/bin/agent-rules-kit check /path/to/repository --format console
 
@@ -252,21 +250,21 @@ The source tree can also be used directly for quick CLI inspection:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
 
-### v0.3.0 release-candidate commands from source
+### v0.3.0 commands from source
 
-Until `v0.3.0` is published, the new command baselines should be tested from the source tree:
+The v0.3.0 commands can also be tested from the source tree:
 
     PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
 
-These source-tree commands are release-candidate behavior, not PyPI publication evidence.
+These source-tree commands are development checks. Published-package behavior must be verified from a clean PyPI install during release closeout.
 
 ---
 
 ## Release and PyPI Publishing
 
-The `v0.2.3` release was published through PyPI Trusted Publishing.
+The `v0.3.0` release was published through PyPI Trusted Publishing.
 
 Release publishing is handled by:
 
@@ -284,11 +282,11 @@ The workflow is intentionally limited:
 - it grants `id-token: write` only to the publish job;
 - it does not use a static PyPI token, username, or password.
 
-The published `v0.2.3` package must remain verifiable by:
+The published `v0.3.0` package must remain verifiable by:
 
 - the GitHub Release tag pointing to the verified release SHA;
 - a successful PyPI publish workflow run;
-- a clean virtual environment installing and running `agent-rules-kit==0.2.3` from PyPI.
+- a clean virtual environment installing and running `agent-rules-kit==0.3.0` from PyPI.
 
 ---
 
@@ -353,26 +351,26 @@ If root `AGENTS.md` already exists, it is backed up before replacement:
 
     AGENTS.md.agent-rules-kit.bak
 
-### Doctor release-candidate command
+### Doctor command
 
-`doctor` summarizes supported instruction files, finding counts, and review status from local source-tree execution until `v0.3.0` is published:
+`doctor` summarizes supported instruction files, finding counts, and review status:
 
     PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
 
-### Budget release-candidate command
+### Budget command
 
 `budget` reports deterministic local size metrics. It is an approximation, not tokenizer-specific counting:
 
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
 
-### Explain release-candidate command
+### Explain command
 
 `explain` lists or explains known local governance rule IDs:
 
     PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
     PYTHONPATH=src python -m agent_rules_kit.cli explain --list
 
-These v0.3.0 commands are source-tree release-candidate behavior until the dedicated release phase publishes and verifies the package.
+These commands are part of the v0.3.0 command surface.
 
 ---
 
@@ -436,7 +434,7 @@ See:
     │   ├── THREAT-MODEL.md
     │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
     │   ├── V0.3-ARCHITECTURE-ROADMAP.md
-    │   ├── V0.3.0-RELEASE-NOTES-DRAFT.md
+    │   ├── V0.3.0-RELEASE-NOTES.md
     │   └── screenshots/
     │       └── readme/
     │           ├── agent-rules-kit-governance-findings.png
@@ -509,18 +507,17 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.2.3` is published as the current GitHub Release and PyPI package;
-- `main` contains the v0.3.0 release-candidate command baselines;
-- `v0.3.0` is not published yet and must not be claimed as available from PyPI until the dedicated release phase verifies it;
+- `v0.3.0` is published as the current GitHub Release and PyPI package;
+- `v0.2.3` remains the previous published GitHub Release and PyPI package baseline;
 - no stable support or API guarantee yet;
-- release tag `v0.2.3` points to the verified release SHA;
+- release tag `v0.3.0` points to the verified release SHA;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
-- `doctor`, `budget`, and `explain` are implemented on `main` as v0.3.0 release-candidate commands;
+- `doctor`, `budget`, and `explain` are implemented as v0.3.0 commands;
 - CI active;
 - branch protection is active with the required `local-checks / Python 3.12` status check;
 - the `pypi` GitHub environment exists for the release publishing workflow;
-- `.github/workflows/publish-pypi.yml` published `v0.2.3` through PyPI Trusted Publishing and remains the release publishing workflow;
+- `.github/workflows/publish-pypi.yml` published `v0.3.0` through PyPI Trusted Publishing and remains the release publishing workflow;
 - README screenshots are generated from real local CLI commands;
 - security boundaries documented;
 - threat model documented.

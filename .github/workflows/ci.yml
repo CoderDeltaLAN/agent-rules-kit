@@ -41,3 +41,7 @@ jobs:
         run: |
           agent-rules-kit --version
           agent-rules-kit check tests/fixtures/repositories/single-agent --format json | python -m json.tool
+          agent-rules-kit doctor tests/fixtures/repositories/single-agent
+          agent-rules-kit budget tests/fixtures/repositories/single-agent
+          agent-rules-kit explain AIRK-GOV003
+          agent-rules-kit explain --list
