@@ -13,13 +13,10 @@ Implemented command surface:
 - `agent-rules-kit init --dry-run`;
 - `agent-rules-kit init --write`;
 - `agent-rules-kit doctor`;
-- `agent-rules-kit budget`.
-
-Planned v0.3 command surface:
-
+- `agent-rules-kit budget`;
 - `agent-rules-kit explain`.
 
-`doctor` and `budget` are implemented as v0.3 command baselines. The remaining planned command is not implemented yet. Its output contract is a design target for a future phase and must not be documented as available behavior until its implementation phase is merged.
+`doctor`, `budget`, and `explain` are implemented as v0.3 command baselines. Release preparation remains a separate phase and must not imply tag, release, or PyPI publication until those phases are completed.
 
 ## Contract status
 
@@ -47,7 +44,7 @@ That test module currently pins representative exact output for:
 - `init --dry-run` console output for an existing root `AGENTS.md`;
 - `init` missing-mode stderr behavior.
 
-It also includes a contract regression matrix for current version, no-command help, `check` console/JSON/Markdown success and no-result behavior, `init --dry-run`, and missing-mode `init` behavior.
+It also includes a contract regression matrix for current version, no-command help, `check` console/JSON/Markdown success and no-result behavior, `doctor`, `budget`, `explain`, `init --dry-run`, and missing-mode `init` behavior.
 
 This is regression evidence for implemented behavior on current `main`. It is not a stable public API guarantee before v1.0.
 
@@ -74,7 +71,7 @@ Future behavior should preserve that distinction unless a dedicated phase change
 | `init --write` | console | yes | Explicit write mode with backup behavior for existing root `AGENTS.md`. |
 | `doctor` | console | yes | Read-only repository-level diagnosis summary. |
 | `budget` | console | yes | Read-only local size and context-pressure approximation. |
-| `explain` | to be defined | no | Planned v0.3 local rule explanation command. |
+| `explain` | console | yes | Read-only local governance rule explanation command. |
 
 ## Exit codes
 
@@ -95,6 +92,8 @@ Summary for current implemented commands:
 | `budget` | `0` | Budget approximation completed for supported instruction files. |
 | `budget` | `1` | No supported instruction files were found. |
 | `budget` | `2` | Invalid repository input, unsupported instruction-file input, or command-line usage error. |
+| `explain` | `0` | Known rule listed or explained. |
+| `explain` | `2` | Unknown rule ID, conflicting input, missing input, or command-line usage error. |
 
 ## JSON contract for `check`
 
@@ -246,28 +245,21 @@ Current `budget` exit-code behavior:
 
 `Approximate words` is a local whitespace-based approximation, not a model token count.
 
-## Planned v0.3 command contracts
+## Explain output contract
 
-The remaining command is a design target. It is not available until its dedicated implementation phase is merged.
+Current `explain` console output includes either:
 
-### `explain`
+- a list of known rule IDs with category and title;
+- one known rule explanation with title, category, summary, and limits.
 
-Planned purpose:
+Current `explain` exit-code behavior:
 
-- explain known rule IDs and their limits from local rule metadata or documentation-backed text;
-- optionally list known rules.
+- `0`: known rules listed or a known rule was explained;
+- `2`: unknown rule ID, conflicting input, missing input, or command-line usage error.
 
-Planned output direction:
+`explain` is read-only. It uses local rule metadata only. It does not fetch external documentation, call an LLM, infer new rules, or generate free-form policy advice.
 
-- local explanations only;
-- no external documentation fetch;
-- no LLM-generated explanations;
-- unsupported rule IDs must fail predictably.
-
-Planned exit-code direction:
-
-- `0`: explanation or rule list completed;
-- `2`: unknown rule ID, invalid input, or command-line usage error.
+Unsupported rule IDs fail predictably instead of producing generic guidance.
 
 ## Redaction expectations
 

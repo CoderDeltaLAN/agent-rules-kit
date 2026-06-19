@@ -194,6 +194,81 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 2)
         self.assertIn("ERROR: repository root does not exist:", output.getvalue())
 
+    def test_explain_lists_known_rules(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["explain", "--list"])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit explain", text)
+        self.assertIn("Known rules:", text)
+        self.assertIn("- AIRK-SYS001 [system] Unreadable instruction file", text)
+        self.assertIn(
+            "- AIRK-GOV003 [governance] Review or CI bypass guidance",
+            text,
+        )
+        self.assertIn(
+            "- AIRK-GOV001 [governance] Missing instruction scope or authority",
+            text,
+        )
+
+    def test_explain_reports_known_rule(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["explain", "AIRK-GOV003"])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit explain: AIRK-GOV003", text)
+        self.assertIn("Title: Review or CI bypass guidance", text)
+        self.assertIn("Category: governance", text)
+        self.assertIn("bypassing review", text)
+        self.assertIn("Does not audit real GitHub settings", text)
+
+    def test_explain_normalizes_known_rule_id(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["explain", "airk-gov003"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit explain: AIRK-GOV003", output.getvalue())
+
+    def test_explain_returns_two_for_unknown_rule_id(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["explain", "AIRK-GOV999"])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(output.getvalue(), "ERROR: unknown rule ID: AIRK-GOV999\n")
+
+    def test_explain_returns_two_without_rule_id_or_list(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["explain"])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(output.getvalue(), "ERROR: explain requires --list or RULE_ID.\n")
+
+    def test_explain_returns_two_for_conflicting_inputs(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["explain", "AIRK-GOV003", "--list"])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(
+            output.getvalue(),
+            "ERROR: explain accepts either --list or a rule ID.\n",
+        )
+
     def test_check_returns_two_for_invalid_repository_root(self) -> None:
         output = io.StringIO()
 

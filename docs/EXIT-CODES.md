@@ -67,6 +67,20 @@ Notes:
 - `budget` does not perform tokenizer-specific counting, remote tokenization, LLM calls, pricing estimates, or optimization claims.
 - `Approximate words` is not a model token count.
 
+### `explain`
+
+| Condition | Exit code | Stdout | Stderr |
+| --- | ---: | --- | --- |
+| Known rules listed or known rule explained | `0` | Console rule explanation output | Empty unless lower-level runtime fails unexpectedly |
+| Unknown rule ID, conflicting input, missing input, or command-line usage error | `2` | Empty or argparse-dependent | Error message or argparse-dependent |
+
+Notes:
+
+- `explain` is read-only.
+- `explain` uses local rule metadata only.
+- `explain` does not fetch external documentation, call an LLM, infer new rules, or generate free-form policy advice.
+- Unknown rule IDs fail predictably.
+
 ### `init --dry-run`
 
 | Condition | Exit code | Stdout | Stderr |
@@ -96,18 +110,7 @@ Notes:
 
 ## Planned v0.3 exit-code direction
 
-The following commands are not implemented yet. Their exit-code contracts are design targets for future implementation phases.
-
-### `explain`
-
-Planned direction:
-
-| Condition | Exit code |
-| --- | ---: |
-| Known rule explained or known rules listed | `0` |
-| Unknown rule ID, invalid input, or command-line usage error | `2` |
-
-Unknown rule IDs should fail predictably. They should not silently produce generic guidance.
+No remaining v0.3 command exit-code target is documented here after the `explain` baseline. Future release or documentation phases must update this file only from verified behavior.
 
 ## Test evidence
 
@@ -124,6 +127,9 @@ The contract regression matrix currently checks:
 - `doctor` exits `1` when no supported instruction files are found;
 - `budget` exits `0` when supported instruction files are found;
 - `budget` exits `1` when no supported instruction files are found;
+- `explain --list` exits `0`;
+- `explain RULE_ID` exits `0` for known rule IDs;
+- `explain RULE_ID` exits `2` for unknown rule IDs;
 - `init --dry-run` exits `0`;
 - `init` without `--dry-run` or `--write` exits `2` and writes the supported error to stderr.
 

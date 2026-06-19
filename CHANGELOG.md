@@ -14,6 +14,7 @@ This project has a published GitHub Release line, but no stable support or API g
 - Added a CLI contract regression matrix for current version, help, `check`, and `init` output channels and exit codes.
 - Added the read-only `doctor` baseline command for repository-level instruction diagnosis summaries.
 - Added the read-only `budget` baseline command for deterministic local instruction-file size metrics.
+- Added the read-only `explain` baseline command for local governance rule explanations.
 
 ## [0.2.3] - 2026-06-18
 
