@@ -35,7 +35,7 @@ Follow-up verification notes from `security/verify-dependabot-settings`:
 - `GET /repos/{owner}/{repo}/dependabot/alerts` returned an empty list, so no open Dependabot alerts were visible at verification time;
 - no REST or GraphQL field was found in this phase that clearly exposes the Grouped security updates or Dependabot malware alerts toggle state;
 - the GitHub Advanced Security UI screenshots are therefore the evidence source for the malware alerts and grouped security updates claims;
-- no `.github/dependabot.yml` exists, so Dependabot version updates remain not configured by repository file.
+- `.github/dependabot.yml` exists, so Dependabot version updates are configured by repository file.
 
 ## Current repository setting record
 
@@ -49,7 +49,7 @@ Follow-up verification notes from `security/verify-dependabot-settings`:
 | Dependabot malware alerts | Enabled | Advanced Security UI showed `Disable` in the follow-up verification phase | Alerts when malware is detected in dependencies; this is a repository-maintenance signal, not a product guarantee. |
 | Dependabot security updates | Enabled | Advanced Security UI showed `Disable` | May open security PRs when Dependabot alerts have available patches. |
 | Grouped security updates | Enabled | Advanced Security UI showed `Disable` in the follow-up verification phase | Groups available Dependabot alert fixes into one pull request per package manager and manifest directory, unless overridden by rules. |
-| Dependabot version updates | Disabled / not configured | Advanced Security UI showed `Enable`; no `.github/dependabot.yml` exists | Version updates require a committed `.github/dependabot.yml` and should be handled in a dedicated phase. |
+| Dependabot version updates | Configured | `.github/dependabot.yml` committed in `supply-chain/add-dependabot-version-updates` | Low-noise monthly checks for `pip` and `github-actions`, each capped at 2 open version-update PRs. |
 | CodeQL analysis | Enabled | Advanced Security UI showed CodeQL advanced setup and recent scan | Additional signal only; not a guarantee. |
 | Copilot Autofix | Enabled as suggestion source | Advanced Security UI showed `On` | Suggestions must not bypass branch, diff, tests, CI, or PR review. |
 | Secret Protection | Enabled | Advanced Security UI showed `Disable` | Keep active; this record does not configure custom patterns. |
@@ -78,11 +78,11 @@ They do not prove that dependencies are safe, complete, current, or free of vuln
 
 Dependabot security updates may open pull requests for vulnerable dependencies with available patches. Those pull requests must follow the normal Always-Green workflow: branch, diff review, checks, PR, CI, and merge by exact head SHA.
 
-## Deferred Dependabot version updates
+## Dependabot version updates
 
-Dependabot version updates are deliberately deferred in this phase.
+Dependabot version updates are now configured by `.github/dependabot.yml`.
 
-Reason: version updates are enabled by committing a `.github/dependabot.yml` file, and they can open normal update PRs even when no vulnerability exists. That is useful, but it is a separate supply-chain maintenance phase, not part of this settings-record phase.
+Current policy: keep the first configuration deliberately low-noise. Dependabot checks `pip` and `github-actions` monthly, with at most 2 open version-update PRs per ecosystem. Security updates remain governed separately by GitHub's Dependabot security update controls.
 
 Expected future branch if accepted:
 
