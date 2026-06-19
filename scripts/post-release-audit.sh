@@ -204,6 +204,8 @@ PYTHONPATH=src python -m agent_rules_kit.cli --version | grep -Eq '^agent-rules-
 PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format json | python -m json.tool >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/single-agent >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/single-agent >/dev/null
+PYTHONPATH=src python -m agent_rules_kit.cli dedupe tests/fixtures/repositories/multi-agent-overlap >/dev/null
+PYTHONPATH=src python -m agent_rules_kit.cli conflicts tests/fixtures/repositories/multi-agent-overlap >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003 >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli explain --list >/dev/null
 printf 'OK: local CLI smoke checks passed.\n'
