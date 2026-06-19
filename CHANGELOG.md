@@ -10,6 +10,11 @@ This project has a published GitHub Release line, but no stable support or API g
 
 - Documented the v0.3.0 post-release audit findings and v0.3.1 maintenance hardening target.
 
+### Changed
+
+- Synced the README source-tree layout with the actual v0.3.0 module structure.
+- Reviewed the threat model for the v0.3.0 doctor, budget, and explain command surface.
+
 ## [0.3.0] - 2026-06-19
 
 ### Added

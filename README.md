@@ -449,7 +449,6 @@ See:
     │       ├── budget.py
     │       ├── cli.py
     │       ├── discovery.py
-    │       ├── doctor.py
     │       ├── explain.py
     │       ├── findings.py
     │       ├── governance.py
