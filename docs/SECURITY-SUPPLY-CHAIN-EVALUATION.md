@@ -32,21 +32,15 @@ The publish job needs `id-token: write` for PyPI Trusted Publishing. No static P
 
 ## Private vulnerability reporting
 
-Current repository documentation states that private vulnerability reporting has been checked and is currently verified as disabled.
+Private vulnerability reporting has since been manually enabled and documented for this repository.
 
-Do not claim private vulnerability reporting is enabled unless the repository setting is explicitly verified as enabled.
+Current documentation:
 
-Decision for this phase:
+- `SECURITY.md` states that private vulnerability reporting is enabled;
+- `docs/PRIVATE-VULNERABILITY-REPORTING.md` records the manual GitHub UI verification evidence and limits;
+- the setting must still be treated as a disclosure channel, not a security guarantee.
 
-- do not enable or change private vulnerability reporting in this branch;
-- keep SECURITY.md honest about the current disabled state;
-- keep the documented public fallback: no secrets, exploit details, private URLs, customer data, or sensitive repository contents should be posted publicly.
-
-Future enablement candidate:
-
-- create a separate settings-only phase if the maintainer decides to enable private vulnerability reporting;
-- verify the setting after enablement;
-- update SECURITY.md, README, and release documentation only after verified evidence exists.
+Historical note: this document was originally created as a read-only evaluation before private vulnerability reporting was enabled. That older disabled-state wording is no longer current.
 
 ## CodeQL and code scanning
 
@@ -83,29 +77,29 @@ Recommended future CodeQL phase boundaries:
 
 Dependabot alerts help identify known vulnerable dependencies when the dependency graph can detect affected packages.
 
-Potential value for this project:
+Current repository setting record:
 
-- alerts for development tooling vulnerabilities;
-- visibility into dependency risk even with zero runtime dependencies;
-- useful because the project has build, lint, test, and publishing tooling.
+- dependency graph is manually verified as enabled;
+- Dependabot alerts are manually verified as enabled;
+- Dependabot security updates are manually verified as enabled;
+- Dependabot version updates are deferred because no `.github/dependabot.yml` exists in this phase;
+- automatic dependency submission is deferred;
+- malware alerts and grouped security updates are not claimed as enabled in this record unless separately verified by a later UI check.
+
+See `docs/DEPENDABOT-DEPENDENCY-GRAPH.md` for the dedicated settings record.
 
 Risks and constraints:
 
 - alerts may not cover every issue;
 - only GitHub-reviewed advisories trigger alerts;
 - dependency graph coverage depends on supported ecosystems and manifest visibility;
-- this does not make agent-rules-kit a dependency vulnerability scanner.
-
-Decision for this phase:
-
-- do not enable or configure Dependabot in this branch;
-- record Dependabot alerts as a future settings/configuration candidate;
-- keep any Dependabot version-update policy separate from vulnerability-alert evaluation.
+- this does not make agent-rules-kit a dependency vulnerability scanner;
+- Dependabot-created PRs still require normal Always-Green review, checks, CI, and exact-head merge discipline.
 
 Recommended future Dependabot phase boundaries:
 
-- first evaluate repository settings and current alert status;
-- then decide whether to add `.github/dependabot.yml` for version updates;
+- inspect and document the existing Dependabot rule before claiming it as a control;
+- decide whether to add `.github/dependabot.yml` for version updates in a separate branch;
 - do not combine version-update automation with CodeQL, release, or security-policy changes.
 
 ## OpenSSF Scorecard
