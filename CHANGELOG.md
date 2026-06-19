@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added a dedicated CodeQL workflow for Python code scanning without changing the protected CI required check name.
 - Added a read-only security and supply-chain evaluation record for CodeQL, private vulnerability reporting, Dependabot, Scorecard, and GitHub Actions pinning.
 - Added a non-required Python 3.13 compatibility CI job without changing the protected Python 3.12 required check name.
 - Added a local post-release audit script for repeatable maintainer verification.
