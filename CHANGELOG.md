@@ -13,6 +13,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Improved PyPI package metadata with SPDX license metadata, explicit license files, project URLs, and additional classifiers.
 - Synced the README source-tree layout with the actual v0.3.0 module structure.
 - Reviewed the threat model for the v0.3.0 doctor, budget, and explain command surface.
 
