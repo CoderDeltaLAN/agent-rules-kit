@@ -46,9 +46,11 @@ Use fake examples only.
 
 ## Reporting a vulnerability
 
-Private vulnerability reporting has been checked and is currently verified as disabled.
+Private vulnerability reporting is currently documented as disabled.
 
-Do not claim private vulnerability reporting is enabled.
+See `docs/PRIVATE-VULNERABILITY-REPORTING.md` for the verification boundary and the manual GitHub UI check required before changing this statement.
+
+Do not claim private vulnerability reporting is enabled unless the GitHub UI explicitly verifies it as enabled.
 
 If a sensitive issue cannot be reported privately through GitHub, do not publish secrets, exploit details, private URLs, customer data, or sensitive repository contents. Open only a minimal public issue requesting a private contact path.
 
