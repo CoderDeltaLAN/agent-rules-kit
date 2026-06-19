@@ -8,6 +8,8 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Prepared v0.3.0 release documentation and release-notes draft without creating a tag, GitHub Release, or PyPI publication.
+
 - Added v0.3 architecture and roadmap planning documentation.
 - Added initial output and exit-code contract documentation for existing `check` and `init` behavior and planned v0.3 `doctor`, `budget`, and `explain` commands.
 - Added golden output foundation tests for current `check` and `init` console, JSON, Markdown, stdout, stderr, and exit-code behavior.
