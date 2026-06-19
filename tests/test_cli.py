@@ -195,6 +195,47 @@ class CliTests(unittest.TestCase):
         self.assertIn("ERROR: repository root does not exist:", output.getvalue())
 
 
+
+    def test_conflicts_reports_opposing_guidance(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            (root / "AGENTS.md").write_text(
+                "# Agent instructions\n\n- Commit directly to main.\n",
+                encoding="utf-8",
+            )
+            (root / "CLAUDE.md").write_text(
+                "# Claude instructions\n\n- Use pull requests for changes to main.\n",
+                encoding="utf-8",
+            )
+
+            output = io.StringIO()
+
+            with redirect_stdout(output):
+                exit_code = main(["conflicts", str(root)])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("agent-rules-kit conflicts:", text)
+        self.assertIn("Status: review", text)
+        self.assertIn("Conflict groups: 1", text)
+        self.assertIn("Conflict lines: 2", text)
+        self.assertIn("main integration", text)
+        self.assertIn("AGENTS.md:3", text)
+        self.assertIn("CLAUDE.md:3", text)
+
+    def test_conflicts_returns_one_when_no_instruction_files_are_found(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(["conflicts", str(FIXTURE_ROOT / "empty-repo")])
+
+        text = output.getvalue()
+
+        self.assertEqual(exit_code, 1)
+        self.assertIn("Status: no_instruction_files", text)
+        self.assertIn("Conflict groups: 0", text)
+
     def test_dedupe_reports_duplicate_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)
