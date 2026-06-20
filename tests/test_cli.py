@@ -236,6 +236,38 @@ class CliTests(unittest.TestCase):
         self.assertIn("Status: no_instruction_files", text)
         self.assertIn("Conflict groups: 0", text)
 
+    def test_conflicts_returns_two_for_invalid_repository_root(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["conflicts", str(FIXTURE_ROOT / "missing-repo")])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(
+            output.getvalue(),
+            "ERROR: repository root does not exist: "
+            f"{FIXTURE_ROOT / 'missing-repo'}\n",
+        )
+
+    def test_conflicts_returns_two_for_symlinked_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "REAL.md"
+            target.write_text("- Commit directly to main.\n", encoding="utf-8")
+            (root / "AGENTS.md").symlink_to(target)
+
+            output = io.StringIO()
+
+            with redirect_stderr(output):
+                exit_code = main(["conflicts", str(root)])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(
+            output.getvalue(),
+            "ERROR: instruction file path is a symlink and cannot be checked for "
+            "conflicts: AGENTS.md\n",
+        )
+
     def test_dedupe_reports_duplicate_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)
@@ -276,6 +308,38 @@ class CliTests(unittest.TestCase):
         self.assertEqual(exit_code, 1)
         self.assertIn("Status: no_instruction_files", text)
         self.assertIn("Duplicate groups: 0", text)
+
+    def test_dedupe_returns_two_for_invalid_repository_root(self) -> None:
+        output = io.StringIO()
+
+        with redirect_stderr(output):
+            exit_code = main(["dedupe", str(FIXTURE_ROOT / "missing-repo")])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(
+            output.getvalue(),
+            "ERROR: repository root does not exist: "
+            f"{FIXTURE_ROOT / 'missing-repo'}\n",
+        )
+
+    def test_dedupe_returns_two_for_symlinked_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "REAL.md"
+            target.write_text("Run unit tests before opening a pull request.\n", encoding="utf-8")
+            (root / "AGENTS.md").symlink_to(target)
+
+            output = io.StringIO()
+
+            with redirect_stderr(output):
+                exit_code = main(["dedupe", str(root)])
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(
+            output.getvalue(),
+            "ERROR: instruction file path is a symlink and cannot be deduplicated: "
+            "AGENTS.md\n",
+        )
 
     def test_explain_lists_known_rules(self) -> None:
         output = io.StringIO()
