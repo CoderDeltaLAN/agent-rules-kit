@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added a consolidated post-audit action plan for the v0.4.0 hardening and release-preparation sequence.
 - Added a post-v0.3.0 internal readiness audit record documenting current-main evidence, release blockers, and follow-up items before external audit or any future release.
 - Added a post-v0.3.0 functional contract evidence record covering the current CLI command matrix, init write behavior, and release-boundary limits.
 - Added a read-only `dedupe` baseline command for deterministic duplicate instruction-line detection across supported instruction files.
