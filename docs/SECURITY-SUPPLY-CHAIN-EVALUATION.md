@@ -129,7 +129,7 @@ Recommended future Scorecard phase boundary:
 
 ## GitHub Actions pinning policy
 
-The workflows currently use version tags such as `actions/checkout@v6`, `actions/setup-python@v6`, `actions/upload-artifact@v4`, `actions/download-artifact@v5`, and `pypa/gh-action-pypi-publish@release/v1`.
+The workflows currently use version tags such as `actions/checkout@v7`, `actions/setup-python@v6`, `actions/upload-artifact@v4`, `actions/download-artifact@v8`, and `pypa/gh-action-pypi-publish@release/v1`.
 
 Potential stronger policy:
 
