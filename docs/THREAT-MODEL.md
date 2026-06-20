@@ -1,6 +1,6 @@
 # Threat Model
 
-This document defines the threat model for agent-rules-kit. It was last reviewed for the published v0.3.0 release line and the current post-v0.3.0 main state, including the v0.3.0 doctor, budget, and explain command surface.
+This document defines the threat model for agent-rules-kit. It was last reviewed for the published v0.3.0 release line and the current post-v0.3.0 main state, including the published v0.3.0 doctor, budget, and explain command surface and the current-main post-v0.3.0 dedupe and conflicts read-only command additions.
 
 It is intentionally narrow. agent-rules-kit is a local CLI for diagnosing AI agent instruction files. It is not a security scanner, malware detector, CI/CD auditor, sandbox, secret manager, or autonomous remediation agent.
 
@@ -14,9 +14,13 @@ In scope for the current release line and current main state:
 - read-only doctor repository diagnosis summaries;
 - read-only budget size and context-pressure approximation output;
 - read-only explain output for local governance rule IDs;
+- read-only dedupe duplicate instruction-line detection on current main as a post-v0.3.0 addition;
+- read-only conflicts contradictory-guidance detection on current main as a post-v0.3.0 addition;
 - explicit init planning;
 - explicit init write behavior for baseline AGENTS.md creation or replacement with backup;
 - secret-like value redaction in findings and output.
+
+`dedupe` and `conflicts` are current-main post-v0.3.0 additions. They must not be represented as published PyPI package behavior until a later release is cut, published, and verified.
 
 Out of scope:
 
@@ -159,6 +163,7 @@ Before release, verify:
 - backups are created before replacing existing AGENTS.md;
 - no runtime network or LLM dependency was introduced;
 - no repository command execution was introduced;
+- post-v0.3.0 `dedupe` and `conflicts` command boundaries remain read-only if they are included in the next release scope;
 - secret-like examples in tests and docs are fake or redacted;
 - README does not claim security guarantees;
 - CI is green for the release SHA.
