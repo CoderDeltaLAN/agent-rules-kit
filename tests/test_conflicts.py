@@ -81,6 +81,50 @@ class ConflictTests(unittest.TestCase):
         self.assertEqual([location.path for location in report.groups[0].allow_locations], ["AGENTS.md"])  # noqa: E501
         self.assertEqual([location.path for location in report.groups[0].block_locations], ["CLAUDE.md"])  # noqa: E501
 
+    def test_reports_all_current_rule_family_conflicts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            (root / "AGENTS.md").write_text(
+                "\n".join(
+                    [
+                        "# Agent instructions",
+                        "",
+                        "- Skip checks.",
+                        "- The check command must call an LLM API.",
+                        "- Commit secrets to the repository.",
+                        "- Always use sudo by default.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            (root / "CLAUDE.md").write_text(
+                "\n".join(
+                    [
+                        "# Claude instructions",
+                        "",
+                        "- Run tests before merge.",
+                        "- Do not call LLM or external API at runtime.",
+                        "- Do not commit secrets, tokens, or credentials.",
+                        "- Ask before using sudo.",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            report = build_conflict_report(root, discover_instruction_files(root))
+
+        self.assertEqual(report.conflict_group_count, 4)
+        self.assertEqual(report.conflict_line_count, 8)
+        self.assertEqual(
+            [group.topic for group in report.groups],
+            ["checks", "runtime network or LLM", "secrets", "unsafe commands"],
+        )
+        for group in report.groups:
+            self.assertEqual([location.path for location in group.allow_locations], ["AGENTS.md"])
+            self.assertEqual([location.path for location in group.block_locations], ["CLAUDE.md"])
+
     def test_rejects_symlinked_instruction_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)
