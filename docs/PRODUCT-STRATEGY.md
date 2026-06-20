@@ -6,7 +6,7 @@ It is a strategy document, not an implementation plan for a specific feature. It
 
 ## Current product truth
 
-agent-rules-kit has a published v0.3.0 GitHub Release and PyPI package line. `v0.2.3` remains the previous published GitHub Release and PyPI package baseline. Current main contains post-v0.3.0 maintenance hardening intended for a future patch release.
+agent-rules-kit has a published v0.3.0 GitHub Release and PyPI package line. `v0.2.3` remains the previous published GitHub Release and PyPI package baseline. Current main contains post-v0.3.0 `dedupe` and `conflicts` command additions plus maintenance hardening. The next public release target is v0.4.0, not a v0.3.x patch, because the new commands expand the compatible command surface.
 
 The implemented product currently supports:
 
@@ -272,7 +272,7 @@ The next implementation phase should be justified against the current repository
 
 Good next candidates are narrow and evidence-backed:
 
-- v0.3.1 maintenance hardening before new product features;
+- v0.4.0 release preparation for the current `dedupe` and `conflicts` command additions, after final audit evidence is complete;
 - release and package smoke hardening;
 - README, support, security, and strategy public-truth checks;
 - supply-chain workflow additions only after dedicated evaluation phases;
@@ -288,7 +288,7 @@ Decision: keep product strategy as the boundary document after v0.2.
 Reason:
 
 - v0.3.0 already published the local diagnosis toolkit baseline;
-- current main contains post-v0.3.0 maintenance hardening that should become a future patch release;
+- current main contains post-v0.3.0 `dedupe` and `conflicts` command additions plus maintenance hardening that must be released, if approved, as v0.4.0 rather than a patch release;
 - adjacent tools still cover repository packaging, context frameworks, and broad rule generation better than this project should;
 - the real product wedge remains instruction governance;
 - future features must be justified against this document to avoid scope drift.

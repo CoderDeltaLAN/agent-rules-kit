@@ -148,11 +148,11 @@ Minimum core files to include:
 
 ### H-01: SECURITY-SUPPLY-CHAIN-EVALUATION action versions are stale
 
-Status: open.
+Status: closed by PR #121.
 
 docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md still mentions older GitHub Actions versions, while current workflows include actions/checkout@v7 and actions/download-artifact@v8.
 
-Required phase:
+Completed phase:
 
 - docs/sync-supply-chain-evaluation-action-versions
 
@@ -165,11 +165,11 @@ Acceptance criteria:
 
 ### H-02: dedupe and conflicts need CLI error-contract tests
 
-Status: open.
+Status: closed by PR #122.
 
 Before publishing dedupe and conflicts in v0.4.0, their error paths need tests matching docs/OUTPUTS.md and docs/EXIT-CODES.md.
 
-Required phase:
+Completed phase:
 
 - test/add-dedupe-conflicts-error-contracts
 
@@ -185,11 +185,11 @@ Acceptance criteria:
 
 ### H-03: conflicts needs rule-family fixtures
 
-Status: open.
+Status: closed by PR #123.
 
 conflicts is more reputation-sensitive than dedupe because it reports contradictory guidance. It needs coverage for the implemented families, not broad semantic analysis.
 
-Required phase:
+Completed phase:
 
 - test/add-conflicts-rule-family-fixtures
 
@@ -206,11 +206,11 @@ Acceptance criteria:
 
 ### H-04: dedupe needs a representative golden or contract test
 
-Status: open.
+Status: closed by PR #124.
 
 dedupe is a new v0.4.0 command surface and needs a stable representative output contract.
 
-Required phase:
+Completed phase:
 
 - test/add-dedupe-golden-contract
 
@@ -222,11 +222,11 @@ Acceptance criteria:
 
 ### M-01: symlink behavior needs clearer documentation
 
-Status: open.
+Status: closed by PR #125.
 
 check degrades symlinked supported instruction files to SYS002 findings, while budget, dedupe, and conflicts fail hard with exit code 2. This can be valid, but must be documented as a deliberate UX and safety choice.
 
-Required phase:
+Completed phase:
 
 - docs/sync-outputs-symlink-behavior-clarification
 
@@ -239,11 +239,11 @@ Acceptance criteria:
 
 ### M-02: Python 3.13 classifier decision
 
-Status: open.
+Status: closed by PR #126.
 
 The project has a Python 3.13 compatibility job, but package classifiers currently communicate only Python 3.12 support.
 
-Required phase:
+Completed phase:
 
 - packaging/sync-python-313-classifier
 
