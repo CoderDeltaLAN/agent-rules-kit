@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass
@@ -49,6 +50,18 @@ class GoldenOutputTests(unittest.TestCase):
             "Found 1 supported instruction file(s):\n"
             "- AGENTS.md [agents]\n",
         )
+
+    def test_check_console_redacts_secret_like_repository_path(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="sk-ant-testredaction123456-") as temp_dir:
+            repository = Path(temp_dir)
+            (repository / "AGENTS.md").write_text("Scope: test\nNo secrets.\n", encoding="utf-8")
+
+            result = run_cli(["check", str(repository)])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertIn("[REDACTED]", result.stdout)
+        self.assertNotIn("sk-ant-testredaction123456", result.stdout)
 
     def test_check_json_clean_fixture_matches_golden_output(self) -> None:
         repository = FIXTURE_ROOT / "single-agent"
@@ -316,7 +329,10 @@ class GoldenOutputTests(unittest.TestCase):
                 "stdout_contains": [
                     "Status: ok",
                     "Supported instruction files: 1",
-                    "Total bytes: 321",
+                    (
+                        "Total bytes: "
+                        f"{len((FIXTURE_ROOT / 'single-agent' / 'AGENTS.md').read_bytes())}"
+                    ),
                 ],
                 "stderr": "",
             },
