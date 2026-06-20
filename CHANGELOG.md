@@ -8,6 +8,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Added
 
+- Added a post-v0.3.0 internal readiness audit record documenting current-main evidence, release blockers, and follow-up items before external audit or any future release.
 - Added a post-v0.3.0 functional contract evidence record covering the current CLI command matrix, init write behavior, and release-boundary limits.
 - Added a read-only `dedupe` baseline command for deterministic duplicate instruction-line detection across supported instruction files.
 - Added a read-only `conflicts` baseline command for deterministic contradictory-guidance detection across supported instruction files.
