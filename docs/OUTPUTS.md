@@ -255,6 +255,8 @@ Current `budget` exit-code behavior:
 
 `Approximate words` is a local whitespace-based approximation, not a model token count.
 
+Budget rejects symlinked supported instruction-file paths with exit code `2` instead of producing a partial report. This is deliberate: budget totals should not follow or count external symlink targets as if they were repository-local instruction files.
+
 ## Dedupe output contract
 
 Current `dedupe` console output includes:
@@ -275,6 +277,8 @@ Current `dedupe` exit-code behavior:
 
 `dedupe` is read-only. It detects repeated normalized lines across supported instruction files. It does not perform semantic duplication analysis.
 
+Dedupe rejects symlinked supported instruction-file paths with exit code `2` instead of producing a partial report. This is deliberate: duplicate-line reports should compare repository-local instruction text and should not follow symlink targets outside the reviewed tree.
+
 ## Conflicts output contract
 
 Current `conflicts` console output includes:
@@ -294,6 +298,8 @@ Current `conflicts` exit-code behavior:
 - `2`: invalid repository input, unsupported instruction-file input, or command-line usage error.
 
 `conflicts` is read-only. It detects implemented deterministic pattern families for opposite guidance. It does not perform broad semantic contradiction analysis.
+
+Conflicts rejects symlinked supported instruction-file paths with exit code `2` instead of producing a partial report. This is deliberate: conflict reports should not mix repository-local guidance with symlink targets whose review boundary may be unclear.
 
 ## Explain output contract
 

@@ -66,6 +66,7 @@ Notes:
 - `budget` uses deterministic local metrics only.
 - `budget` does not perform tokenizer-specific counting, remote tokenization, LLM calls, pricing estimates, or optimization claims.
 - `Approximate words` is not a model token count.
+- Symlinked supported instruction-file paths fail hard with exit code `2` instead of being followed or silently skipped.
 
 ### `dedupe`
 
@@ -80,6 +81,7 @@ Notes:
 - `dedupe` is read-only.
 - `dedupe` uses deterministic local normalization only.
 - `dedupe` detects repeated normalized lines across supported instruction files, not broad semantic duplication.
+- Symlinked supported instruction-file paths fail hard with exit code `2` instead of being followed or silently skipped.
 
 ### `conflicts`
 
@@ -94,6 +96,7 @@ Notes:
 - `conflicts` is read-only.
 - `conflicts` uses deterministic local pattern families only.
 - `conflicts` detects implemented opposite-guidance patterns, not broad semantic contradiction.
+- Symlinked supported instruction-file paths fail hard with exit code `2` instead of being followed or silently skipped.
 
 ### `explain`
 
