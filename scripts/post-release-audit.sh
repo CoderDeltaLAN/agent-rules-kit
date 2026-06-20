@@ -305,7 +305,7 @@ require_contains docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md 'Dependabot-created PR
 printf 'OK: Dependabot sanity checks passed.\n'
 
 printf '\n== public truth and claim boundaries ==\n'
-require_contains README.md '`v0\.3\.0` is the current GitHub Release and PyPI package'
+require_contains README.md '`v0\.3\.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`'
 require_contains README.md 'agent-rules-kit==0\.3\.0'
 require_contains README.md 'PyPI Trusted Publishing'
 require_contains README.md 'not a security product, not a general repository auditor, not a secret scanner'

@@ -135,11 +135,13 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-`v0.3.0` is the current GitHub Release and PyPI package for `agent-rules-kit`.
+`v0.3.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`.
 
 `v0.2.3` remains the previous published GitHub Release and PyPI package baseline.
 
-The implemented behavior includes:
+Current `main` may include post-v0.3.0 changes that are not part of the published PyPI package until a later release is cut and verified.
+
+The current `main` behavior includes:
 
 - discovers supported AI agent instruction files;
 - reports repository-relative paths;
@@ -147,11 +149,11 @@ The implemented behavior includes:
 - provides `init --dry-run` for planning baseline instruction files;
 - provides explicit `init --write` behavior for creating or replacing root `AGENTS.md`;
 - backs up existing root `AGENTS.md` before replacement;
-- provides read-only `doctor` repository diagnosis output on `main`;
-- provides read-only `budget` local size and context-pressure approximation output on `main`;
-- provides read-only `explain` output for known governance rule IDs on `main`;
-- provides read-only `dedupe` duplicate instruction-line detection on `main`;
-- provides read-only `conflicts` contradictory-guidance detection on `main`;
+- provides read-only `doctor` repository diagnosis output in the published v0.3.0 package and current `main`;
+- provides read-only `budget` local size and context-pressure approximation output in the published v0.3.0 package and current `main`;
+- provides read-only `explain` output for known governance rule IDs in the published v0.3.0 package and current `main`;
+- provides read-only `dedupe` duplicate instruction-line detection on current `main` as a post-v0.3.0 addition;
+- provides read-only `conflicts` contradictory-guidance detection on current `main` as a post-v0.3.0 addition;
 - redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
@@ -252,9 +254,9 @@ The source tree can also be used directly for quick CLI inspection:
 
     PYTHONPATH=src python -m agent_rules_kit.cli --help
 
-### v0.3.0 commands from source
+### Current main commands from source
 
-The v0.3.0 commands can also be tested from the source tree:
+Current `main` can also be tested from the source tree. `doctor`, `budget`, and `explain` are part of the published v0.3.0 package. `dedupe` and `conflicts` are post-v0.3.0 current-main additions until the next release is cut and verified:
 
     PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
@@ -516,6 +518,8 @@ Current verified local result on `main`:
 
 The exact unit test count may change as coverage evolves. The source of truth is the current `./scripts/check.sh` output and the matching GitHub Actions run for `main`.
 
+For current post-v0.3.0 functional evidence, including the verified command matrix, init write behavior, and release-boundary limits, see `docs/POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md`.
+
 CI installs project development dependencies and then runs the same local check script through GitHub Actions.
 
 The required status check for `main` is:
@@ -540,6 +544,7 @@ Current status:
 - the `pypi` GitHub environment exists for the release publishing workflow;
 - `.github/workflows/publish-pypi.yml` published `v0.3.0` through PyPI Trusted Publishing and remains the release publishing workflow;
 - README screenshots are generated from real local CLI commands;
+- post-v0.3.0 functional contract evidence is documented in `docs/POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md`;
 - security boundaries documented;
 - threat model documented.
 
