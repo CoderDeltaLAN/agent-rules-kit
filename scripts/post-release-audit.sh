@@ -200,7 +200,17 @@ print(f"OK: package metadata and version parity {pyproject_version}")
 PY_METADATA
 
 printf '\n== local CLI smoke ==\n'
-PYTHONPATH=src python -m agent_rules_kit.cli --version | grep -Eq '^agent-rules-kit 0\.3\.0$'
+PACKAGE_VERSION="$(python - <<'PY_VERSION'
+from __future__ import annotations
+
+import tomllib
+from pathlib import Path
+
+project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]
+print(project["version"])
+PY_VERSION
+)"
+PYTHONPATH=src python -m agent_rules_kit.cli --version | grep -Fx "agent-rules-kit ${PACKAGE_VERSION}"
 PYTHONPATH=src python -m agent_rules_kit.cli check tests/fixtures/repositories/single-agent --format json | python -m json.tool >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/single-agent >/dev/null
 PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/single-agent >/dev/null
