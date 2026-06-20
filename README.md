@@ -443,28 +443,39 @@ See:
     .
     ├── .github/
     │   ├── ISSUE_TEMPLATE/
+    │   │   ├── bug_report.yml
+    │   │   └── feature_request.yml
+    │   ├── dependabot.yml
     │   ├── pull_request_template.md
     │   └── workflows/
     │       ├── ci.yml
+    │       ├── codeql.yml
     │       └── publish-pypi.yml
     ├── docs/
     │   ├── BUILD-PLAN.md
+    │   ├── DEPENDABOT-DEPENDENCY-GRAPH.md
     │   ├── EXIT-CODES.md
+    │   ├── OPENSSF-SCORECARD-EVALUATION.md
     │   ├── OUTPUTS.md
+    │   ├── POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md
+    │   ├── PRIVATE-VULNERABILITY-REPORTING.md
     │   ├── PRODUCT-STRATEGY.md
     │   ├── RULES.md
+    │   ├── SECURITY-SUPPLY-CHAIN-EVALUATION.md
     │   ├── THREAT-MODEL.md
+    │   ├── V0.2.0-RELEASE-NOTES.md
+    │   ├── V0.2-GOVERNANCE-BOUNDARIES.md
     │   ├── V0.2-GOVERNANCE-RULES-SPEC.md
+    │   ├── V0.2-PACKAGING-DRY-RUN.md
+    │   ├── V0.2-RELEASE-READINESS.md
     │   ├── V0.3-ARCHITECTURE-ROADMAP.md
+    │   ├── V0.3.0-POST-RELEASE-AUDIT.md
     │   ├── V0.3.0-RELEASE-NOTES.md
     │   └── screenshots/
     │       └── readme/
-    │           ├── agent-rules-kit-governance-findings.png
-    │           ├── agent-rules-kit-help-check.png
-    │           ├── agent-rules-kit-init-safety.png
-    │           └── agent-rules-kit-output-formats.png
     ├── scripts/
-    │   └── check.sh
+    │   ├── check.sh
+    │   └── post-release-audit.sh
     ├── src/
     │   └── agent_rules_kit/
     │       ├── __init__.py
@@ -480,6 +491,19 @@ See:
     │       ├── init_write.py
     │       └── redaction.py
     ├── tests/
+    │   ├── test_cli.py
+    │   ├── test_conflicts.py
+    │   ├── test_dedupe.py
+    │   ├── test_diagnostic_fixtures.py
+    │   ├── test_discovery.py
+    │   ├── test_findings.py
+    │   ├── test_golden_outputs.py
+    │   ├── test_governance.py
+    │   ├── test_init_plan.py
+    │   ├── test_init_write.py
+    │   ├── test_path_boundaries.py
+    │   └── test_redaction.py
+    ├── .gitignore
     ├── AGENTS.md
     ├── CHANGELOG.md
     ├── CONTRIBUTING.md

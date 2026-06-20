@@ -22,6 +22,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Changed
 
+- Synced the README repository layout with the current workflows, evidence documents, scripts, package modules, and test files.
 - Synced README wording with current main truth for post-v0.3.0 `dedupe` and `conflicts`, published v0.3.0/PyPI boundaries, and functional evidence traceability.
 - Hardened the local post-release audit script to verify package metadata, version parity, source CLI smoke behavior, workflow action inventory, workflow trigger and permission posture, PyPI Trusted Publishing boundaries, Dependabot configuration, forbidden local artifacts, and public-claim guardrails.
 - Expanded CI, wheel, and post-release audit smoke coverage for the current `dedupe` and `conflicts` command contract.
