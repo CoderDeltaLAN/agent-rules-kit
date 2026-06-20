@@ -218,6 +218,37 @@ class GoldenOutputTests(unittest.TestCase):
             "Next step: review large instruction files before adding more agent guidance.\n",
         )
 
+    def test_dedupe_duplicate_fixture_matches_golden_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            repository = Path(tmp_dir)
+            duplicate = "Run unit tests before opening a pull request."
+            (repository / "AGENTS.md").write_text(
+                f"# Agent instructions\n\n- {duplicate}\n",
+                encoding="utf-8",
+            )
+            (repository / "CLAUDE.md").write_text(
+                f"# Claude instructions\n\n{duplicate}\n",
+                encoding="utf-8",
+            )
+
+            result = run_cli(["dedupe", str(repository)])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(
+            result.stdout,
+            f"agent-rules-kit dedupe: {repository}\n"
+            "Status: review\n"
+            "Supported instruction files: 2\n"
+            "Duplicate groups: 1\n"
+            "Duplicate lines: 2\n"
+            "Duplicate groups:\n"
+            "1. - Run unit tests before opening a pull request.\n"
+            "   - AGENTS.md:3\n"
+            "   - CLAUDE.md:3\n"
+            "Next step: move repeated instructions into one source of truth or import path.\n",
+        )
+
     def test_explain_known_rule_matches_golden_output(self) -> None:
         result = run_cli(["explain", "AIRK-GOV003"])
 
