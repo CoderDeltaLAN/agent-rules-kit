@@ -87,6 +87,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ### Fixed
 
+- Made the post-release audit CLI version smoke derive the expected version from `pyproject.toml` instead of hardcoding `0.3.0`.
 - Scoped governance finding suppression to same-line negation or approval cues so adjacent safe guidance no longer hides unrelated risky instructions.
 - Reject symlinked supported instruction files and harden `init --write` temporary and backup paths against symlink escapes.
 - Report non-UTF-8 supported instruction files as `AIRK-SYS001` findings instead of silently skipping governance analysis.
