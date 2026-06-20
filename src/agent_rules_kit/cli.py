@@ -487,7 +487,7 @@ def _print_console_check(
     instruction_files: tuple[InstructionFile, ...],
     findings: tuple[Finding, ...],
 ) -> int:
-    print(f"agent-rules-kit check: {repository_root}")
+    print(f"agent-rules-kit check: {redact_secret_like_values(str(repository_root))}")
 
     if not instruction_files:
         print("No supported agent instruction files found.")
