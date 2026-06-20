@@ -63,6 +63,8 @@ _CONFLICT_RULES: tuple[_ConflictRule, ...] = (
             re.compile(r"\b(commit|push)\s+directly\s+to\s+main\b", re.IGNORECASE),
             re.compile(r"\bdirect\s+push(?:es)?\s+to\s+main\s+(are\s+)?(allowed|ok|fine)\b", re.IGNORECASE),  # noqa: E501
             re.compile(r"\bmerge\s+without\s+(review|approval)\b", re.IGNORECASE),
+            re.compile(r"\b(do not|don't|never|avoid)\b.{0,80}\buse\s+pull\s+requests?\b", re.IGNORECASE),  # noqa: E501
+            re.compile(r"\b(no\s+PR|PR\s+is\s+not|required\s+PR\s+is\s+not|pull\s+requests?\s+are\s+not)\b.{0,80}\b(required|needed|mandatory)\b", re.IGNORECASE),  # noqa: E501
         ),
     ),
     _ConflictRule(
@@ -213,10 +215,29 @@ def build_conflict_report(
 
 
 def _matches_conflict_rule(stripped: str, rule: _ConflictRule) -> bool:
-    if rule.polarity == "allow" and _has_negated_guidance(stripped):
+    matched = any(pattern.search(stripped) for pattern in rule.patterns)
+    if not matched:
         return False
 
-    return any(pattern.search(stripped) for pattern in rule.patterns)
+    if rule.topic == "main integration" and _has_negated_pr_boundary(stripped):
+        return rule.polarity == "allow"
+
+    return not (rule.polarity == "allow" and _has_negated_guidance(stripped))
+
+
+def _has_negated_pr_boundary(stripped: str) -> bool:
+    return bool(
+        re.search(
+            r"\b(do not|don't|never|avoid)\b.{0,80}\buse\s+pull\s+requests?\b",
+            stripped,
+            re.IGNORECASE,
+        )
+        or re.search(
+            r"\b(no\s+PR|PR\s+is\s+not|required\s+PR\s+is\s+not|pull\s+requests?\s+are\s+not)\b.{0,80}\b(required|needed|mandatory)\b",
+            stripped,
+            re.IGNORECASE,
+        )
+    )
 
 
 def _has_negated_guidance(stripped: str) -> bool:
