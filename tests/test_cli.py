@@ -268,6 +268,32 @@ class CliTests(unittest.TestCase):
             "conflicts: AGENTS.md\n",
         )
 
+
+    def test_conflicts_returns_two_for_non_utf8_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            original_bytes = b"# Agent instructions\n\n\xff\xfe\n"
+            agents_file = root / "AGENTS.md"
+            agents_file.write_bytes(original_bytes)
+
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with redirect_stdout(stdout), redirect_stderr(stderr):
+                exit_code = main(["conflicts", str(root)])
+
+            self.assertEqual(agents_file.read_bytes(), original_bytes)
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertEqual(
+            stderr.getvalue(),
+            "ERROR: instruction file is not valid UTF-8 and cannot be checked "
+            "for conflicts: AGENTS.md\n",
+        )
+        self.assertNotIn("\\xff", stderr.getvalue())
+        self.assertNotIn("255", stderr.getvalue())
+
     def test_dedupe_reports_duplicate_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)
@@ -296,6 +322,32 @@ class CliTests(unittest.TestCase):
         self.assertIn("Duplicate lines: 2", text)
         self.assertIn("AGENTS.md:3", text)
         self.assertIn("CLAUDE.md:3", text)
+
+
+    def test_dedupe_returns_two_for_non_utf8_instruction_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            original_bytes = b"# Agent instructions\n\n\xff\xfe\n"
+            agents_file = root / "AGENTS.md"
+            agents_file.write_bytes(original_bytes)
+
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with redirect_stdout(stdout), redirect_stderr(stderr):
+                exit_code = main(["dedupe", str(root)])
+
+            self.assertEqual(agents_file.read_bytes(), original_bytes)
+
+        self.assertEqual(exit_code, 2)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertEqual(
+            stderr.getvalue(),
+            "ERROR: instruction file is not valid UTF-8 and cannot be "
+            "deduplicated: AGENTS.md\n",
+        )
+        self.assertNotIn("\\xff", stderr.getvalue())
+        self.assertNotIn("255", stderr.getvalue())
 
     def test_dedupe_returns_one_when_no_instruction_files_are_found(self) -> None:
         output = io.StringIO()
