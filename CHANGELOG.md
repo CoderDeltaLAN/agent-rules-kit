@@ -6,6 +6,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+- Triaged superseded v0.3.1 release-target wording before the v0.4.0 release train.
 - Add non-UTF-8 error-contract coverage for `dedupe` and `conflicts`.
 
 ### Added
