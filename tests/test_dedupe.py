@@ -42,6 +42,19 @@ class DedupeTests(unittest.TestCase):
 
         self.assertEqual(report.duplicate_group_count, 0)
 
+
+    def test_rejects_non_utf8_instruction_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            original_bytes = b"# Agent instructions\n\n\xff\xfe\n"
+            agents_file = root / "AGENTS.md"
+            agents_file.write_bytes(original_bytes)
+
+            with self.assertRaisesRegex(ValueError, "not valid UTF-8"):
+                build_dedupe_report(root, discover_instruction_files(root))
+
+            self.assertEqual(agents_file.read_bytes(), original_bytes)
+
     def test_rejects_symlinked_instruction_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)

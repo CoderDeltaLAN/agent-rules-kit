@@ -6,6 +6,8 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+- Add non-UTF-8 error-contract coverage for `dedupe` and `conflicts`.
+
 ### Added
 
 - Added a consolidated post-audit action plan for the v0.4.0 hardening and release-preparation sequence.
