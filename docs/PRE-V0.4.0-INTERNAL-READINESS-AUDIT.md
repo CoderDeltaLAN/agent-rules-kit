@@ -106,7 +106,7 @@ Current main includes post-v0.3.0 functionality, including dedupe and conflicts.
 
 ### RB-02: final release evidence is missing
 
-Status: open.
+Status: closed by docs/triage-v040-release-truth-wording.
 
 The v0.4.0 release still needs exact release evidence, including:
 
@@ -135,17 +135,13 @@ Before release/prepare-v040, the external audit package must include the core so
 Severity: medium.
 Status: open.
 
-The stale-truth scan still finds older v0.3.1 and v0.2.x wording in historical docs, changelog entries, and product-strategy material. Some of this is legitimate historical release evidence and should not be rewritten. Some wording may still read like current guidance and should be triaged before the final v0.4.0 release package.
+The stale-truth scan found older v0.3.1 and v0.2.x wording in historical docs, changelog entries, and product-strategy material. The v0.3.1 wording that could read like current guidance in docs/V0.3.0-POST-RELEASE-AUDIT.md was triaged and marked as superseded historical planning. Historical v0.2.x release evidence remains intentionally unchanged.
 
-Required follow-up:
+Resolution:
 
-- identify which older references are intentionally historical;
-- update any current-guidance wording that still says the next work is v0.3.1 or a patch release;
-- avoid rewriting historical release notes unless the current truth boundary is genuinely unclear.
-
-Suggested phase:
-
-- docs/triage-v040-release-truth-wording
+- v0.3.1 wording in the v0.3.0 post-release audit is now explicitly labeled as superseded historical planning;
+- current release guidance remains v0.4.0;
+- historical v0.2.x release evidence is retained and not rewritten.
 
 ## Deferred non-blockers
 
