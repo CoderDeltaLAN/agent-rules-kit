@@ -345,3 +345,7 @@ Allowed files:
 - CHANGELOG.md
 
 This phase must not change code, tests, workflows, pyproject.toml, release metadata, tags, PyPI, branch protection, or dependency configuration.
+
+## Supply-chain resolution note
+
+GitHub Actions SHA pinning has been implemented after the original current-main action plan. CI, CodeQL, artifact upload/download, setup-python, checkout, and PyPI publishing actions are now pinned to full-length commit SHAs, with the local audit script enforcing the policy.

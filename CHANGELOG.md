@@ -6,6 +6,7 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+- Pin GitHub Actions workflow dependencies to full-length commit SHAs and enforce that policy in the local audit script.
 - Add non-UTF-8 error-contract coverage for `dedupe` and `conflicts`.
 
 ### Added

@@ -159,3 +159,7 @@ Recommended next hardening order:
 3. `supply-chain/add-dependabot-version-updates` if normal dependency version-update automation is accepted.
 
 None of these future phases should be mixed with release, PyPI, branch protection, runtime behavior, or product feature changes.
+
+## Current action pinning status
+
+GitHub Actions workflow dependencies are pinned to full-length commit SHAs in CI, CodeQL, and PyPI publishing workflows. Version labels remain as YAML comments for human review only. The local post-release audit rejects non-SHA `uses:` references.

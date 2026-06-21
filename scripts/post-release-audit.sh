@@ -238,20 +238,20 @@ if workflow_paths != expected_workflows:
     raise SystemExit(f"ERROR unexpected workflow inventory: {sorted(workflow_paths)}")
 
 allowed_uses = {
-    "actions/checkout@v7",
-    "actions/setup-python@v6",
-    "actions/upload-artifact@v4",
-    "actions/download-artifact@v8",
-    "github/codeql-action/init@v4",
-    "github/codeql-action/analyze@v4",
-    "pypa/gh-action-pypi-publish@release/v1",
+    "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+    "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+    "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+    "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "github/codeql-action@8aad20d150bbac5944a9f9d289da16a4b0d87c1e",
+    "github/codeql-action@8aad20d150bbac5944a9f9d289da16a4b0d87c1e",
+    "pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b",
 }
 
 observed_uses: list[str] = []
 
 for workflow_path in sorted(Path(".github/workflows").glob("*.yml")):
     for line_number, line in enumerate(workflow_path.read_text(encoding="utf-8").splitlines(), start=1):
-        match = re.match(r"\s*uses:\s*['\"]?([^'\"\s]+)['\"]?\s*$", line)
+        match = re.match(r"\s*uses:\s*[\'\"]?([^\'\"\s#]+)[\'\"]?(?:\s+#.*)?\s*$", line)
         if match is None:
             continue
 
@@ -268,7 +268,13 @@ missing_uses = sorted(allowed_uses.difference(observed_uses))
 if missing_uses:
     raise SystemExit(f"ERROR expected action reference not observed: {missing_uses}")
 
-print("OK: workflow action inventory is explicit and approved.")
+non_pinned_uses = [value for value in observed_uses if not re.search(r"@[0-9a-f]{40}$", value)]
+if non_pinned_uses:
+    print("ERROR workflow action uses are not pinned to full-length commit SHAs:")
+    for value in non_pinned_uses:
+        print(f"- {value}")
+    raise SystemExit(1)
+print("OK: workflow action inventory is full-SHA pinned and approved.")
 PY_WORKFLOWS
 
 printf '\n== workflow permission and trigger sanity ==\n'
