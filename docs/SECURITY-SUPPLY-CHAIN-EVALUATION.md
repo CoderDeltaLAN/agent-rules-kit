@@ -129,24 +129,27 @@ Recommended future Scorecard phase boundary:
 
 ## GitHub Actions pinning policy
 
-The workflows currently use version tags such as `actions/checkout@v7`, `actions/setup-python@v6`, `actions/upload-artifact@v4`, `actions/download-artifact@v8`, and `pypa/gh-action-pypi-publish@release/v1`.
+The workflows currently use version tags such as `actions/checkout@v7`, `actions/setup-python@v6`, `github/codeql-action/init@v4`, `github/codeql-action/analyze@v4`, `actions/upload-artifact@v4`, `actions/download-artifact@v8`, and `pypa/gh-action-pypi-publish@release/v1`.
 
-Potential stronger policy:
+Current policy decision:
 
-- pin third-party actions by full commit SHA;
-- document how pinned actions are reviewed and updated.
+- full-length commit SHA pinning is accepted as the stricter long-term GitHub Actions supply-chain policy;
+- the current tag-based references are a transitional state, not the final strictest policy;
+- the policy and implementation guardrails are documented in `docs/ACTIONS-PINNING-POLICY.md`.
 
 Risks and constraints:
 
 - full SHA pinning improves immutability but increases update burden;
 - a partial or stale pinning policy can create false confidence;
-- changing action references must be its own CI/supply-chain phase.
+- changing action references must be its own CI/supply-chain implementation phase;
+- sub-actions such as `github/codeql-action/init` and `github/codeql-action/analyze` must preserve their full path when pinned.
 
 Decision for this phase:
 
-- do not change action references here;
+- do not change workflow action references here;
 - keep current explicit permissions;
-- evaluate action pinning in a separate phase if the maintainer wants stricter supply-chain hardening.
+- record the accepted policy and exact implementation guardrails;
+- defer actual SHA conversion to a dedicated implementation phase with exact repository/SHA verification.
 
 ## Decision
 
