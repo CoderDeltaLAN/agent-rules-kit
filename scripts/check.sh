@@ -8,7 +8,14 @@ printf '\n== unit tests ==\n'
 PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'
 
 printf '\n== ruff ==\n'
-python -m ruff check .
+if python -m ruff --version >/dev/null 2>&1; then
+    python -m ruff check .
+elif command -v ruff >/dev/null 2>&1; then
+    ruff check .
+else
+    printf '%s\n' 'ERROR: ruff is required. Install development tools with: python -m pip install -e ".[dev]"' >&2
+    exit 1
+fi
 
 printf '\n== text hygiene ==\n'
 python - <<'PY'
