@@ -55,8 +55,8 @@ require_file SUPPORT.md
 require_file LICENSE
 require_file docs/PRODUCT-STRATEGY.md
 require_file docs/THREAT-MODEL.md
-require_file docs/V0.3.0-POST-RELEASE-AUDIT.md
-require_file docs/V0.3.0-RELEASE-NOTES.md
+require_file docs/V0.4.0-RELEASE-EVIDENCE.md
+require_file docs/V0.4.0-RELEASE-NOTES.md
 require_file docs/DEPENDABOT-DEPENDENCY-GRAPH.md
 require_file docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md
 require_file docs/OPENSSF-SCORECARD-EVALUATION.md
@@ -315,37 +315,37 @@ require_contains docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md 'Dependabot-created PR
 printf 'OK: Dependabot sanity checks passed.\n'
 
 printf '\n== public truth and claim boundaries ==\n'
-require_contains README.md '`v0\.3\.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`'
-require_contains README.md 'agent-rules-kit==0\.3\.0'
+require_contains README.md '`v0\.4\.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`'
+require_contains README.md 'agent-rules-kit==0\.4\.0'
 require_contains README.md 'PyPI Trusted Publishing'
 require_contains README.md 'not a security product, not a general repository auditor, not a secret scanner'
-require_contains SECURITY.md '`v0\.3\.0` is the current published GitHub Release and PyPI package'
+require_contains SECURITY.md '`v0\.4\.0` is the current published GitHub Release and PyPI package'
 require_contains SECURITY.md 'Private vulnerability reporting is enabled'
 require_contains SECURITY.md 'not a security scanner, provides no security guarantees'
-require_contains SUPPORT.md '`v0\.3\.0` is the current published GitHub Release and PyPI package line'
+require_contains SUPPORT.md '`v0\.4\.0` is the current published GitHub Release and PyPI package line'
 require_contains SUPPORT.md 'Private vulnerability reporting is enabled'
 require_contains docs/PRIVATE-VULNERABILITY-REPORTING.md 'private vulnerability reporting was enabled manually'
 require_contains docs/OPENSSF-SCORECARD-EVALUATION.md 'Do not add a Scorecard workflow in this phase'
-require_contains docs/V0.3.0-POST-RELEASE-AUDIT.md 'v0\.3\.0 remains published and should not be modified'
+require_contains docs/V0.4.0-RELEASE-EVIDENCE.md 'v0\.4\.0 release evidence'
 require_absent README.md 'enterprise-grade|production-ready|guarantees security|guaranteed secure|complete secret scanner'
 require_absent SECURITY.md 'enterprise-grade|production-ready|guarantees security|guaranteed secure|complete secret scanner'
 require_absent SUPPORT.md 'enterprise-grade|production-ready|guarantees security|guaranteed secure|complete secret scanner'
 printf 'OK: public truth and claim boundary checks passed.\n'
 
-printf '\n== v0.3.0 documentation sanity ==\n'
+printf '\n== v0.4.0 documentation sanity ==\n'
 require_absent README.md 'doctor\.py'
 require_absent docs/THREAT-MODEL.md 'v0\.2\.0 release line|post-v0\.2\.0 main state'
 require_absent docs/PRODUCT-STRATEGY.md 'published v0\.2\.0 GitHub Release and current post-v0\.2\.0 main fixes|published v0\.2\.0 GitHub Release line|unreleased post-v0\.2\.0 fixes|Status: published in v0\.2\.0, with unreleased post-v0\.2\.0 fixes on main|current main contains post-v0\.2\.0 fixes'
 require_absent SUPPORT.md 'Private vulnerability reporting is currently disabled'
-require_contains docs/THREAT-MODEL.md 'v0\.3\.0 doctor, budget, and explain command surface'
-require_contains docs/PRODUCT-STRATEGY.md 'published v0\.3\.0 GitHub Release and PyPI package line'
+require_contains docs/THREAT-MODEL.md 'published v0\.4\.0 release line'
+require_contains docs/PRODUCT-STRATEGY.md 'published v0\.4\.0 GitHub Release and PyPI package line'
 require_contains docs/PRODUCT-STRATEGY.md 'Status: published in v0\.3\.0'
 require_contains SUPPORT.md 'Private vulnerability reporting is enabled'
 require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'Evidence is ranked in this record as follows'
 require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'vulnerability-alerts` returned HTTP `204`'
 require_contains docs/DEPENDABOT-DEPENDENCY-GRAPH.md 'private-vulnerability-reporting` returned `enabled: true`'
 require_contains docs/SECURITY-SUPPLY-CHAIN-EVALUATION.md 'Dependabot malware alerts and grouped security updates are manually verified as enabled'
-require_contains docs/V0.3.0-POST-RELEASE-AUDIT.md 'v0\.3\.0'
-printf 'OK: v0.3.0 documentation sanity checks passed.\n'
+require_contains docs/V0.4.0-RELEASE-NOTES.md 'v0\.4\.0'
+printf 'OK: v0.4.0 documentation sanity checks passed.\n'
 
 printf '\nOK: post-release audit passed.\n'

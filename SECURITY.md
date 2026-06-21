@@ -6,20 +6,21 @@ It is not a security scanner, provides no security guarantees, and must not be d
 
 ## Supported versions
 
-`v0.3.0` is the current published GitHub Release and PyPI package.
+`v0.4.0` is the current published GitHub Release and PyPI package.
 
-`v0.2.3` remains the previous published GitHub Release and PyPI package baseline.
+`v0.3.0` remains the previous published GitHub Release and PyPI package baseline.
 
 The project is still maintained on a best-effort basis. There is no commercial SLA, no guaranteed response time, and no guarantee that every security-relevant issue will be found or fixed.
 
 | Version | Status |
 | --- | --- |
-| 0.3.x | Current published GitHub Release line / best-effort security fixes |
-| 0.2.x | Previous published line / limited best-effort fixes |
+| 0.4.x | Current published GitHub Release line / best-effort security fixes |
+| 0.3.x | Previous published line / limited best-effort fixes |
+| 0.2.x | Historical line / limited best-effort fixes |
 | 0.1.x | Historical pre-release line / not supported |
 | < 0.1 | Not supported |
 
-`agent-rules-kit==0.3.0` is published on PyPI. Future PyPI availability claims must be verified per release before updating this policy.
+`agent-rules-kit==0.4.0` is published on PyPI. Future PyPI availability claims must be verified per release before updating this policy.
 
 ## Security boundaries
 
@@ -70,7 +71,7 @@ agent-rules-kit does not aim to:
 
 ## Maintainer response
 
-Security response is best-effort for the current published `0.3.x` GitHub Release line.
+Security response is best-effort for the current published `0.4.x` GitHub Release line.
 
 There is no commercial SLA or guaranteed response time.
 

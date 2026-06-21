@@ -18,7 +18,7 @@ Implemented command surface:
 - `agent-rules-kit conflicts`;
 - `agent-rules-kit explain`.
 
-`doctor`, `budget`, and `explain` are implemented as v0.3.0 command baselines. `dedupe` and `conflicts` are implemented on current `main` after v0.3.0 and must not be described as published package behavior until the next release is cut and verified. Release publication is verified by the dedicated GitHub Release and PyPI workflow evidence, not by this output contract alone.
+The full command surface listed above is implemented in the published v0.4.0 command baseline. Release publication is verified by the dedicated GitHub Release and PyPI workflow evidence, not by this output contract alone.
 
 ## Contract status
 

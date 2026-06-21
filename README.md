@@ -135,11 +135,11 @@ The default behavior is read-only.
 
 ## What This Project Does
 
-`v0.3.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`.
+`v0.4.0` is the current published GitHub Release and PyPI package for `agent-rules-kit`.
 
-`v0.2.3` remains the previous published GitHub Release and PyPI package baseline.
+`v0.3.0` remains the previous published GitHub Release and PyPI package baseline.
 
-Current `main` may include post-v0.3.0 changes that are not part of the published PyPI package until a later release is cut and verified.
+Current `main` may include post-v0.4.0 changes that are not part of the published PyPI package until a later release is cut and verified.
 
 The current `main` behavior includes:
 
@@ -149,11 +149,11 @@ The current `main` behavior includes:
 - provides `init --dry-run` for planning baseline instruction files;
 - provides explicit `init --write` behavior for creating or replacing root `AGENTS.md`;
 - backs up existing root `AGENTS.md` before replacement;
-- provides read-only `doctor` repository diagnosis output in the published v0.3.0 package and current `main`;
-- provides read-only `budget` local size and context-pressure approximation output in the published v0.3.0 package and current `main`;
-- provides read-only `explain` output for known governance rule IDs in the published v0.3.0 package and current `main`;
-- provides read-only `dedupe` duplicate instruction-line detection on current `main` as a post-v0.3.0 addition;
-- provides read-only `conflicts` contradictory-guidance detection on current `main` as a post-v0.3.0 addition;
+- provides read-only `doctor` repository diagnosis output in the published v0.4.0 package and current `main`;
+- provides read-only `budget` local size and context-pressure approximation output in the published v0.4.0 package and current `main`;
+- provides read-only `explain` output for known governance rule IDs in the published v0.4.0 package and current `main`;
+- provides read-only `dedupe` duplicate instruction-line detection in the published v0.4.0 package and current `main`;
+- provides read-only `conflicts` contradictory-guidance detection in the published v0.4.0 package and current `main`;
 - redacts supported secret-like values in supported output, including finding messages, paths, and evidence payloads;
 - avoids network calls;
 - avoids LLM calls;
@@ -213,7 +213,7 @@ A clean report means only that the implemented checks did not find a supported i
 
 ## Installation
 
-`v0.3.0` is the current published GitHub Release and PyPI package.
+`v0.4.0` is the current published GitHub Release and PyPI package.
 
 The published package can be installed from PyPI. Release publication uses PyPI Trusted Publishing from the GitHub Release workflow.
 
@@ -225,10 +225,10 @@ Requirements for using a published CLI release:
 - a Python virtual environment;
 - a published PyPI release of `agent-rules-kit`.
 
-Install `v0.3.0` in a virtual environment:
+Install `v0.4.0` in a virtual environment:
 
     python -m venv .venv
-    .venv/bin/python -m pip install agent-rules-kit==0.3.0
+    .venv/bin/python -m pip install agent-rules-kit==0.4.0
     .venv/bin/agent-rules-kit --version
     .venv/bin/agent-rules-kit check /path/to/repository --format console
 
@@ -256,7 +256,7 @@ The source tree can also be used directly for quick CLI inspection:
 
 ### Current main commands from source
 
-Current `main` can also be tested from the source tree. `doctor`, `budget`, and `explain` are part of the published v0.3.0 package. `dedupe` and `conflicts` are post-v0.3.0 current-main additions until the next release is cut and verified:
+Current `main` can also be tested from the source tree. `doctor`, `budget`, `explain`, `dedupe`, and `conflicts` are part of the published v0.4.0 package and current source tree:
 
     PYTHONPATH=src python -m agent_rules_kit.cli doctor tests/fixtures/repositories/multi-agent-overlap
     PYTHONPATH=src python -m agent_rules_kit.cli budget tests/fixtures/repositories/multi-agent-overlap
@@ -270,7 +270,7 @@ These source-tree commands are development checks. Published-package behavior mu
 
 ## Release and PyPI Publishing
 
-The `v0.3.0` release was published through PyPI Trusted Publishing.
+The `v0.4.0` release was published through PyPI Trusted Publishing.
 
 Release publishing is handled by:
 
@@ -288,11 +288,11 @@ The workflow is intentionally limited:
 - it grants `id-token: write` only to the publish job;
 - it does not use a static PyPI token, username, or password.
 
-The published `v0.3.0` package must remain verifiable by:
+The published `v0.4.0` package must remain verifiable by:
 
 - the GitHub Release tag pointing to the verified release SHA;
 - a successful PyPI publish workflow run;
-- a clean virtual environment installing and running `agent-rules-kit==0.3.0` from PyPI.
+- a clean virtual environment installing and running `agent-rules-kit==0.4.0` from PyPI.
 
 ---
 
@@ -392,7 +392,7 @@ The first baseline is conservative: it detects implemented pattern families for 
     PYTHONPATH=src python -m agent_rules_kit.cli explain AIRK-GOV003
     PYTHONPATH=src python -m agent_rules_kit.cli explain --list
 
-These commands are implemented on current `main`. `doctor`, `budget`, and `explain` are part of the published v0.3.0 command surface. `dedupe` and `conflicts` are post-v0.3.0 `main` additions until the next release is cut and verified.
+These commands are implemented on current `main` and are part of the published v0.4.0 command surface.
 
 ---
 
@@ -452,13 +452,17 @@ See:
     │       ├── codeql.yml
     │       └── publish-pypi.yml
     ├── docs/
+    │   ├── ACTIONS-PINNING-POLICY.md
     │   ├── BUILD-PLAN.md
     │   ├── DEPENDABOT-DEPENDENCY-GRAPH.md
     │   ├── EXIT-CODES.md
+    │   ├── EXTERNAL-AUDIT-PACKAGE-CURRENT-MAIN.md
     │   ├── OPENSSF-SCORECARD-EVALUATION.md
     │   ├── OUTPUTS.md
+    │   ├── POST-AUDIT-ACTION-PLAN-CURRENT-MAIN.md
     │   ├── POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md
     │   ├── POST-V0.3.0-INTERNAL-READINESS-AUDIT.md
+    │   ├── PRE-V0.4.0-INTERNAL-READINESS-AUDIT.md
     │   ├── PRIVATE-VULNERABILITY-REPORTING.md
     │   ├── PRODUCT-STRATEGY.md
     │   ├── RULES.md
@@ -472,8 +476,14 @@ See:
     │   ├── V0.3-ARCHITECTURE-ROADMAP.md
     │   ├── V0.3.0-POST-RELEASE-AUDIT.md
     │   ├── V0.3.0-RELEASE-NOTES.md
+    │   ├── V0.4.0-RELEASE-EVIDENCE.md
+    │   ├── V0.4.0-RELEASE-NOTES.md
     │   └── screenshots/
     │       └── readme/
+    │           ├── agent-rules-kit-governance-findings.png
+    │           ├── agent-rules-kit-help-check.png
+    │           ├── agent-rules-kit-init-safety.png
+    │           └── agent-rules-kit-output-formats.png
     ├── scripts/
     │   ├── check.sh
     │   └── post-release-audit.sh
@@ -492,6 +502,8 @@ See:
     │       ├── init_write.py
     │       └── redaction.py
     ├── tests/
+    │   ├── fixtures/
+    │   │   └── repositories/
     │   ├── test_cli.py
     │   ├── test_conflicts.py
     │   ├── test_dedupe.py
@@ -543,7 +555,7 @@ Current verified local result on `main`:
 
 The exact unit test count may change as coverage evolves. The source of truth is the current `./scripts/check.sh` output and the matching GitHub Actions run for `main`.
 
-For current post-v0.3.0 functional evidence, including the verified command matrix, init write behavior, and release-boundary limits, see `docs/POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md`.
+For v0.4.0 release notes and release evidence, see `docs/V0.4.0-RELEASE-NOTES.md` and `docs/V0.4.0-RELEASE-EVIDENCE.md`.
 
 CI installs project development dependencies and then runs the same local check script through GitHub Actions.
 
@@ -557,19 +569,19 @@ The required status check for `main` is:
 
 Current status:
 
-- `v0.3.0` is published as the current GitHub Release and PyPI package;
-- `v0.2.3` remains the previous published GitHub Release and PyPI package baseline;
+- `v0.4.0` is published as the current GitHub Release and PyPI package;
+- `v0.3.0` remains the previous published GitHub Release and PyPI package baseline;
 - no stable support or API guarantee yet;
-- release tag `v0.3.0` points to the verified release SHA;
+- release tag `v0.4.0` points to the verified release SHA;
 - local CLI behavior implemented;
 - governance diagnostics, structured finding evidence, and evidence redaction are implemented;
-- `doctor`, `budget`, and `explain` are implemented as v0.3.0 commands, while `dedupe` and `conflicts` are implemented on current `main` as post-v0.3.0 read-only command additions;
+- `doctor`, `budget`, `explain`, `dedupe`, and `conflicts` are implemented as v0.4.0 read-only command surfaces;
 - CI active;
 - branch protection is active with the required `local-checks / Python 3.12` status check;
 - the `pypi` GitHub environment exists for the release publishing workflow;
-- `.github/workflows/publish-pypi.yml` published `v0.3.0` through PyPI Trusted Publishing and remains the release publishing workflow;
+- `.github/workflows/publish-pypi.yml` published `v0.4.0` through PyPI Trusted Publishing and remains the release publishing workflow;
 - README screenshots are generated from real local CLI commands;
-- post-v0.3.0 functional contract evidence is documented in `docs/POST-V0.3.0-FUNCTIONAL-CONTRACT-EVIDENCE.md`;
+- v0.4.0 release notes and release evidence are documented in `docs/V0.4.0-RELEASE-NOTES.md` and `docs/V0.4.0-RELEASE-EVIDENCE.md`;
 - security boundaries documented;
 - threat model documented.
 

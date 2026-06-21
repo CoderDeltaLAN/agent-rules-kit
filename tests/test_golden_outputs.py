@@ -286,7 +286,7 @@ class GoldenOutputTests(unittest.TestCase):
                 "name": "version",
                 "args": ["--version"],
                 "exit_code": 0,
-                "stdout_contains": ["agent-rules-kit 0.3.0\n"],
+                "stdout_contains": ["agent-rules-kit 0.4.0\n"],
                 "stderr": "",
             },
             {
