@@ -28,14 +28,15 @@ The final package must capture, outside this document if necessary:
 
 The exact SHA in this document's creation branch is not enough after merge. The final audit packet must refresh the SHA and CI evidence from main.
 
-## Baseline evidence at manifest creation
+## Baseline evidence at manifest refresh
 
-This manifest was created from:
+This manifest was refreshed after F-01 was merged into main. The final external audit must still use the post-merge main SHA for the actual audit target.
+
+This refresh starts from:
 
 - branch: audit/provide-complete-core-files;
-- base main SHA before this manifest commit: 378bf5a41dd355e3e219a0a3b54408c039bdeca8;
-- CI push run for that base SHA: 27885987180, success;
-- CodeQL push run for that base SHA: 27885987214, success;
+- base main SHA before this manifest refresh: 853998d79768299cce7457cf5ffeb592bb848221;
+- CI and CodeQL for that base SHA were verified before this branch; final run IDs must be refreshed from the post-merge main SHA;
 - required file existence check: 45 required files, 0 missing;
 - command surface observed from source tree: check, init, doctor, budget, dedupe, conflicts, explain.
 
