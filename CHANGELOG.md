@@ -6,6 +6,10 @@ This project has a published GitHub Release line, but no stable support or API g
 
 ## [Unreleased]
 
+No unreleased changes yet.
+
+## [0.4.0] - 2026-06-21
+
 - Documented the GitHub Actions pinning policy decision before the v0.4.0 release train.
 - Refreshed the external audit package manifest and corrected pre-v0.4.0 readiness statuses after F-01.
 - Triaged superseded v0.3.1 release-target wording before the v0.4.0 release train.
@@ -41,7 +45,6 @@ This project has a published GitHub Release line, but no stable support or API g
 - Improved PyPI package metadata with SPDX license metadata, explicit license files, project URLs, and additional classifiers.
 - Synced the README source-tree layout with the actual v0.3.0 module structure.
 - Reviewed the threat model for the v0.3.0 doctor, budget, and explain command surface.
-
 ## [0.3.0] - 2026-06-19
 
 ### Added

@@ -6,15 +6,15 @@ There is no commercial SLA, no guaranteed response time, no production-readiness
 
 ## Current published line
 
-`v0.3.0` is the current published GitHub Release and PyPI package line.
+`v0.4.0` is the current published GitHub Release and PyPI package line.
 
-`v0.2.3` remains the previous published GitHub Release and PyPI package baseline.
+`v0.3.0` remains the previous published GitHub Release and PyPI package baseline.
 
 ## Package availability
 
 The current published package is:
 
-    agent-rules-kit==0.3.0
+    agent-rules-kit==0.4.0
 
 Future PyPI availability claims must be verified per release before updating this policy.
 
