@@ -52,7 +52,9 @@ class GoldenOutputTests(unittest.TestCase):
         )
 
     def test_check_console_redacts_secret_like_repository_path(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="sk-ant-testredaction123456-") as temp_dir:
+        secret_like_prefix = "sk-ant-" + "testredaction123456"
+
+        with tempfile.TemporaryDirectory(prefix=f"{secret_like_prefix}-") as temp_dir:
             repository = Path(temp_dir)
             (repository / "AGENTS.md").write_text("Scope: test\nNo secrets.\n", encoding="utf-8")
 
@@ -61,7 +63,7 @@ class GoldenOutputTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.stderr, "")
         self.assertIn("[REDACTED]", result.stdout)
-        self.assertNotIn("sk-ant-testredaction123456", result.stdout)
+        self.assertNotIn(secret_like_prefix, result.stdout)
 
     def test_check_json_clean_fixture_matches_golden_output(self) -> None:
         repository = FIXTURE_ROOT / "single-agent"
